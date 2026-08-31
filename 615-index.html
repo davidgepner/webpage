@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AS.110.615 Algebraic Topology I — Johns Hopkins University</title>
+<style>
+  /* ------------------------------------------------------------------
+     Palette: Hopkins heritage blue with chalk-white line work in the
+     header — blackboard in university colors — over warm-white paper
+     and near-black ink. One serif family (Charter stack), set close to
+     the LaTeX of the lecture notes themselves.
+     ------------------------------------------------------------------ */
+  :root {
+    --paper:   #fefefc;
+    --ink:     #1e2127;
+    --faint:   #676c75;
+    --rule:    #dcdde1;
+    --blue:    #002d72;   /* JHU heritage blue */
+    --blue-70: #33578e;
+    --tint:    #eef2f8;
+    --chalk:   #dfe7f4;
+  }
+  * { box-sizing: border-box; }
+  html { font-size: 17px; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    line-height: 1.55;
+  }
+  a { color: var(--blue-70); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:hover { color: var(--blue); text-decoration-thickness: 2px; }
+  a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+  /* ---------- header: blackboard band ---------- */
+  .band {
+    background: var(--blue);
+    color: #fff;
+  }
+  .band-inner {
+    max-width: 50rem;
+    margin: 0 auto;
+    padding: 3.2rem 1.25rem 2.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  .course-id { margin: 0 0 .5rem; color: var(--chalk); font-style: italic; }
+  h1 {
+    font-size: 2.7rem;
+    line-height: 1.08;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.012em;
+  }
+  .term { margin: .7rem 0 0; color: var(--chalk); }
+  .diagram { flex-shrink: 0; }
+  @media (max-width: 42rem) {
+    .band-inner { flex-direction: column; align-items: flex-start; padding-top: 2.2rem; }
+    h1 { font-size: 2.1rem; }
+  }
+
+  /* ---------- logistics grid ---------- */
+  .logistics {
+    background: var(--tint);
+    border-bottom: 1px solid var(--rule);
+  }
+  .logistics-inner {
+    max-width: 50rem;
+    margin: 0 auto;
+    padding: 1.1rem 1.25rem 1.2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .35rem 2.5rem;
+  }
+  .logistics p { margin: 0; }
+  .logistics b { font-weight: 600; color: var(--blue); }
+  @media (max-width: 42rem) { .logistics-inner { grid-template-columns: 1fr; } }
+
+  /* ---------- main column ---------- */
+  .page { max-width: 50rem; margin: 0 auto; padding: 0 1.25rem 5rem; }
+  main { max-width: 44rem; }
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 3.2rem 0 1rem;
+  }
+  h2::before {
+    content: "";
+    display: block;
+    width: 2.6rem;
+    height: 4px;
+    background: var(--blue);
+    margin-bottom: .55rem;
+  }
+  h3 { font-size: 1.06rem; font-weight: 700; margin: 1.8rem 0 .6rem; }
+  ul { padding-left: 1.3rem; margin: .5rem 0; }
+  li { margin: .35rem 0; }
+
+  /* Week-by-week: hanging labels in the margin, like lecture notes */
+  .weeks { list-style: none; padding: 0; margin: .6rem 0 0; }
+  .weeks li {
+    display: grid;
+    grid-template-columns: 5.8rem 1fr;
+    gap: 1rem;
+    padding: .5rem 0;
+    border-top: 1px solid var(--rule);
+    margin: 0;
+  }
+  .weeks li:last-child { border-bottom: 1px solid var(--rule); }
+  .wk { color: var(--blue); font-weight: 600; font-variant-numeric: tabular-nums; }
+  @media (max-width: 42rem) {
+    .weeks li { grid-template-columns: 1fr; gap: .1rem; }
+  }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: .8rem 0; }
+  th, td { text-align: left; padding: .55rem .6rem .55rem 0; vertical-align: top; }
+  thead th { font-weight: 700; border-bottom: 2px solid var(--blue); padding-bottom: .4rem; }
+  tbody tr { border-bottom: 1px solid var(--rule); }
+  tbody tr:hover { background: var(--tint); }
+  td.num  { width: 3rem;   color: var(--faint); }
+  td.date { width: 7.5rem; white-space: nowrap; color: var(--faint); }
+  .tba { color: var(--faint); font-style: italic; }
+
+  footer {
+    margin-top: 4.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    color: var(--faint);
+    font-size: .9rem;
+  }
+</style>
+</head>
+<body>
+
+<header class="band">
+  <div class="band-inner">
+    <div>
+      <p class="course-id">AS.110.615, Johns Hopkins University</p>
+      <h1>Algebraic Topology&nbsp;I</h1>
+      <p class="term">Fall Semester 2026</p>
+    </div>
+
+    <!-- The universal property of the product A x B, drawn as chalk on
+         the blue band: projections out to A and B, and the unique
+         dashed map in from X. Decorative only. -->
+    <svg class="diagram" width="170" height="140" viewBox="0 0 170 140" aria-hidden="true">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10" fill="none" stroke="context-stroke" stroke-width="1.6"/>
+        </marker>
+      </defs>
+      <g font-family="inherit" font-style="italic" font-size="20" fill="#ffffff">
+        <text x="81" y="28">X</text>
+        <text x="10" y="130">A</text>
+        <text x="62" y="130">A×B</text>
+        <text x="150" y="130">B</text>
+      </g>
+      <g stroke="#dfe7f4" stroke-width="1.5" fill="none" marker-end="url(#ah)">
+        <line x1="56" y1="124" x2="30" y2="124"/>
+        <line x1="118" y1="124" x2="144" y2="124"/>
+        <line x1="75" y1="38" x2="20" y2="112"/>
+        <line x1="98" y1="38" x2="156" y2="112"/>
+      </g>
+      <line x1="86" y1="38" x2="86" y2="110"
+            stroke="#ffffff" stroke-width="2" stroke-dasharray="5 4"
+            fill="none" marker-end="url(#ah)"/>
+      <text x="93" y="80" font-style="italic" font-size="15" fill="#dfe7f4">∃!</text>
+    </svg>
+  </div>
+</header>
+
+<div class="logistics">
+  <div class="logistics-inner">
+    <p><b>Lectures</b> — MW 1:30–2:45 pm, Bloomberg 276 (Homewood campus)</p>
+    <p><b>Instructor</b> — David Gepner, Krieger 410; office hours TBD, and by appointment</p>
+  </div>
+</div>
+
+<div class="page">
+<main>
+
+  <h2>About the course</h2>
+  <p>
+    This is the first semester of the graduate algebraic topology sequence,
+    continued in AS.110.616 in the spring. The guiding idea of the subject is
+    to attach algebraic invariants — groups, modules, chain complexes — to
+    topological spaces in a functorial way, and to use these invariants to
+    distinguish spaces and to prove theorems inaccessible by point-set methods
+    alone.
+  </p>
+  <p>
+    Unusually for a first course, we begin with the algebraic infrastructure —
+    categories, homological algebra, and derived categories — <i>before</i>
+    introducing the topology. Once that language is in place, the construction
+    and manipulation of homology theories becomes transparent, and the
+    transition to modern homotopical methods (in 616 and beyond) is much
+    smoother. We then develop simplicial sets and singular and cellular
+    homology, and close the semester with homotopy theory proper: homotopy
+    groups, fibrations, and a detailed treatment of the fundamental group and
+    covering space theory.
+  </p>
+  <p>
+    <b>Prerequisites.</b> The equivalent of one semester each of graduate
+    abstract algebra and real analysis, including point-set topology. Prior
+    exposure to the fundamental group (e.g., at the level of AS.110.413) is
+    helpful but not assumed. Comfort with modules over a ring and basic
+    categorical language will be assumed after the first two weeks.
+  </p>
+
+  <h2>Lecture notes</h2>
+  <table>
+    <thead>
+      <tr><th></th><th>Date</th><th>Topic</th></tr>
+    </thead>
+    <tbody>
+      <!-- EDIT: to post a new lecture, copy a row and update the
+           number, date, title, and the href of the PDF. -->
+      <tr>
+        <td class="num">1</td>
+        <td class="date">Aug 31</td>
+        <td><a href="lecture_abelian_categories.pdf">Additive and abelian categories</a></td>
+      </tr>
+      <tr>
+        <td class="num">2</td>
+        <td class="date">Sep 2</td>
+        <td class="tba">Chain complexes and homology — to appear</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Syllabus</h2>
+
+  <h3>Part I — Categories and homological algebra</h3>
+  <ul class="weeks">
+    <li><span class="wk">Week 1</span><span>Categories, functors, natural transformations. Limits and colimits; adjoint functors. Additive categories; kernels, cokernels, and abelian categories. Examples: modules, sheaves, chain complexes.</span></li>
+    <li><span class="wk">Week 2</span><span>Chain complexes and homology as a functor. Chain homotopy. The long exact sequence of a short exact sequence of complexes; the snake lemma and diagram chases done once, carefully. Projective and injective objects; resolutions.</span></li>
+    <li><span class="wk">Week 3</span><span>Derived functors: Tor and Ext, computed and interpreted. Universal coefficient and Künneth theorems (algebraic form). The homotopy category K(𝒜).</span></li>
+    <li><span class="wk">Week 4</span><span>Localization of categories; the derived category D(𝒜). Triangulated structure: distinguished triangles as the replacement for short exact sequences. Derived functors revisited from this viewpoint.</span></li>
+  </ul>
+
+  <h3>Part II — Simplicial sets and singular homology</h3>
+  <ul class="weeks">
+    <li><span class="wk">Week 5</span><span>The simplex category Δ; simplicial sets, faces and degeneracies. Geometric realization and the singular simplicial set; the realization–singular adjunction. Simplicial abelian groups and the associated chain complex; statement of Dold–Kan.</span></li>
+    <li><span class="wk">Week 6</span><span>Singular homology: definition, functoriality, H₀ and π₀, homology of a point. Homotopy invariance via simplicial/prism arguments.</span></li>
+    <li><span class="wk">Week 7</span><span>Relative homology. Excision and Mayer–Vietoris. First computations: spheres; degree of self-maps of Sⁿ; Brouwer fixed point theorem; invariance of dimension and of domain.</span></li>
+    <li><span class="wk">Week 8</span><span>CW complexes and cellular homology; comparison with singular homology. Euler characteristic. Computations: projective spaces, surfaces, lens spaces. Homology with coefficients; topological universal coefficients and Künneth (survey); Lefschetz fixed point theorem (time permitting).</span></li>
+  </ul>
+
+  <h3>Part III — Homotopy theory and the fundamental group</h3>
+  <ul class="weeks">
+    <li><span class="wk">Week 9</span><span>Homotopy groups π<sub>n</sub>: definitions, basepoints, the action of π₁ on π<sub>n</sub>. Statement of Whitehead's theorem and the Hurewicz theorem (proofs deferred to 616).</span></li>
+    <li><span class="wk">Week 10</span><span>Fibrations: the homotopy lifting property, Serre fibrations, fiber bundles as examples. The long exact sequence of a fibration, with the Hopf fibration S¹ → S³ → S² and the computation of π₃(S²) as the flagship application. Path–loop fibration.</span></li>
+    <li><span class="wk">Week 11</span><span>The fundamental group in detail: π₁(S¹) via lifting, applications (fundamental theorem of algebra, Borsuk–Ulam in low dimension). Free products and the Seifert–van Kampen theorem, with computations: wedges, surfaces, knot complements (Wirtinger presentation sketched).</span></li>
+    <li><span class="wk">Week 12</span><span>Covering spaces: lifting criteria, the classification of coverings via subgroups of π₁, universal covers, deck transformations, and the Galois correspondence. Covering space proofs of group-theoretic facts (subgroups of free groups are free); preview of 616.</span></li>
+  </ul>
+
+  <h3>Final project presentations</h3>
+  <ul class="weeks">
+    <li><span class="wk">Week 13–14</span><span>In-class final project presentations (Nov 30 – Dec 9). No new lecture material.</span></li>
+  </ul>
+
+  <p>Thanksgiving break (late November): no classes.</p>
+
+  <h2>Grading</h2>
+  <p>
+    <b>Your course grade is based entirely on class participation/attendance
+    and a final project.</b> There are no exams.
+  </p>
+  <ul>
+    <li><b>Participation and attendance (10%).</b> This is a lecture course, but a conversational one: attend regularly, ask and answer questions, and occasionally present an argument at the board when invited. The participation grade reflects consistent, good-faith engagement over the semester — not the number of times you speak, and certainly not whether your questions are "good enough." If you must miss more than an occasional class (illness, travel, conflicts), just let me know.</li>
+    <li><b>Final project (90%).</b> An expository in-class presentation, given in the final two weeks of the semester (Nov 30 – Dec 9), on a topic extending the course. Suitable topics include: the Dold–Kan correspondence in full; model structures on simplicial sets; group cohomology via derived functors; the Hurewicz theorem; classifying spaces and principal bundles; Poincaré duality; the Lefschetz fixed point theorem; covering space theory from the Galois-theoretic viewpoint; braid groups and configuration spaces. Topic proposal due mid-October. Graded on mathematical correctness, depth of engagement with the material, and clarity of exposition — not originality of research.</li>
+    <li><b>Homework (assigned, not counted toward the grade).</b> Problem sets roughly every one to two weeks, graded for your benefit only and returned with comments. Collaboration is encouraged; write up solutions in your own words.</li>
+  </ul>
+
+  <h2>Problem sets</h2>
+  <p class="tba">
+    Problem set 1 will be posted here after the first week of lectures.
+    Sets are graded for your benefit and returned with comments; they do not
+    count toward the course grade.
+  </p>
+
+  <h2>Important dates</h2>
+  <table>
+    <thead><tr><th>Date</th><th></th></tr></thead>
+    <tbody>
+      <tr><td class="date">Mon, Aug 31</td><td>First class</td></tr>
+      <tr><td class="date">Mid-October</td><td>Project topic proposal due</td></tr>
+      <tr><td class="date">Late Nov</td><td>Thanksgiving break</td></tr>
+      <tr><td class="date">Nov 30 – Dec 9</td><td>In-class project presentations; last class Wed, Dec 9</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Policies</h2>
+  <ul>
+    <li><b>Collaboration and integrity.</b> Discussion of homework with classmates is encouraged. The final project must be your own exposition; all sources (including AI tools, if used) must be cited. All work is subject to the university's graduate academic misconduct policies.</li>
+    <li><b>AI use.</b> Prohibited on homework: the problem sets exist entirely for your benefit, so outsourcing them defeats the purpose. Permitted for everything else, subject to the citation requirement for the final project.</li>
+    <li><b>Devices in class.</b> Discouraged. If your attention drifts, work on something productive instead (like the current problem set) — a lit screen makes it harder for everyone nearby to pay attention.</li>
+    <li><b>Accommodations.</b> Students requiring accommodations should register with <a href="https://studentdisabilityservices.jhu.edu">Student Disability Services</a> and contact me early in the semester.</li>
+  </ul>
+
+  <h2>Texts</h2>
+  <p>No single text covers the course in the order we follow. Primary references, all freely or electronically available:</p>
+  <ul>
+    <li>A.&nbsp;Hatcher, <i>Algebraic Topology</i> — <a href="https://pi.math.cornell.edu/~hatcher/AT/ATpage.html">free from the author's page</a>. Main reference for homology, the fundamental group, and covering spaces.</li>
+    <li>C.&nbsp;Weibel, <i>An Introduction to Homological Algebra</i> — <a href="https://www.cambridge.org/core_title/gb/119879">Cambridge University Press</a>; main reference for Part I.</li>
+    <li>S.&nbsp;Gelfand and Y.&nbsp;Manin, <i>Methods of Homological Algebra</i> — <a href="https://doi.org/10.1007/978-3-662-12492-5">SpringerLink</a>; for derived and triangulated categories.</li>
+    <li>P.&nbsp;Goerss and J.&nbsp;F.&nbsp;Jardine, <i>Simplicial Homotopy Theory</i> — <a href="https://link.springer.com/book/10.1007/978-3-0348-8707-6">SpringerLink</a>; main reference for simplicial sets.</li>
+    <li>J.&nbsp;P.&nbsp;May, <i>A Concise Course in Algebraic Topology</i> — <a href="https://www.math.uchicago.edu/~may/CONCISE/ConciseRevised.pdf">free PDF from the author's page</a>; secondary reference throughout, especially for fibrations.</li>
+  </ul>
+
+  <footer>
+    <p>AS.110.615, Department of Mathematics, Johns Hopkins University.
+       Questions about the course: <a href="mailto:gepner@jhu.edu">gepner@jhu.edu</a>.
+       Page maintained by the instructor; last updated August 2026.</p>
+  </footer>
+
+</main>
+</div>
+</body>
+</html>
