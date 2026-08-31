@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0"><title>David Gepner &mdash; Department of Mathematics, Johns Hopkins University</title>
+<meta name="description" content="David Gepner, Department of Mathematics, Johns Hopkins University. Algebraic topology, homotopy theory, algebraic K-theory, and higher category theory.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFFFFF;--ink:#0A0A0A;--dim:#6E6E6E;--ac:#0033CC;--line:#E4E4E4;--zebra:#FAFAFA}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;
+ font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.w{max-width:1280px;margin:0 auto;padding:0 20px}
+a{color:var(--ac);text-decoration:none}a:hover{text-decoration:underline}
+.mn{font-family:'Martian Mono',monospace}
+
+header{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:end;
+ padding:34px 0 16px;border-bottom:2px solid var(--ink)}
+h1{font-size:clamp(26px,3.4vw,38px);font-weight:700;letter-spacing:-.03em;margin:0 0 3px;line-height:1.05}
+.sub{font-size:13px;color:var(--dim);margin:0}
+.lk{font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:-.02em;text-align:right}
+.lk a{display:inline-block;margin-left:16px}
+
+.split{display:grid;grid-template-columns:1fr 400px;gap:40px;padding:30px 0 26px;border-bottom:1px solid var(--line);align-items:center}
+.stmt{font-size:clamp(17px,2.1vw,25px);font-weight:600;letter-spacing:-.025em;line-height:1.3;max-width:42ch;margin:0}
+.figc svg{width:100%;height:auto;display:block}
+.figc p{font-family:'Martian Mono',monospace;font-size:9.5px;color:var(--dim);margin:8px 0 0}
+.cs-dim{font-family:'Public Sans',sans-serif;font-weight:600;font-size:13px;fill:var(--dim)}
+.cs-vert{fill:var(--ink)}.cs-arrow{stroke:var(--ink);stroke-width:1.1;fill:none;stroke-linecap:round}
+.cs-hidden{stroke-dasharray:3 3;opacity:.4}
+.cs-face{fill:var(--ac);fill-opacity:.07}.cs-face-front{fill:var(--ac);fill-opacity:.13}
+.cs-rot{stroke:var(--ac);stroke-width:1.1;fill:none}.cs-back{opacity:.45}
+.cs-head{fill:var(--ink)}.rot-head{fill:var(--ac)}
+
+h2{font-family:'Martian Mono',monospace;font-size:10.5px;font-weight:500;letter-spacing:-.02em;
+ text-transform:uppercase;color:var(--ink);margin:0;padding:26px 0 8px;
+ display:flex;justify-content:space-between;align-items:baseline}
+h2 i{font-style:normal;color:var(--dim)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{font-family:'Martian Mono',monospace;font-size:9.5px;font-weight:500;letter-spacing:-.02em;
+ text-transform:uppercase;color:var(--dim);text-align:left;padding:6px 10px;
+ border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);white-space:nowrap}
+tbody tr:nth-child(even){background:var(--zebra)}
+tbody tr:hover{background:#F0F4FF}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.k{font-family:'Martian Mono',monospace;font-size:10.5px;color:var(--dim);white-space:nowrap;width:1%}
+td.kd{font-family:'Martian Mono',monospace;font-size:9.5px;text-transform:uppercase;color:var(--ac);white-space:nowrap;width:1%}
+td.t{font-weight:600;letter-spacing:-.012em;min-width:270px}
+td.c{color:var(--dim);font-size:12.5px}
+td.r{font-family:'Martian Mono',monospace;font-size:10.5px;white-space:nowrap;text-align:right;width:1%}
+td.r a{margin-left:9px}
+#tt tbody tr,#st tbody tr{background:#0A0A0A;color:#fff}
+#tt tbody tr:hover,#st tbody tr:hover{background:#1C1C1C}
+#tt td,#st td{border-bottom:1px solid #2A2A2A}
+#tt td.k,#st td.k{color:#9A9A9A}#tt td.kd,#st td.kd{color:#7FA8FF}#tt td.c,#st td.c{color:#C4C4C4}
+#tt td.t a,#st td.t a{color:#9FC0FF}
+.note{color:var(--dim);font-size:13px;margin:14px 0 0}
+.cx{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--ink);
+ border-bottom:1px solid var(--line)}
+.cx div{padding:14px 10px;border-right:1px solid var(--line)}
+.cx div:last-child{border-right:none}
+.cx b{display:block;font-family:'Martian Mono',monospace;font-size:9.5px;letter-spacing:-.02em;
+ text-transform:uppercase;color:var(--dim);font-weight:500;margin-bottom:4px}
+footer{font-family:'Martian Mono',monospace;font-size:10px;color:var(--dim);
+ display:flex;justify-content:space-between;padding:18px 0 50px;flex-wrap:wrap;gap:8px}
+@media(max-width:960px){.split{grid-template-columns:1fr;gap:24px}
+ td.c,td.r,thead th.hc,thead th.hr{display:none}
+  .cx{grid-template-columns:1fr}.cx div{border-right:none;border-bottom:1px solid var(--line)}
+ header{grid-template-columns:1fr}.lk{text-align:left}.lk a{margin:0 16px 0 0}}
+</style></head><body><div class="w">
+<header>
+ <div><h1>David Gepner</h1><p class="sub">Department of Mathematics, Johns Hopkins University</p></div>
+ <div class="lk"><a href="mailto:gepner@jhu.edu">gepner@jhu.edu</a><a href="https://arxiv.org/a/gepner_d_1">arXiv</a><a href="https://scholar.google.com/citations?user=Gw8bjkEAAAAJ&hl=en">Scholar</a><a href="https://www.google.com/maps/search/?api=1&query=Krieger+Hall+Johns+Hopkins+University+Baltimore">Krieger 410</a></div>
+</header>
+<div class="split">
+ <p class="stmt">I study algebraic topology. More specifically, homotopy theory and its interactions with algebraic geometry, algebraic K-theory, and higher category theory.</p>
+ <div class="figc"><svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The oriented simplices in dimensions zero through three.">
+<defs>
+<marker id="am" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0,0.6 L5.2,3.5 L0,6.4 z" class="cs-head"/></marker>
+<marker id="ae" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0.6 L5.2,3.5 L0,6.4 z" class="rot-head"/></marker>
+</defs>
+<circle cx="112" cy="95" r="4.4" class="cs-vert"/><text x="112" y="182" class="cs-dim" text-anchor="middle">&#916;&#8304;</text>
+<polyline points="275,95 337.5,95 400,95" class="cs-arrow" marker-mid="url(#am)"/>
+<circle cx="275" cy="95" r="4.4" class="cs-vert"/><circle cx="400" cy="95" r="4.4" class="cs-vert"/>
+<text x="337" y="182" class="cs-dim" text-anchor="middle">&#916;&#185;</text>
+<polygon points="508,140 616,140 562,55" class="cs-face-front"/>
+<polyline points="508,140 562,140 616,140" class="cs-arrow" marker-mid="url(#am)"/>
+<polyline points="508,140 535,97.5 562,55" class="cs-arrow" marker-mid="url(#am)"/>
+<polyline points="562,55 589,97.5 616,140" class="cs-arrow" marker-mid="url(#am)"/>
+<path d="M 568.4 119.4 A 10 10 0 1 0 558.6 121.1" class="cs-rot" marker-end="url(#ae)"/>
+<circle cx="508" cy="140" r="4.4" class="cs-vert"/><circle cx="616" cy="140" r="4.4" class="cs-vert"/><circle cx="562" cy="55" r="4.4" class="cs-vert"/>
+<text x="562" y="182" class="cs-dim" text-anchor="middle">&#916;&#178;</text>
+<polygon points="712,140 862,140 800,108" class="cs-face"/><polygon points="712,140 800,108 782,45" class="cs-face"/>
+<polygon points="862,140 800,108 782,45" class="cs-face"/><polygon points="712,140 862,140 782,45" class="cs-face-front"/>
+<polyline points="712,140 756,124 800,108" class="cs-arrow cs-hidden" marker-mid="url(#am)"/>
+<polyline points="800,108 831,124 862,140" class="cs-arrow cs-hidden" marker-mid="url(#am)"/>
+<polyline points="800,108 791,76.5 782,45" class="cs-arrow cs-hidden" marker-mid="url(#am)"/>
+<polyline points="712,140 787,140 862,140" class="cs-arrow" marker-mid="url(#am)"/>
+<polyline points="712,140 747,92.5 782,45" class="cs-arrow" marker-mid="url(#am)"/>
+<polyline points="782,45 822,92.5 862,140" class="cs-arrow" marker-mid="url(#am)"/>
+<path d="M 769.2 103.1 A 7 7 0 1 0 762.3 104.3" class="cs-rot cs-back" marker-end="url(#ae)"/>
+<path d="M 819.2 103.1 A 7 7 0 1 0 812.3 104.3" class="cs-rot cs-back" marker-end="url(#ae)"/>
+<path d="M 794.5 136.2 A 5.5 5.5 0 1 0 789.1 137.2" class="cs-rot cs-back" marker-end="url(#ae)"/>
+<path d="M 789.8 113.7 A 7 7 0 1 0 782.9 114.9" class="cs-rot" marker-end="url(#ae)"/>
+<circle cx="712" cy="140" r="4.4" class="cs-vert"/><circle cx="862" cy="140" r="4.4" class="cs-vert"/>
+<circle cx="800" cy="108" r="4.4" class="cs-vert"/><circle cx="782" cy="45" r="4.4" class="cs-vert"/>
+<text x="787" y="182" class="cs-dim" text-anchor="middle">&#916;&#179;</text>
+</svg><p>Oriented simplices &#916;&#8304; through &#916;&#179;, faces oriented</p></div>
+</div>
+<h2><span>Preprints &amp; publications</span><i>31 records</i></h2>
+<table><thead><tr><th>#</th><th>Year</th><th>Type</th><th>Title</th><th class="hc">Authors / venue</th><th class="hr">Ref</th></tr></thead>
+<tbody><tr><td class="k">031</td><td class="k">2026</td><td class="kd">preprint</td><td class="t">Colimits in Oriented Category Theory</td><td class="c">with Hadrian Heine</td><td class="r"><a href="https://arxiv.org/abs/2608.02592">2608.02592</a></td></tr>
+<tr><td class="k">030</td><td class="k">2026</td><td class="kd">preprint</td><td class="t">Fibrations in Oriented Category Theory</td><td class="c">with Hadrian Heine</td><td class="r"><a href="https://arxiv.org/abs/2607.18418">2607.18418</a></td></tr>
+<tr><td class="k">029</td><td class="k">2026</td><td class="kd">preprint</td><td class="t">An Oriented Street–Roberts Conjecture</td><td class="c">with Hadrian Heine</td><td class="r"><a href="https://arxiv.org/abs/2606.29373">2606.29373</a></td></tr>
+<tr><td class="k">028</td><td class="k">2026</td><td class="kd">preprint</td><td class="t">Oriented Category Theory</td><td class="c">with Hadrian Heine · v2, June 2026</td><td class="r"><a href="https://arxiv.org/abs/2510.10504">2510.10504</a></td></tr>
+<tr><td class="k">027</td><td class="k">2026</td><td class="kd">preprint</td><td class="t">Homotopy Posets, Postnikov Towers, and Hypercompletions of ∞-Categories</td><td class="c">with Hadrian Heine</td><td class="r"><a href="https://arxiv.org/abs/2603.09903">2603.09903</a></td></tr>
+<tr><td class="k">026</td><td class="k">2024</td><td class="kd">accepted</td><td class="t">Global 2-rings and genuine refinements</td><td class="c">with Sil Linskens and Luca Pol · accepted, <em>Compositio Mathematica</em></td><td class="r"><a href="https://arxiv.org/abs/2407.05124">2407.05124</a></td></tr>
+<tr><td class="k">025</td><td class="k">2023</td><td class="kd">article</td><td class="t">The tom Dieck splitting theorem in equivariant motivic homotopy theory</td><td class="c">with Jeremiah Heller · <em>Journal of the Institute of Mathematics of Jussieu</em> 22, no. 3, 1181–1250</td><td class="r"><a href="https://arxiv.org/abs/1910.11485">1910.11485</a></td></tr>
+<tr><td class="k">024</td><td class="k">2023</td><td class="kd">article</td><td class="t">On equivariant topological modular forms</td><td class="c">with Lennart Meier · <em>Compositio Mathematica</em> 159, no. 12, 2638–2693</td><td class="r"><a href="https://arxiv.org/abs/2004.10254">2004.10254</a> <a href="https://doi.org/10.1112/S0010437X23007509">doi</a></td></tr>
+<tr><td class="k">023</td><td class="k">2022</td><td class="kd">article</td><td class="t">∞-Operads as analytic monads</td><td class="c">with Rune Haugseng and Joachim Kock · <em>International Mathematics Research Notices</em> 2022, 12516–12624</td><td class="r"><a href="https://arxiv.org/abs/1712.06469">1712.06469</a> <a href="https://doi.org/10.1093/imrn/rnaa332">doi</a></td></tr>
+<tr><td class="k">022</td><td class="k">2021</td><td class="kd">article</td><td class="t">Brauer groups and Galois cohomology of commutative ring spectra</td><td class="c">with Tyler Lawson · <em>Compositio Mathematica</em> 157, 1211–1264</td><td class="r"><a href="https://arxiv.org/abs/1607.01118">1607.01118</a></td></tr>
+<tr><td class="k">021</td><td class="k">2021</td><td class="kd">book</td><td class="t">Differential function spectra, the differential Becker–Gottlieb transfer, and applications to differential algebraic K-theory</td><td class="c">with Ulrich Bunke · <em>Memoirs of the American Mathematical Society</em></td><td class="r"><a href="https://arxiv.org/abs/1306.0247">1306.0247</a></td></tr>
+<tr><td class="k">020</td><td class="k">2020</td><td class="kd">preprint</td><td class="t">Integral representation theorems for DQ-modules</td><td class="c">with François Petit</td><td class="r"><a href="https://arxiv.org/abs/2004.10176">2004.10176</a></td></tr>
+<tr><td class="k">019</td><td class="k">2019</td><td class="kd">article</td><td class="t">K-theoretic obstructions to bounded t-structures</td><td class="c">with Benjamin Antieau and Jeremiah Heller · <em>Inventiones mathematicae</em></td><td class="r"><a href="https://doi.org/10.1007/s00222-018-00847-0">doi</a></td></tr>
+<tr><td class="k">018</td><td class="k">2019</td><td class="kd">book</td><td class="t">An Introduction to Higher Categorical Algebra</td><td class="c">Chapter in <em>Handbook of Homotopy Theory</em>, CRC Press</td><td class="r"><a href="https://arxiv.org/abs/1907.02904">1907.02904</a> <a href="https://doi.org/10.1201/9781351251624-13">doi</a></td></tr>
+<tr><td class="k">017</td><td class="k">2018</td><td class="kd">article</td><td class="t">On localization sequences in the algebraic K-theory of ring spectra</td><td class="c">with Benjamin Antieau and Tobias Barthel · <em>Journal of the European Mathematical Society</em> 20, no. 2, 459–487</td><td class="r"><a href="https://arxiv.org/abs/1412.4041">1412.4041</a> <a href="https://doi.org/10.4171/JEMS/771">doi</a></td></tr>
+<tr><td class="k">016</td><td class="k">2018</td><td class="kd">article</td><td class="t">Parametrized spectra, multiplicative Thom spectra, and the twisted Umkehr map</td><td class="c">with Matthew Ando and Andrew Blumberg · <em>Geometry &amp; Topology</em> 22, no. 7, 3761–3825</td><td class="r"><a href="https://arxiv.org/abs/1112.2203">1112.2203</a> <a href="https://doi.org/10.2140/gt.2018.22.3761">doi</a></td></tr>
+<tr><td class="k">015</td><td class="k">2017</td><td class="kd">article</td><td class="t">Lax colimits and free fibrations in ∞-categories</td><td class="c">with Rune Haugseng and Thomas Nikolaus · <em>Documenta Mathematica</em> 22, 1225–1266</td><td class="r"><a href="https://doi.org/10.4171/dm/593">doi</a></td></tr>
+<tr><td class="k">014</td><td class="k">2017</td><td class="kd">article</td><td class="t">Univalence in locally cartesian closed ∞-categories</td><td class="c">with Joachim Kock · <em>Forum Mathematicum</em> 29, 617–652</td><td class="r"><a href="https://arxiv.org/abs/1208.1749">1208.1749</a></td></tr>
+<tr><td class="k">013</td><td class="k">2016</td><td class="kd">article</td><td class="t">K-theory of endomorphisms via noncommutative motives</td><td class="c">with Andrew Blumberg and Gonçalo Tabuada · <em>Transactions of the AMS</em> 368, 1435–1465</td><td class="r"><a href="https://arxiv.org/abs/1302.1214">1302.1214</a></td></tr>
+<tr><td class="k">012</td><td class="k">2015</td><td class="kd">article</td><td class="t">Enriched ∞-categories via non-symmetric ∞-operads</td><td class="c">with Rune Haugseng · <em>Advances in Mathematics</em> 279, 575–716</td><td class="r"></td></tr>
+<tr><td class="k">011</td><td class="k">2015</td><td class="kd">article</td><td class="t">Universality of multiplicative infinite loop space machines</td><td class="c">with Moritz Groth and Thomas Nikolaus · <em>Algebraic &amp; Geometric Topology</em> 15, 3107–3153</td><td class="r"></td></tr>
+<tr><td class="k">010</td><td class="k">2014</td><td class="kd">article</td><td class="t">Brauer groups and étale cohomology in derived algebraic geometry</td><td class="c">with Benjamin Antieau · <em>Geometry &amp; Topology</em> 18, 1149–1244</td><td class="r"></td></tr>
+<tr><td class="k">009</td><td class="k">2014</td><td class="kd">article</td><td class="t">Uniqueness of the multiplicative cyclotomic trace</td><td class="c">with Andrew Blumberg and Gonçalo Tabuada · <em>Advances in Mathematics</em> 260, 191–232</td><td class="r"></td></tr>
+<tr><td class="k">008</td><td class="k">2014</td><td class="kd">article</td><td class="t">Units of ring spectra, orientations, and Thom spectra via rigid infinite loop space theory</td><td class="c">with Matthew Ando, Andrew Blumberg, Michael Hopkins and Charles Rezk · <em>Journal of Topology</em> 7, no. 4, 1077–1117</td><td class="r"><a href="https://arxiv.org/abs/1403.4320">1403.4320</a> <a href="https://doi.org/10.1112/jtopol/jtu009">doi</a></td></tr>
+<tr><td class="k">007</td><td class="k">2014</td><td class="kd">article</td><td class="t">An ∞-categorical approach to R-line bundles, R-module Thom spectra, and twisted R-homology</td><td class="c">with Matthew Ando, Andrew Blumberg, Michael Hopkins and Charles Rezk · <em>Journal of Topology</em> 7, 869–893</td><td class="r"><a href="https://arxiv.org/abs/1403.4325">1403.4325</a> <a href="https://doi.org/10.1112/jtopol/jtt035">doi</a></td></tr>
+<tr><td class="k">006</td><td class="k">2024</td><td class="kd">article</td><td class="t">Actions of Eilenberg–MacLane spaces on K-theory spectra and uniqueness of twisted K-theory</td><td class="c">with Benjamin Antieau and José Manuel Gómez · <em>Transactions of the AMS</em> 366, 3631–3648</td><td class="r"></td></tr>
+<tr><td class="k">005</td><td class="k">2013</td><td class="kd">article</td><td class="t">A universal characterization of higher algebraic K-theory</td><td class="c">with Andrew Blumberg and Gonçalo Tabuada · <em>Geometry &amp; Topology</em> 17, 733–838</td><td class="r"><a href="https://arxiv.org/abs/1001.2282">1001.2282</a></td></tr>
+<tr><td class="k">004</td><td class="k">2010</td><td class="kd">article</td><td class="t">Twists of K-theory and TMF</td><td class="c">with Matthew Ando and Andrew Blumberg · in <em>Superstrings, Geometry, Topology, and C*-algebras</em>, Proc. Sympos. Pure Math. 81, AMS</td><td class="r"><a href="https://arxiv.org/abs/1002.3004">1002.3004</a></td></tr>
+<tr><td class="k">003</td><td class="k">2009</td><td class="kd">article</td><td class="t">On the motivic spectra representing algebraic cobordism and algebraic K-theory</td><td class="c">with Victor Snaith · <em>Documenta Mathematica</em> 14, 359–396</td><td class="r"><a href="https://arxiv.org/abs/0712.2817">0712.2817</a></td></tr>
+<tr><td class="k">002</td><td class="k">2007</td><td class="kd">preprint</td><td class="t">Homotopy theory of orbispaces</td><td class="c">with André Henriques</td><td class="r"><a href="https://arxiv.org/abs/math/0701916">math/0701916</a></td></tr>
+<tr><td class="k">001</td><td class="k">2006</td><td class="kd">thesis</td><td class="t">Homotopy topoi and equivariant elliptic cohomology</td><td class="c">PhD thesis, University of Illinois at Urbana-Champaign</td><td class="r"></td></tr></tbody></table>
+<h2><span>Teaching</span><i>11 records &middot; Johns Hopkins</i></h2>
+<table id="tt"><thead><tr><th>#</th><th>Term</th><th>Type</th><th>Course</th><th class="hc">Title</th><th class="hr">Enrolment</th></tr></thead>
+<tbody><tr><td class="k">&mdash;</td><td class="k">Fall 2026</td><td class="kd">course</td><td class="t"><a href="https://e-catalogue.jhu.edu/search/?P=AS.110.615">AS.110.615</a></td><td class="c">Algebraic Topology I</td><td class="r"></td></tr><tr><td class="k">&mdash;</td><td class="k">Spring 2026</td><td class="kd">course</td><td class="t"><a href="https://e-catalogue.jhu.edu/search/?P=AS.110.201">AS.110.201</a></td><td class="c">Linear Algebra</td><td class="r"></td></tr><tr><td class="k">&mdash;</td><td class="k">Spring 2025</td><td class="kd">course</td><td class="t"><a href="https://e-catalogue.jhu.edu/search/?P=AS.110.601">AS.110.601</a></td><td class="c">Algebra I</td><td class="r"></td></tr><tr><td class="k">&mdash;</td><td class="k">Fall 2024</td><td class="kd">course</td><td class="t"><a href="https://e-catalogue.jhu.edu/search/?P=AS.110.601">AS.110.601</a></td><td class="c">Algebra I</td><td class="r">~12</td></tr><tr><td class="k">&mdash;</td><td class="k">Spring 2024</td><td class="kd">course</td><td class="t">&mdash;</td><td class="c">Topics in Algebraic Topology</td><td class="r">~15</td></tr><tr><td class="k">&mdash;</td><td class="k">Fall 2023</td><td class="kd">course</td><td class="t"><a href="https://e-catalogue.jhu.edu/search/?P=AS.110.407">AS.110.407</a></td><td class="c">Honors Complex Analysis</td><td class="r">~12</td></tr><tr><td class="k">&mdash;</td><td class="k">Spring 2023</td><td class="kd">course</td><td class="t">&mdash;</td><td class="c">Algebraic Topology II</td><td class="r">~12</td></tr><tr><td class="k">&mdash;</td><td class="k">Spring 2023</td><td class="kd">course</td><td class="t">&mdash;</td><td class="c">Algebra II</td><td class="r">~12</td></tr><tr><td class="k">&mdash;</td><td class="k">Spring 2022</td><td class="kd">course</td><td class="t">&mdash;</td><td class="c">Algebraic Topology II</td><td class="r">~15</td></tr><tr><td class="k">&mdash;</td><td class="k">Fall 2021</td><td class="kd">course</td><td class="t"><a href="https://e-catalogue.jhu.edu/search/?P=AS.110.615">AS.110.615</a></td><td class="c">Algebraic Topology I</td><td class="r">~15</td></tr><tr><td class="k">&mdash;</td><td class="k">Fall 2021</td><td class="kd">course</td><td class="t">&mdash;</td><td class="c">Honors Algebra I</td><td class="r">~20</td></tr></tbody></table>
+<p class="note">Prospective PhD students must apply through the department's <a href="https://e-catalogue.jhu.edu/arts-sciences/full-time-residential-programs/degree-programs/mathematics/mathematics-phd/">graduate admissions process</a>.</p>
+
+<h2><span>Students &amp; postdocs</span><i>10 records</i></h2>
+<table id="st"><thead><tr><th>#</th><th>Year</th><th>Type</th><th>Name</th><th class="hc">Position</th><th class="hr"></th></tr></thead>
+<tbody><tr><td class="k">&mdash;</td><td class="k">current</td><td class="kd">PhD</td><td class="t">Nooria Ahmed</td><td class="c"></td><td class="r"></td></tr><tr><td class="k">&mdash;</td><td class="k">2026</td><td class="kd">PhD</td><td class="t">Anish Chedalavada</td><td class="c"></td><td class="r"></td></tr><tr><td class="k">&mdash;</td><td class="k">2026</td><td class="kd">PhD</td><td class="t">Fan Huang</td><td class="c"></td><td class="r"></td></tr><tr><td class="k">&mdash;</td><td class="k">current</td><td class="kd">PhD</td><td class="t">Jiacheng Liang</td><td class="c"></td><td class="r"></td></tr><tr><td class="k">&mdash;</td><td class="k">current</td><td class="kd">PhD</td><td class="t">Swaminathan Rajagopalan</td><td class="c"></td><td class="r"></td></tr><tr><td class="k">&mdash;</td><td class="k">2026</td><td class="kd">PhD</td><td class="t">Akira Tominaga</td><td class="c"></td><td class="r"></td></tr><tr><td class="k">&mdash;</td><td class="k">current</td><td class="kd">PhD</td><td class="t">Hongxiang Zhao</td><td class="c"></td><td class="r"></td></tr><tr><td class="k">&mdash;</td><td class="k">2024</td><td class="kd">PhD</td><td class="t">Naruki Masuda</td><td class="c">Boas Assistant Professor, Northwestern University</td><td class="r"></td></tr><tr><td class="k">&mdash;</td><td class="k">2025</td><td class="kd">PhD</td><td class="t">Milton Lin</td><td class="c">Fellow, National Institute for Theory and Mathematics in Biology, Chicago</td><td class="r"></td></tr><tr><td class="k">&mdash;</td><td class="k">2023&ndash;2026</td><td class="kd">postdoc</td><td class="t">Rok Gregoric</td><td class="c"></td><td class="r"></td></tr></tbody></table>
+
+<h2><span>Contact</span></h2>
+<div class="cx">
+ <div><b>Email</b><a href="mailto:gepner@jhu.edu">gepner@jhu.edu</a></div>
+ <div><b>Office</b><a href="https://www.google.com/maps/search/?api=1&query=Krieger+Hall+Johns+Hopkins+University+Baltimore">Krieger Hall, Room 410</a></div>
+ <div><b>Post</b>Department of Mathematics, Johns Hopkins University, 3400 N. Charles Street, Baltimore, MD 21218</div>
+</div>
+<footer><span>David Gepner</span><span>August 2026</span></footer>
+</div></body></html>
