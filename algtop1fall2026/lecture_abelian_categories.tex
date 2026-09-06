@@ -1,0 +1,551 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{tikz-cd}
+\usetikzlibrary{decorations.pathmorphing}
+\usepackage{booktabs}
+\usepackage[colorlinks=true, linkcolor=blue!50!black, urlcolor=blue!50!black]{hyperref}
+\usepackage{microtype}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}[definition]{Example}
+\newtheorem{exercise}{Exercise}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem*{slogan}{Slogan}
+\newtheorem*{warning}{Warning}
+
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\Mor}{\operatorname{Mor}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\coim}{\operatorname{coim}}
+\newcommand{\coker}{\operatorname{coker}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Grp}{\mathbf{Grp}}
+\newcommand{\Ab}{\mathbf{Ab}}
+\newcommand{\Modd}{\mathbf{Mod}}
+\newcommand{\Vect}{\mathbf{Vect}}
+\newcommand{\Topp}{\mathbf{Top}}
+\newcommand{\CMon}{\mathbf{CMon}}
+\newcommand{\Rel}{\mathbf{Rel}}
+
+\title{Additive and Abelian Categories\\[1ex]\large Lecture 1}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-3em}
+
+\begingroup
+\small
+\renewcommand{\contentsname}{\normalsize Contents}
+\setcounter{tocdepth}{1}
+\tableofcontents
+\endgroup
+
+\section{Categories}
+
+\begin{definition}
+A \textbf{category} $\C$: objects; a set $\Mor_{\C}(A,B)$ for each pair of objects $A, B$ of $\C$; associative composition $\Mor_{\C}(B,C) \times \Mor_{\C}(A,B) \to \Mor_{\C}(A,C)$; identities $\id_A \in \Mor_{\C}(A,A)$.
+\end{definition}
+
+\begin{example}\leavevmode
+\begin{itemize}
+\item $\Set$, $\Grp$, $\Ab$, $R\text{-}\Modd$, $\Topp$;
+\item a group $G$, viewed as a category $\mathrm{B}G$ with one object $*$ and $\Mor_{\mathrm{B}G}(*,*) = G$; every morphism is invertible, so $G = \Aut_{\mathrm{B}G}(*) = \End_{\mathrm{B}G}(*)$;
+\item a poset: $p \le q$ gives one arrow $p \to q$.
+\end{itemize}
+The last two show that morphisms need not be functions, so all definitions today must be purely arrow-theoretic.
+\end{example}
+
+\begin{definition}
+Let $\C$ be a category and $f \in \Mor_{\C}(A,B)$. Then $f$ is \textbf{mono} if for all $g, h \in \Mor_{\C}(X,A)$, $fg = fh \Rightarrow g = h$; \textbf{epi} if for all $g, h \in \Mor_{\C}(B,X)$, $gf = hf \Rightarrow g = h$; \textbf{iso} if
+\[
+\exists\, g \in \Mor_{\C}(B,A) \quad\text{with}\quad gf = \id_A \ \text{ and } \ fg = \id_B.
+\]
+\end{definition}
+
+\begin{warning}
+In $\mathbf{Ring}$, the inclusion $\mathbb{Z} \hookrightarrow \mathbb{Q}$ is mono \emph{and} epi, but not iso. Remember this pathology.
+\end{warning}
+
+\noindent\textbf{Universal properties.} Terminal $T$: unique $X \to T$ for every $X$; initial is dual. Product ($=$ universal for maps \emph{in}) and coproduct ($=$ universal for maps \emph{out}):
+\[
+\begin{tikzcd}[column sep=large, row sep=huge]
+& X \arrow[dl, "f"'] \arrow[d, dashed, "\exists!\, \langle f{,}g\rangle" description] \arrow[dr, "g"] & \\
+A & A \times B \arrow[l, "p_A"] \arrow[r, "p_B"'] & B
+\end{tikzcd}
+\qquad\qquad
+\begin{tikzcd}[column sep=large, row sep=huge]
+& X  & \\
+A \arrow[ur, "f"] \arrow[r, "i_A"'] & A + B \arrow[u, dashed, "\exists!\, {[f,g]}" description] & B \arrow[ul, "g"'] \arrow[l, "i_B"]
+\end{tikzcd}
+\]
+Anything universal is unique up to unique isomorphism.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+category & product & coproduct \\
+\midrule
+$\Set$ & $A \times B$ & $A + B$ (disjoint union) \\
+$\Grp$ & $A \times B$ & $A * B$ (free product) \\
+$\Ab$, $R\text{-}\Modd$ & $A \oplus B$ & $A \oplus B$ \quad $\leftarrow$ \textbf{same object!} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The coincidence in the last row is the seed of the whole lecture.
+
+\medskip
+\noindent\textbf{Duality.} Reversing all arrows in a theorem yields a theorem (proved in $\C^{\mathrm{op}}$). Used constantly.
+
+\section{Zero objects and zero morphisms}
+
+\begin{definition}
+$0$ is a \textbf{zero object} if it is both initial and terminal. ($\Set$: no. $\Grp$, $R\text{-}\Modd$, pointed sets: yes.)
+\end{definition}
+
+\begin{definition}[and Lemma]
+In a category $\C$ with zero object, the \textbf{zero morphism} $0_{A,B} \in \Mor_{\C}(A,B)$, and its absorbing property:
+\[
+\begin{tikzcd}[column sep=large]
+A \arrow[rr, "0_{A,B}"] \arrow[dr] & & B \\
+& 0 \arrow[ur] &
+\end{tikzcd}
+\qquad\qquad
+\begin{tikzcd}[column sep=large]
+A \arrow[r] \arrow[rrr, bend right=35, "0_{A,C}"'] & 0 \arrow[r] \arrow[rr, bend left=40, "\text{unique map } 0 \to C"] & B \arrow[r, "f"'] & C
+\end{tikzcd}
+\]
+so $f \circ 0 = 0$ and $0 \circ f = 0$: any composite through $0$ factors through the unique map $0 \to C$.
+\end{definition}
+
+\noindent Each morphism set now has a basepoint. Next: a full addition, for free.
+
+\section{Semiadditive categories}
+
+\subsection{The comparison map and biproducts}
+
+Given a zero object, products and coproducts, there is a \emph{canonical} comparison map $r$, defined on the injections:
+\[
+\begin{tikzcd}[column sep=huge]
+A + B \arrow[r, "r"] & A \times B
+\end{tikzcd}
+\qquad
+r \circ i_A = \langle \id_A, 0\rangle, \quad r \circ i_B = \langle 0, \id_B\rangle,
+\qquad
+r = \begin{pmatrix} \id_A & 0 \\ 0 & \id_B \end{pmatrix}.
+\]
+
+\begin{center}
+\begin{tabular}{llc}
+\toprule
+category & $r : A + B \to A \times B$ & iso? \\
+\midrule
+$\Ab$ & $A \oplus B = A \oplus B$ & \checkmark \\
+$\Set_*$ & wedge $A \vee B \hookrightarrow A \times B$ (``the axes'') & $\times$ \\
+$\Grp$ & $A * B \twoheadrightarrow A \times B$ (kill cross-commutators) & $\times$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{definition}
+A \textbf{biproduct} of $A$ and $B$: one object, four structure maps, product and coproduct at once ---
+\[
+\begin{tikzcd}[column sep=huge]
+A \arrow[r, shift left=1.5, "i_A"] & A \oplus B \arrow[l, shift left=1.5, "p_A"] \arrow[r, shift left=1.5, "p_B"] & B \arrow[l, shift left=1.5, "i_B"]
+\end{tikzcd}
+\qquad
+\begin{aligned}
+p_A i_A &= \id_A, & p_B i_A &= 0,\\
+p_B i_B &= \id_B, & p_A i_B &= 0,
+\end{aligned}
+\]
+such that $(p_A, p_B)$ exhibit a product and $(i_A, i_B)$ a coproduct.
+\end{definition}
+
+\begin{definition}
+$\C$ is \textbf{semiadditive} $\iff$ zero object $+$ all binary biproducts $\iff$ finite products and coproducts exist and every comparison $r$ is an isomorphism.
+\end{definition}
+
+\subsection{The miracle: morphism sets become commutative monoids}
+
+\begin{lemma}[Eckmann--Hilton]\label{lem:EH}
+Let $M$ be a set with two binary operations $*$ and $\star$ (no associativity assumed) and elements $e, e' \in M$ such that
+\begin{enumerate}
+\item The element $e$ is a two-sided unit for $*$, and $e'$ is a two-sided unit for $\star$:
+\[
+e * a = a = a * e, \qquad e' \star a = a = a \star e' \qquad (a \in M);
+\]
+\item The \textbf{interchange law} holds:
+\[
+(a \star b) * (c \star d) \;=\; (a * c) \star (b * d) \qquad (a,b,c,d \in M).
+\]
+\end{enumerate}
+Then $e = e'$, the two operations coincide, and the resulting single operation is commutative and associative. In particular $(M, *)$ is a commutative monoid.
+\end{lemma}
+
+\begin{proof}
+Only the unit laws and interchange are used; each step below applies exactly one of them.
+
+\emph{Step 1: the units coincide.}
+\[
+e \;=\; e * e \;=\; (e \star e') * (e' \star e) \;\overset{\text{(2)}}{=}\; (e * e') \star (e' * e) \;=\; e' \star e' \;=\; e'.
+\]
+(The second and fourth equalities use the unit laws for $\star$ and $*$ respectively.) Write $e$ for the common unit.
+
+\emph{Step 2: the operations coincide and are commutative.} For all $a, b \in M$:
+\[
+a * b \;=\; (a \star e) * (e \star b) \;\overset{\text{(2)}}{=}\; (a * e) \star (e * b) \;=\; a \star b,
+\]
+\[
+a * b \;=\; (e \star a) * (b \star e) \;\overset{\text{(2)}}{=}\; (e * b) \star (a * e) \;=\; b \star a.
+\]
+Together: $a * b = a \star b = b \star a = b * a$.
+
+\emph{Step 3: associativity.} Writing $*$ for the (now unique) operation:
+\[
+a * (b * c) \;=\; (a \star e) * (b \star c) \;\overset{\text{(2)}}{=}\; (a * b) \star (e * c) \;=\; (a * b) * c. \qedhere
+\]
+\end{proof}
+
+\begin{remark}
+The lemma is stronger than it looks: neither operation was assumed associative or commutative, yet both properties are forced. Classic corollaries elsewhere in mathematics: a monoid object in the category of monoids is a commutative monoid; the higher homotopy groups $\pi_n$ ($n \ge 2$) are abelian; the fundamental group of a topological group is abelian.
+\end{remark}
+
+\begin{theorem}\label{thm:cmon}
+Let $\C$ be a semiadditive category. Then each $\Mor_{\C}(A,B)$ is canonically a commutative monoid with unit $0_{A,B}$, and composition is bilinear.
+\end{theorem}
+
+\begin{proof}[Construction]
+For $f, g : A \to B$ define $f + g$ as the composite
+\[
+\begin{tikzcd}[column sep=huge]
+A \arrow[r, "\Delta"] & A \oplus A \arrow[r, "f \oplus g"] & B \oplus B \arrow[r, "\nabla"] & B
+\end{tikzcd}
+\]
+where $\Delta = \langle \id, \id \rangle$ (diagonal, via the product structure) and $\nabla = [\id, \id]$ (codiagonal, via the coproduct structure).
+
+\emph{Why commutative, associative, unital?} By Lemma~\ref{lem:EH}. The product structure alone defines one operation $+$; the coproduct structure another, $\boxplus$. Both are unital with unit $0$, and they satisfy the interchange law
+\[
+(f + g) \boxplus (h + k) \;=\; (f \boxplus h) + (g \boxplus k).
+\]
+Lemma~\ref{lem:EH} then forces $+ = \boxplus$, commutative and associative. Bilinearity of composition follows from naturality of $\Delta$ and $\nabla$:
+\[
+\begin{tikzcd}
+A \arrow[r, "\Delta_A"] \arrow[d, "h"'] & A \oplus A \arrow[d, "h \oplus h"] \\
+B \arrow[r, "\Delta_B"'] & B \oplus B
+\end{tikzcd}
+\qquad\qquad
+\begin{tikzcd}
+A \oplus A \arrow[r, "\nabla_A"] \arrow[d, "h \oplus h"'] & A \arrow[d, "h"] \\
+B \oplus B \arrow[r, "\nabla_B"'] & B
+\end{tikzcd}
+\qedhere
+\]
+\end{proof}
+
+In $R\text{-}\Modd$, unwind the construction: $a \mapsto (a,a) \mapsto (f(a), g(a)) \mapsto f(a) + g(a)$. The usual addition --- \emph{recovered, not chosen}.
+
+\begin{slogan}
+Semiadditivity is a property of a category, not a structure on it.
+\end{slogan}
+
+\begin{theorem}[Converse]
+If $\C$ has finite products and an enrichment in commutative monoids, then products are biproducts: set $i_A = \langle \id, 0\rangle$, $i_B = \langle 0, \id\rangle$; the map induced by $f: A \to X$, $g : B \to X$ is $f p_A + g p_B$. Moreover the enrichment, if it exists, is unique.
+\end{theorem}
+
+\noindent\textbf{Matrix calculus.} In a semiadditive category $\C$, morphisms $\bigoplus_j A_j \to \bigoplus_i B_i$ are the same as matrices $(f_{ij} : A_j \to B_i)$, and composition is matrix multiplication. Linear algebra notation is not an analogy; it is the structure of the category.
+
+\begin{example}[Semiadditive but \emph{not} additive]\leavevmode
+\begin{itemize}
+\item $\CMon$, commutative monoids;
+\item natural numbers as objects, matrices over $\mathbb{N}$ as morphisms;
+\item $\Rel$, sets and relations: here $f + f = f$, so inverses cannot exist.
+\end{itemize}
+\end{example}
+
+\section{Additive categories}
+
+\begin{definition}
+A category $\C$ is \textbf{additive} if it is semiadditive and every morphism monoid $\Mor_{\C}(A,B)$ is a group; equivalently, $\C$ is $\Ab$-enriched with finite biproducts.
+\end{definition}
+
+\begin{example}\leavevmode
+\begin{itemize}
+\item $\Ab$, $R\text{-}\Modd$, $\Vect_k$;
+\item free modules; projective modules (a full subcategory closed under $\oplus$ and containing $0$ stays additive);
+\item Banach spaces; chain complexes; vector bundles.
+\end{itemize}
+\emph{Non-examples:}
+\begin{itemize}
+\item $\Grp$, $\Set_*$ (no biproducts);
+\item $\CMon$, $\Rel$ (no inverses).
+\end{itemize}
+\end{example}
+
+\begin{remark}[One object $=$ ring]
+\[
+\Bigl\{\text{additive category $\C$ with one object } * \Bigr\}
+\;\longleftrightarrow\;
+\Bigl\{\text{ring } R = \End_{\C}(*) = \Mor_{\C}(*,*) \Bigr\}
+\]
+Additive categories are ``rings with several objects'' (Mitchell); Morita theory, ideals, radicals all generalize.
+\end{remark}
+
+\begin{proposition}
+For a functor $F : \A \to \mathcal{B}$ between additive categories, the following are equivalent:
+\begin{enumerate}
+\item $F(f + g) = Ff + Fg$ on each $\Mor_{\A}(A,B)$;
+\item $F$ preserves biproducts;
+\item $F$ preserves finite products;
+\item $F$ preserves finite coproducts.
+\end{enumerate}
+(Property, not structure --- again.) Examples: $\Mor_{\A}(M,-) : \A \to \Ab$, its contravariant sibling $\Mor_{\A}(-,N)$, and $M \otimes_R - : R\text{-}\Modd \to \Ab$.
+\end{proposition}
+
+\noindent\textbf{Why keep going?} In the additive category of free abelian groups, $\mathbb{Z} \xrightarrow{\,2\,} \mathbb{Z}$ has no cokernel. Additive $\ne$ ready for homological algebra.
+
+\section{Kernels and cokernels}
+
+\begin{definition}
+In a category $\C$ with zero object, a \textbf{kernel} of $f \in \Mor_{\C}(A,B)$ is a morphism $k : K \to A$ with $fk = 0$ such that every $g : X \to A$ with $fg = 0$ factors uniquely through $k$ (left); a \textbf{cokernel} is a morphism $c : B \to C$ with $cf = 0$ such that every $h : B \to X$ with $hf = 0$ factors uniquely through $c$ (right):
+\[
+\begin{tikzcd}[column sep=large, row sep=huge]
+K \arrow[r, "k"] & A \arrow[r, "f"] & B \\
+X \arrow[u, dashed, "\exists!"] \arrow[ur, "g"'] & &
+\end{tikzcd}
+\qquad\qquad
+\begin{tikzcd}[column sep=large, row sep=huge]
+A \arrow[r, "f"] & B \arrow[r, "c"] \arrow[dr, "h"'] & C \arrow[d, dashed, "\exists!"] \\
+& & X
+\end{tikzcd}
+\]
+\end{definition}
+
+\begin{example}
+$R\text{-}\Modd$: $\ker f = f^{-1}(0)$, $\coker f = B/\im f$. $\Grp$: $\coker f = B/(\text{normal closure of } \im f)$.
+\end{example}
+
+\begin{lemma}
+In any category $\C$ with zero object, kernels are monos and cokernels are epis. In an \emph{additive} category $\C$, $f$ is mono $\iff \ker f = 0$, since $fg = fh \iff f(g - h) = 0$ --- subtraction earns its keep here.
+\end{lemma}
+
+\begin{definition}
+A mono is \textbf{normal} if it \emph{is} a kernel of some morphism; an epi is \textbf{conormal} if it \emph{is} a cokernel.
+\end{definition}
+
+\noindent Invisible in $R\text{-}\Modd$ (every submodule is a kernel); visible elsewhere:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+category & non-normal mono & symptom \\
+\midrule
+$\Grp$ & $\langle (12)\rangle \hookrightarrow S_3$ & kernels $=$ \emph{normal} subgroups only \\
+torsion-free abelian groups & $\mathbb{Z} \xrightarrow{2} \mathbb{Z}$ \ (its coker $= 0$) & mono $+$ epi, not iso \\
+Banach spaces & $\ell^1 \hookrightarrow \ell^2$ (dense, not closed) & mono $+$ epi, not iso \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The abelian axioms are engineered to outlaw exactly this column.
+
+\section{Abelian categories}
+
+\begin{definition}\label{def:abelian}
+$\A$ is \textbf{abelian} if
+\begin{enumerate}
+\item It is additive.
+\item Every morphism has a kernel and a cokernel.
+\item Every mono is normal and every epi is conormal.
+\end{enumerate}
+\end{definition}
+
+\noindent Self-dual: $\A$ abelian $\iff \A^{\mathrm{op}}$ abelian; every theorem dualizes for free. (Remarkably, additivity in (1) is automatic from the rest --- even additive inverses are forced. Property, again.)
+
+\begin{example}\leavevmode
+\begin{itemize}
+\item $\Ab$, $R\text{-}\Modd$, $\Vect_k$, finite abelian groups;
+\item representations of groups and quivers;
+\item chain complexes in any abelian $\A$;
+\item sheaves of abelian groups; quasi-coherent sheaves (Grothendieck, T\^ohoku 1957 --- the motivating case);
+\item functor categories $\mathrm{Fun}(\C, \A)$, pointwise.
+\end{itemize}
+\end{example}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+non-example & failing axiom & witness \\
+\midrule
+free / projective modules & (2) & $\mathbb{Z} \xrightarrow{2} \mathbb{Z}$ has no cokernel \\
+torsion-free abelian groups & (3) & $\mathbb{Z} \xrightarrow{2} \mathbb{Z}$ non-normal mono \\
+Banach spaces & (3) & $\ell^1 \hookrightarrow \ell^2$ \\
+filtered vector spaces & (3) & $\id$ with finer filtration on source \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{First consequences}
+
+\begin{proposition}[mono $+$ epi $\Rightarrow$ iso]
+Let $\A$ be an abelian category. A morphism of $\A$ that is both mono and epi is an isomorphism.
+\end{proposition}
+
+\begin{proof}
+$f$ mono $\xRightarrow{(3)}$ $f = \ker g$ for some $g$. Then $gf = 0 = 0f$, and $f$ epi gives $g = 0$. But $\ker(0 : B \to C) = \id_B$, so $f$ is an iso. The $\mathbb{Z} \to \mathbb{Q}$ / $\ell^1 \to \ell^2$ pathology: abolished, by axiom (3) precisely.
+\end{proof}
+
+\begin{proposition}[Image factorization $=$ first isomorphism theorem]
+In an abelian category $\A$, every $f \in \Mor_{\A}(A,B)$ factors, uniquely up to unique iso, as an epi followed by a mono:
+\[
+\begin{tikzcd}[column sep=large, row sep=large]
+A \arrow[r, "f"] \arrow[d, two heads, "e"'] & B \\
+\coim f \arrow[r, "\cong"'] & \im f \arrow[u, tail, "m"']
+\end{tikzcd}
+\qquad
+\begin{aligned}
+\im f &\coloneqq \ker(\coker f),\\
+\coim f &\coloneqq \coker(\ker f).
+\end{aligned}
+\]
+\end{proposition}
+
+\begin{proof}[Sketch]
+$(\coker f) \circ f = 0$, so $f = me$ for a unique $e$; normality shows $e$ is epi; the comparison $\coim f \to \im f$ is mono $+$ epi, hence iso by the previous proposition. In $R\text{-}\Modd$ this reads $A/\ker f \cong \im f$ --- now one proof for modules, sheaves, representations, complexes.
+\end{proof}
+
+\subsection{Exact sequences}
+
+\begin{definition}
+A composable pair with $gf = 0$ is \textbf{exact at $B$} if the induced mono $\im f \to \ker g$ is an iso. A \textbf{short exact sequence}:
+\[
+\begin{tikzcd}
+0 \arrow[r] & A \arrow[r, tail, "f"] & B \arrow[r, two heads, "g"] & C \arrow[r] & 0
+\end{tikzcd}
+\qquad
+f = \ker g \quad\text{and}\quad g = \coker f.
+\]
+\end{definition}
+
+\noindent Subobjects and quotients determine each other: $A \rightarrowtail B$ extends to $0 \to A \to B \to B/A \to 0$, and dually. (This tight sub/quotient duality is what fails in $\Grp$.)
+
+\begin{definition}
+An additive functor $F : \A \to \mathcal{B}$ between abelian categories is
+\begin{itemize}
+\item \textbf{exact} if it preserves short exact sequences;
+\item \textbf{left exact} if it preserves kernels;
+\item \textbf{right exact} if it preserves cokernels.
+\end{itemize}
+\end{definition}
+
+\[
+\begin{array}{lll}
+\Mor_{\A}(M,-),\ \Mor_{\A}(-,N) : \A \to \Ab: & \text{left exact} & \text{failure measured by } \operatorname{Ext} \\
+M \otimes_R - : R\text{-}\Modd \to \Ab: & \text{right exact} & \text{failure measured by } \operatorname{Tor}
+\end{array}
+\]
+
+\noindent Homological algebra $=$ the calculus of this failure. Abelian categories $=$ where it runs.
+
+\section{Outlook}
+
+\noindent\textbf{Diagram lemmas hold:} Five Lemma, Nine Lemma, the long exact sequence, and the
+
+\medskip
+\noindent\textbf{Snake Lemma.} Given the solid commutative diagram with exact rows, there is a natural connecting morphism $\partial$ and a six-term exact sequence:
+\[
+\begin{tikzcd}[row sep=large]
+& \ker a \arrow[r] \arrow[d, tail] & \ker b \arrow[r] \arrow[d, tail] & \ker c \arrow[d, tail] & \\
+& A \arrow[r] \arrow[d, "a"'{pos=0.2}] & B \arrow[r] \arrow[d, "b"{pos=0.2}] & C \arrow[r] \arrow[d, "c"{pos=0.2}] \arrow[d, phantom, ""{coordinate, name=Z}] & 0 \\
+0 \arrow[r] & A' \arrow[r] \arrow[d, two heads] & B' \arrow[r] \arrow[d, two heads] & C' \arrow[d, two heads] & \\
+& \coker a \arrow[r] & \coker b \arrow[r] & \coker c &
+\arrow[from=1-4, to=4-2, dashed, "\partial"'{pos=0.8}, rounded corners, crossing over,
+  to path={ -- ([xshift=5ex]\tikztostart.east)
+            |- (Z) \tikztonodes
+            -| ([xshift=-5ex]\tikztotarget.west)
+            -- (\tikztotarget)}]
+\end{tikzcd}
+\]
+\[
+\begin{tikzcd}
+\ker a \arrow[r] & \ker b \arrow[r] & \ker c \arrow[r, "\partial"] & \coker a \arrow[r] & \coker b \arrow[r] & \coker c
+\end{tikzcd}
+\]
+
+\noindent Proofs: either purely arrow-theoretically (chasing ``generalized elements'' $X \to A$), or via:
+
+\begin{theorem}[Freyd--Mitchell]
+Every small abelian category $\A$ admits a fully faithful exact functor $\A \hookrightarrow R\text{-}\Modd$ for some ring $R$.
+\end{theorem}
+
+\noindent Consequence: finite diagram lemmas may be checked by honest element chases in modules, then transported back.
+
+\medskip
+\noindent\textbf{Grothendieck categories.} Abelian $+$ coproducts $+$ exact filtered colimits (AB5) $+$ generator $\Rightarrow$ enough injectives $\Rightarrow$ derived functors exist (sheaf cohomology!). The actual point of T\^ohoku: group cohomology, sheaf cohomology, $\operatorname{Ext}$ --- one construction.
+
+\medskip
+\noindent\textbf{Onward.}
+\[
+\begin{tikzcd}[column sep=large]
+\text{abelian } \A \arrow[r] & \mathrm{Ch}(\A) \arrow[r] & K(\A) \arrow[r] & D(\A) \arrow[r] & \substack{\text{triangulated /}\\ \text{stable } \infty\text{-categories}}
+\end{tikzcd}
+\]
+where ``stable,'' like ``additive,'' is again a \emph{property}, not structure. The theme of this lecture scales all the way up.
+
+\medskip
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+level & requires & gains & canonical failure below \\
+\midrule
+zero object & $0$ initial $=$ terminal & zero morphisms & $\Set$ \\
+semiadditive & biproducts ($\times = +$) & $+$, matrix calculus & $\Grp$, $\Set_*$ \\
+additive & inverses ($\Ab$-enriched) & $-$; $\ker$ detects mono & $\CMon$, $\Rel$ \\
+abelian & ker, coker; (co)normality & images, 1st iso thm, exactness & tf groups, Banach \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Exercises}
+
+\begin{exercise}
+Show that kernels are monos, and that two kernels of the same morphism are canonically isomorphic.
+\end{exercise}
+\begin{exercise}
+Verify the interchange law for the two operations $+$ and $\boxplus$ on $\Mor_{\C}(A,B)$, $\C$ semiadditive, directly from the biproduct axioms, completing the proof of Theorem~\ref{thm:cmon}. Then prove, using Lemma~\ref{lem:EH}, that the fundamental group of a topological group is abelian.
+\end{exercise}
+\begin{exercise}
+Show that in an additive category $\C$, a morphism $f \in \Mor_{\C}(A,B)$ is mono $\iff$ ($fg = 0 \Rightarrow g = 0$). Where is subtraction used?
+\end{exercise}
+\begin{exercise}
+In the category of torsion-free abelian groups, compute $\ker$ and $\coker$ of $\mathbb{Z} \xrightarrow{n} \mathbb{Z}$, and exhibit a morphism $f$ whose comparison map $\coim f \to \im f$ is not an iso.
+\end{exercise}
+\begin{exercise}
+Prove that $\mathrm{Fun}(\C, \A)$ is abelian when $\A$ is, with kernels, cokernels, and exactness all computed pointwise.
+\end{exercise}
+\begin{exercise}[Harder]
+Prove that a semiadditive category satisfying axioms (2) and (3) of Definition~\ref{def:abelian} is automatically additive: additive inverses are forced.
+\end{exercise}
+
+\section*{References}
+
+\begin{itemize}
+\item Freyd, \emph{Abelian Categories} (TAC reprint);
+\item Mac Lane, \emph{Categories for the Working Mathematician}, Ch.~VIII;
+\item Weibel, \emph{An Introduction to Homological Algebra}, Ch.~1 and App.~A;
+\item Grothendieck, \emph{Sur quelques points d'alg\`ebre homologique}, T\^ohoku Math.\ J.\ (1957);
+\item Stacks Project, tag 00ZX.
+\end{itemize}
+
+\end{document}
