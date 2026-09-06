@@ -62,7 +62,17 @@ td.r a{margin-left:9px}
 footer{font-family:'Martian Mono',monospace;font-size:10px;color:var(--dim);
  display:flex;justify-content:space-between;padding:18px 0 50px;flex-wrap:wrap;gap:8px}
 @media(max-width:960px){.split{grid-template-columns:1fr;gap:24px}
- td.c,td.r,thead th.hc,thead th.hr{display:none}
+ /* Keep authors and reference links visible on small screens. */
+ table,tbody{display:block;width:100%}
+ thead{display:none}
+ tbody tr{display:block;padding:12px;border-bottom:1px solid var(--line)}
+ tbody td{display:block;width:auto!important;min-width:0!important;border:0!important;padding:3px 0;white-space:normal!important;overflow-wrap:anywhere}
+ tbody td.k,tbody td.kd{display:inline-block;margin-right:12px}
+ tbody td.t{font-size:15px;margin-top:4px}
+ tbody td.c{display:block;font-size:13px}
+ tbody td.r{display:block;text-align:left;margin-top:4px}
+ td.r a{display:inline-block;margin:0 14px 0 0;padding:6px 0;text-decoration:underline}
+ h2{flex-wrap:wrap;gap:4px 12px}
   .cx{grid-template-columns:1fr}.cx div{border-right:none;border-bottom:1px solid var(--line)}
  header{grid-template-columns:1fr}.lk{text-align:left}.lk a{margin:0 16px 0 0}}
 </style></head><body><div class="w">
