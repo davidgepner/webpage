@@ -61,7 +61,16 @@ td.r a{margin-left:9px}
  text-transform:uppercase;color:var(--dim);font-weight:500;margin-bottom:4px}
 footer{font-family:'Martian Mono',monospace;font-size:10px;color:var(--dim);
  display:flex;justify-content:space-between;padding:18px 0 50px;flex-wrap:wrap;gap:8px}
-@media(max-width:960px){.split{grid-template-columns:1fr;gap:24px}
+@media(min-width:701px) and (max-width:1100px){
+ .split{grid-template-columns:1fr 280px;gap:20px}
+ td,thead th{padding:7px 6px}
+ td.t{min-width:0;width:34%}
+ td.c{width:29%;overflow-wrap:anywhere}
+ td.r{white-space:normal;width:13%;overflow-wrap:anywhere}
+ td.r a{display:block;margin:0 0 4px}
+ .lk a{margin-left:10px}
+}
+@media(max-width:700px){.split{grid-template-columns:1fr;gap:24px}
  /* Keep authors and reference links visible on small screens. */
  table,tbody{display:block;width:100%}
  thead{display:none}
