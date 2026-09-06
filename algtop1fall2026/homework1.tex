@@ -17,6 +17,7 @@
 \newcommand{\id}{\mathrm{id}}
 
 \setlist[enumerate]{label=(\alph*),ref=\alph*,leftmargin=*,itemsep=.45em}
+\renewcommand{\thesection}{Exercise \arabic{section}.}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{.25em}
 \hypersetup{pdftitle={Algebraic Topology I: Homework 1}}
@@ -40,7 +41,7 @@ A chain homotopy between chain maps \(f,g:C\to D\) consists of morphisms
 f_n-g_n=d^D_{n+1}h_n+h_{n-1}d^C_n.
 \]
 
-\section*{Preliminary exercise: Mono, epi, and iso}
+\section{Mono, epi, and iso}
 Let \(\mathcal C\) be a category. A morphism \(f:X\to Y\) is called:
 \begin{itemize}[leftmargin=*]
 \item a \emph{monomorphism} if, for every object \(T\) and morphisms
@@ -81,7 +82,7 @@ in \(\mathcal A\) is an isomorphism if and only if it is both a
 monomorphism and an epimorphism.
 \end{enumerate}
 
-\section*{Proposition: Coimage and image}
+\section{Coimage and image}
 Let \(f:X\to Y\) be a morphism in an abelian category. Define
 \[
 \coim(f)=\coker(\ker f),
