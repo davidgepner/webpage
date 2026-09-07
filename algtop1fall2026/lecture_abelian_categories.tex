@@ -19,7 +19,7 @@
 \newcommand{\C}{\mathcal C}
 \newcommand{\A}{\mathcal A}
 \newcommand{\B}{\mathcal B}
-\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Mor}{\operatorname{Mor}}
 \newcommand{\Ob}{\operatorname{Ob}}
 \newcommand{\id}{\operatorname{id}}
 \newcommand{\im}{\operatorname{im}}
@@ -46,13 +46,13 @@ Algebraic Topology I \textbullet\ Lecture 1
 A \emph{category} $\C$ consists of the following data:
 \begin{enumerate}
 \item A class $\Ob(\C)$ of objects.
-\item For every ordered pair of objects $A,B$, a set $\Hom_{\C}(A,B)$ of morphisms with source $A$ and target $B$. A member is written $f\colon A\to B$. Source and target are part of the data of a morphism.
+\item For every ordered pair of objects $A,B$, a set $\Mor_{\C}(A,B)$ of morphisms with source $A$ and target $B$. A member is written $f\colon A\to B$. Source and target are part of the data of a morphism.
 \item For every three objects $A,B,C$, a composition function
 \[
-\Hom_{\C}(B,C)\times\Hom_{\C}(A,B)\longrightarrow\Hom_{\C}(A,C),
+\Mor_{\C}(B,C)\times\Mor_{\C}(A,B)\longrightarrow\Mor_{\C}(A,C),
 \qquad (g,f)\longmapsto g\circ f.
 \]
-\item For every object $A$, a specified identity morphism $\id_A\in\Hom_{\C}(A,A)$.
+\item For every object $A$, a specified identity morphism $\id_A\in\Mor_{\C}(A,A)$.
 \end{enumerate}
 These data satisfy two axioms:
 \begin{itemize}
@@ -66,7 +66,7 @@ A category is \emph{small} if its objects also form a set. Examples are sets wit
 
 \begin{definition}[Functor]
 A functor $F\colon\C\to\B$ assigns an object $F(A)$ to each object $A$ and a function
-$\Hom_{\C}(A,B)\to\Hom_{\B}(F(A),F(B))$, written $f\mapsto F(f)$, to every pair. It satisfies
+$\Mor_{\C}(A,B)\to\Mor_{\B}(F(A),F(B))$, written $f\mapsto F(f)$, to every pair. It satisfies
 \[
 F(\id_A)=\id_{F(A)},\qquad F(g\circ f)=F(g)\circ F(f).
 \]
@@ -75,7 +75,7 @@ It is \emph{faithful} if each of these functions is injective and \emph{full} if
 
 \begin{definition}[Opposite category]
 The opposite category $\C^{\mathrm{op}}$ has the same objects, with
-$\Hom_{\C^{\mathrm{op}}}(A,B)=\Hom_{\C}(B,A)$ and composition reversed. A contravariant functor on $\C$ means a functor defined on $\C^{\mathrm{op}}$. For example, $\Hom_{\C}(A,-)$ is covariant, whereas $\Hom_{\C}(-,B)$ is contravariant.
+$\Mor_{\C^{\mathrm{op}}}(A,B)=\Mor_{\C}(B,A)$ and composition reversed. A contravariant functor on $\C$ means a functor defined on $\C^{\mathrm{op}}$. For example, $\Mor_{\C}(A,-)$ is covariant, whereas $\Mor_{\C}(-,B)$ is contravariant.
 \end{definition}
 
 \begin{definition}[Natural transformation]
@@ -106,7 +106,7 @@ Every isomorphism is both mono and epi, by cancellation with its inverse. The co
 \begin{proposition}[Testing an isomorphism by maps into it]
 A morphism $f\colon A\to B$ is an isomorphism if and only if, for every object $X$, postcomposition induces a bijection
 \[
-f_*\colon\Hom_{\C}(X,A)\longrightarrow\Hom_{\C}(X,B).
+f_*\colon\Mor_{\C}(X,A)\longrightarrow\Mor_{\C}(X,B).
 \]
 \end{proposition}
 \begin{proof}
@@ -115,7 +115,7 @@ An inverse to $f$ induces an inverse to each $f_*$. Conversely, surjectivity for
 
 \section{Zero objects, products, and coproducts}
 \begin{definition}
-An object $I$ is \emph{initial} if $\Hom_{\C}(I,X)$ is a singleton for every $X$. An object $T$ is \emph{terminal} if $\Hom_{\C}(X,T)$ is a singleton for every $X$. A \emph{zero object} is both initial and terminal and is denoted $0$.
+An object $I$ is \emph{initial} if $\Mor_{\C}(I,X)$ is a singleton for every $X$. An object $T$ is \emph{terminal} if $\Mor_{\C}(X,T)$ is a singleton for every $X$. A \emph{zero object} is both initial and terminal and is denoted $0$.
 \end{definition}
 
 \begin{definition}[Zero morphism]
@@ -129,7 +129,7 @@ We usually write $0$ when the source and target are clear.
 \begin{definition}[Product and coproduct]
 A product of $A_1,A_2$ is an object $P$ with projections $\rho_i\colon P\to A_i$ such that for every $X$ and $f_i\colon X\to A_i$, there is a unique $\langle f_1,f_2\rangle\colon X\to P$ satisfying $\rho_i\langle f_1,f_2\rangle=f_i$. Equivalently, the function
 \[
-\Hom_{\C}(X,P)\longrightarrow\Hom_{\C}(X,A_1)\times\Hom_{\C}(X,A_2)
+\Mor_{\C}(X,P)\longrightarrow\Mor_{\C}(X,A_1)\times\Mor_{\C}(X,A_2)
 \]
 given by the projections is bijective for every $X$.
 
@@ -147,7 +147,7 @@ A category is \emph{semiadditive} if it has a zero object and all binary biprodu
 \end{definition}
 
 \begin{theorem}[Canonical addition]\label{thm:addition}
-In a semiadditive category, each $\Hom_{\C}(A,B)$ has a canonical commutative monoid structure. Its identity is the zero morphism, and composition preserves addition and zero in each variable.
+In a semiadditive category, each $\Mor_{\C}(A,B)$ has a canonical commutative monoid structure. Its identity is the zero morphism, and composition preserves addition and zero in each variable.
 \end{theorem}
 \begin{proof}
 Let $\Delta_A=\langle\id_A,\id_A\rangle\colon A\to A\oplus A$ and $\nabla_B=[\id_B,\id_B]\colon B\oplus B\to B$. Define
@@ -192,7 +192,7 @@ The structures agree because $[f,g]\Delta_A=(f\rho_1+g\rho_2)\Delta_A=f+g$.
 \begin{definition}
 A functor $F\colon\A\to\B$ between preadditive categories is \emph{additive} if every induced map on morphism groups is a group homomorphism. In particular, $F(0)=0$ on morphisms and $F(f+g)=F(f)+F(g)$.
 \end{definition}
-Between additive categories, an additive functor preserves finite biproducts, because it preserves the biproduct identities. Conversely, a functor preserving finite products or finite coproducts preserves zero objects and the biproduct structure, and hence the formula defining addition in Theorem~\ref{thm:addition}. Thus it is additive. The functors $\Hom_{\A}(M,-)\colon\A\to\Ab$ and $\Hom_{\A}(-,N)\colon\A^{\mathrm{op}}\to\Ab$ are additive.
+Between additive categories, an additive functor preserves finite biproducts, because it preserves the biproduct identities. Conversely, a functor preserving finite products or finite coproducts preserves zero objects and the biproduct structure, and hence the formula defining addition in Theorem~\ref{thm:addition}. Thus it is additive. The functors $\Mor_{\A}(M,-)\colon\A\to\Ab$ and $\Mor_{\A}(-,N)\colon\A^{\mathrm{op}}\to\Ab$ are additive.
 
 \section{Kernels, cokernels, and abelian categories}
 \begin{definition}[Kernel and cokernel]
