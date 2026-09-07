@@ -146,13 +146,20 @@ We usually write $0$ when the source and target are clear.
 \end{definition}
 
 \begin{definition}[Product and coproduct]
-A product of $A_1,A_2$ is an object $P$ with projections $\rho_i\colon P\to A_i$ such that for every $X$ and $f_i\colon X\to A_i$, there is a unique $\langle f_1,f_2\rangle\colon X\to P$ satisfying $\rho_i\langle f_1,f_2\rangle=f_i$. Equivalently, the function
+A product of $A_1,A_2$ is an object $P$ with projections $\rho_i\colon P\to A_i$ such that for every $X$ and $f_i\colon X\to A_i$, there is a unique $u\colon X\to P$ making the left diagram commute. Dually, a coproduct is an object $S$ with inclusions $\iota_i\colon A_i\to S$ such that for every $Y$ and $g_i\colon A_i\to Y$, there is a unique $v\colon S\to Y$ making the right diagram commute:
 \[
-\Mor_{\C}(X,P)\longrightarrow\Mor_{\C}(X,A_1)\times\Mor_{\C}(X,A_2)
+\begin{tikzcd}[column sep=small,row sep=small]
+&X\arrow[dl,"f_1"']\arrow[d,dashed,"u"]\arrow[dr,"f_2"]&\\
+A_1&P\arrow[l,"\rho_1"]\arrow[r,"\rho_2"']&A_2
+\end{tikzcd}
+\qquad
+\begin{tikzcd}[column sep=small,row sep=small]
+A_1\arrow[r,"\iota_1"]\arrow[dr,"g_1"']&S\arrow[d,dashed,"v"]&A_2\arrow[l,"\iota_2"']\arrow[dl,"g_2"]\\
+&Y&
+\end{tikzcd}
 \]
-given by the projections is bijective for every $X$.
-
-A coproduct is an object $S$ with inclusions $\iota_i\colon A_i\to S$ such that for every $Y$ and $g_i\colon A_i\to Y$, there is a unique $[g_1,g_2]\colon S\to Y$ satisfying $[g_1,g_2]\iota_i=g_i$. This is the dual universal property.
+Equivalently, the projections induce a bijection
+$\Mor_{\C}(X,P)\to\Mor_{\C}(X,A_1)\times\Mor_{\C}(X,A_2)$ for every $X$; the coproduct has the dual property.
 \end{definition}
 Finite products include the empty product, a terminal object; finite coproducts include the empty coproduct, an initial object. Universal properties determine these objects up to unique isomorphism compatible with their structure maps.
 
@@ -169,21 +176,29 @@ A category is \emph{semiadditive} if it has a zero object and all binary biprodu
 In a semiadditive category, each $\Mor_{\C}(A,B)$ has a canonical commutative monoid structure. Its identity is the zero morphism, and composition preserves addition and zero in each variable.
 \end{theorem}
 \begin{proof}
-Let $\Delta_A=\langle\id_A,\id_A\rangle\colon A\to A\oplus A$ and $\nabla_B=[\id_B,\id_B]\colon B\oplus B\to B$. Define
+The diagonal $\Delta_A\colon A\to A\oplus A$ and codiagonal $\nabla_B\colon B\oplus B\to B$ are the unique maps making these diagrams commute for $i=1,2$:
 \[
-f+g=[f,g]\Delta_A=\nabla_B(f\oplus g)\Delta_A,
+\begin{tikzcd}[column sep=large,row sep=small]
+A\arrow[r,"\Delta_A"]\arrow[dr,"\id_A"']&A\oplus A\arrow[d,"\rho_i"]\\
+&A
+\end{tikzcd}
+\qquad
+\begin{tikzcd}[column sep=large,row sep=small]
+B\arrow[r,"\iota_i"]\arrow[dr,"\id_B"']&B\oplus B\arrow[d,"\nabla_B"]\\
+&B.
+\end{tikzcd}
+\]
+Given $f,g\colon A\to B$, let $s\colon A\oplus A\to B$ be the unique map whose restrictions to the two summands are $f,g$. Define
+\[
+f+g=s\Delta_A=\nabla_B(f\oplus g)\Delta_A,
 \]
 where $f\oplus g$ is uniquely specified by its diagonal components $f,g$ and its two zero off-diagonal components.
 
-Since $[f,0]=f\rho_1$, we have $f+0=f\rho_1\Delta_A=f$, and likewise $0+f=f$. The interchange of the two summands fixes $\Delta_A$, and composing $[f,g]$ with that interchange gives $[g,f]$; thus $f+g=g+f$.
+If $g=0$, then $s=f\rho_1$, so $f+0=f$; similarly $0+f=f$. Interchanging the summands fixes $\Delta_A$ and exchanges the restrictions of $s$, proving commutativity.
 
-For associativity, let $\Delta_A^{(3)}\colon A\to A\oplus A\oplus A$ have all three components $\id_A$. Both $(f+g)+h$ and $f+(g+h)$ equal
-\[
-[f,g,h]\Delta_A^{(3)}.
-\]
-This follows by comparing the three product components and the three coproduct restrictions.
+Let $\Delta_A^{(3)}\colon A\to A\oplus A\oplus A$ have all three components $\id_A$, and let $t\colon A\oplus A\oplus A\to B$ have restrictions $f,g,h$. Comparing components and restrictions shows that both $(f+g)+h$ and $f+(g+h)$ equal $t\Delta_A^{(3)}$.
 
-Finally, $k[f,g]=[kf,kg]$ gives $k(f+g)=kf+kg$. For $u\colon X\to A$, the identities $\Delta_Au=(u\oplus u)\Delta_X$ and $[f,g](u\oplus u)=[fu,gu]$ give $(f+g)u=fu+gu$. Composing a zero morphism with any morphism is zero.
+For $k\colon B\to D$, the restrictions of $ks$ are $kf,kg$, so $k(f+g)=kf+kg$. For $u\colon X\to A$, the restrictions of $s(u\oplus u)$ are $fu,gu$, and $\Delta_Au=(u\oplus u)\Delta_X$; hence $(f+g)u=fu+gu$. Composing a zero morphism with any morphism is zero.
 \end{proof}
 
 \begin{proposition}[Biproduct identities and matrices]
@@ -206,7 +221,7 @@ Composing the first asserted identity with either projection gives the correspon
 \begin{definition}
 A category is \emph{preadditive} if every morphism set is equipped with an abelian group structure and composition is bilinear. It is \emph{additive} if it is preadditive and has finite biproducts. Equivalently, it is semiadditive and all its canonical morphism monoids are groups.
 \end{definition}
-The structures agree because $[f,g]\Delta_A=(f\rho_1+g\rho_2)\Delta_A=f+g$.
+The structures agree: the map $s$ used above is $f\rho_1+g\rho_2$, so $s\Delta_A=f+g$ also for the given addition.
 
 \begin{definition}
 A functor $F\colon\A\to\B$ between preadditive categories is \emph{additive} if every induced map on morphism groups is a group homomorphism. In particular, $F(0)=0$ on morphisms and $F(f+g)=F(f)+F(g)$.
@@ -258,9 +273,9 @@ If $f\colon A\to B$ is mono, it is a kernel of some $g\colon B\to D$. Since $gf=
 If $e\colon E\to B$ is epi and $t\colon X\to B$ is any morphism in an abelian category, their pullback exists and its projection $p\colon P\to X$ is epi.
 \end{lemma}
 \begin{proof}
-Let $s\colon P\to E\oplus X$ be a kernel of $[e,-t]$. Put $a=\rho_1s$ and $p=\rho_2s$. Then $ea=tp$. A pair of maps $u\colon Y\to E$, $v\colon Y\to X$ satisfies $eu=tv$ precisely when $[e,-t]\langle u,v\rangle=0$. The kernel property therefore gives a unique $Y\to P$ inducing $u,v$. This is the pullback universal property.
+Put $r=e\rho_1-t\rho_2\colon E\oplus X\to B$, and let $s\colon P\to E\oplus X$ be its kernel. Set $a=\rho_1s$ and $p=\rho_2s$. Then $ea=tp$. For maps $u\colon Y\to E$, $v\colon Y\to X$, let $b\colon Y\to E\oplus X$ be the unique map with components $u,v$. The equality $eu=tv$ is equivalent to $rb=0$, so the kernel property gives a unique $Y\to P$ inducing $u,v$. This is the pullback universal property.
 
-The map $[e,-t]$ is epi, since its composite with $\iota_1$ is $e$. By Lemma~\ref{lem:normal}, it is a cokernel of $s$. Suppose $w\colon X\to Y$ satisfies $wp=0$. Then $[0,w]s=0$, so there is $z\colon B\to Y$ with $[0,w]=z[e,-t]$. Restricting to $E$ gives $ze=0$, whence $z=0$. Restricting to $X$ now gives $w=0$. The epi criterion in Lemma~\ref{lem:cancel} proves that $p$ is epi.
+The map $r$ is epi since $r\iota_1=e$. By Lemma~\ref{lem:normal}, it is a cokernel of $s$. If $w\colon X\to Y$ satisfies $wp=0$, then $w\rho_2s=0$, so there is $z\colon B\to Y$ with $w\rho_2=zr$. Restricting to $E$ gives $ze=0$, whence $z=0$. Restricting to $X$ now gives $w=0$. The epi criterion in Lemma~\ref{lem:cancel} proves that $p$ is epi.
 \end{proof}
 
 \begin{definition}[Image, coimage, and comparison]
@@ -299,7 +314,7 @@ By the kernel property of $k$, write $a=kv$. Then $jp=qa=qkv=0$. Since $p$ is ep
 
 Apply this same argument in $\A^{\mathrm{op}}$. The coimage of the reversed morphism $f^{\mathrm{op}}$ is the image of $f$, its image is the coimage of $f$, and its comparison is the reversed arrow $\fbar$. The argument proves this reversed arrow mono, which says precisely that $\fbar$ is epi in $\A$. Proposition~\ref{prop:balanced} now makes $\fbar$ an isomorphism. Hence $f=m(\fbar q)$ is an epi followed by a mono.
 \end{proof}
-For modules, $\coim f=A/\ker f$, $\im f=f(A)\subseteq B$, and $\fbar([a])=f(a)$. 
+For modules, $\coim f=A/\ker f$, $\im f=f(A)\subseteq B$, and $\fbar(a+\ker f)=f(a)$. 
 
 \section{Exact sequences and chain complexes}
 \begin{definition}[Exactness]
