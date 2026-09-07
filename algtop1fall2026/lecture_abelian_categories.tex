@@ -54,21 +54,41 @@ A \emph{category} $\C$ consists of the following data:
 \]
 \item For every object $A$, a specified identity morphism $\id_A\in\Mor_{\C}(A,A)$.
 \end{enumerate}
-These data satisfy two axioms:
-\begin{itemize}
-\item \emph{Associativity:} for $A\xrightarrow{f}B\xrightarrow{g}C\xrightarrow{h}D$,
-$h\circ(g\circ f)=(h\circ g)\circ f$.
-\item \emph{Identity laws:} for every $f\colon A\to B$,
-$\id_B\circ f=f=f\circ\id_A$.
-\end{itemize}
+The following diagrams are required to commute for every composable triple
+$A\xrightarrow{f}B\xrightarrow{g}C\xrightarrow{h}D$ (associativity)
+and every $f\colon A\to B$ (identity laws):
+\[
+\begin{tikzcd}[column sep=large,row sep=small]
+A\arrow[r,"f"]\arrow[d,"g\circ f"']&B\arrow[d,"h\circ g"]\\
+C\arrow[r,"h"']&D
+\end{tikzcd}
+\qquad
+\begin{tikzcd}[column sep=small,row sep=small]
+A\arrow[r,"\id_A"]\arrow[dr,"f"']&A\arrow[d,"f"]\\
+&B
+\end{tikzcd}
+\qquad
+\begin{tikzcd}[column sep=small,row sep=small]
+A\arrow[r,"f"]\arrow[dr,"f"']&B\arrow[d,"\id_B"]\\
+&B.
+\end{tikzcd}
+\]
+A diagram commutes when the composites along paths with the same endpoints agree.
 A category is \emph{small} if its objects also form a set. Examples are sets with functions and $R\text{-}\Mod$ with linear maps.
 \end{definition}
 
 \begin{definition}[Functor]
 A functor $F\colon\C\to\B$ assigns an object $F(A)$ to each object $A$ and a function
-$\Mor_{\C}(A,B)\to\Mor_{\B}(F(A),F(B))$, written $f\mapsto F(f)$, to every pair. It satisfies
+$\Mor_{\C}(A,B)\to\Mor_{\B}(F(A),F(B))$, written $f\mapsto F(f)$, to every pair. It preserves identities and composition: the following diagrams commute.
 \[
-F(\id_A)=\id_{F(A)},\qquad F(g\circ f)=F(g)\circ F(f).
+\begin{tikzcd}[column sep=large,row sep=small]
+F(A)\arrow[r,"F(f)"]\arrow[dr,"F(g\circ f)"']&F(B)\arrow[d,"F(g)"]\\
+&F(C)
+\end{tikzcd}
+\qquad
+\begin{tikzcd}[column sep=large]
+F(A)\arrow[r,bend left=22,"F(\id_A)"]\arrow[r,bend right=22,"\id_{F(A)}"']&F(A).
+\end{tikzcd}
 \]
 It is \emph{faithful} if each of these functions is injective and \emph{full} if each is surjective. A \emph{full subcategory} is obtained by choosing some objects and retaining every morphism between them.
 \end{definition}
@@ -79,17 +99,16 @@ $\Mor_{\C^{\mathrm{op}}}(A,B)=\Mor_{\C}(B,A)$ and composition reversed. A contra
 \end{definition}
 
 \begin{definition}[Natural transformation]
-For functors $F,G\colon\C\to\B$, a natural transformation $\eta\colon F\Rightarrow G$ consists of morphisms $\eta_A\colon F(A)\to G(A)$ such that, for every $f\colon A\to B$,
+For functors $F,G\colon\C\to\B$, a natural transformation $\eta\colon F\Rightarrow G$ consists of morphisms $\eta_A\colon F(A)\to G(A)$ such that the following square commutes for every $f\colon A\to B$:
 \[
 \begin{tikzcd}
 F(A)\arrow[r,"F(f)"]\arrow[d,"\eta_A"']&F(B)\arrow[d,"\eta_B"]\\
 G(A)\arrow[r,"G(f)"']&G(B).
 \end{tikzcd}
-\qquad G(f)\eta_A=\eta_BF(f).
 \]
 A natural isomorphism is a natural transformation whose components are isomorphisms.
 \end{definition}
-A diagram commutes when composites along paths with the same endpoints agree.
+
 
 \subsection*{Isomorphisms, monomorphisms, and epimorphisms}
 \begin{definition}
@@ -293,9 +312,13 @@ Equivalently, $f$ is a kernel of $g$ and $g$ is a cokernel of $f$.
 An additive functor is \emph{left exact} if it preserves kernels, \emph{right exact} if it preserves cokernels, and \emph{exact} if it preserves short exact sequences.
 
 \begin{definition}[Chain complex and chain map]
-A chain complex $C_\bullet$ in an abelian category consists of objects $C_n$, $n\in\mathbb Z$, and differentials $d^C_n\colon C_n\to C_{n-1}$ satisfying $d^C_{n-1}d^C_n=0$. A chain map $f\colon C_\bullet\to D_\bullet$ consists of maps $f_n\colon C_n\to D_n$ satisfying
+A chain complex $C_\bullet$ in an abelian category consists of objects $C_n$, $n\in\mathbb Z$, and differentials $d^C_n\colon C_n\to C_{n-1}$ satisfying $d^C_{n-1}d^C_n=0$. A chain map $f\colon C_\bullet\to D_\bullet$ consists of maps $f_n\colon C_n\to D_n$ making the following squares commute:
 \[
-d^D_n f_n=f_{n-1}d^C_n\qquad(n\in\mathbb Z).
+\begin{tikzcd}[column sep=large,row sep=small]
+C_n\arrow[r,"d^C_n"]\arrow[d,"f_n"']&C_{n-1}\arrow[d,"f_{n-1}"]\\
+D_n\arrow[r,"d^D_n"']&D_{n-1}
+\end{tikzcd}
+\qquad(n\in\mathbb Z).
 \]
 Composition and identities are defined degreewise; the resulting category is denoted $\Ch(\A)$.
 \end{definition}
