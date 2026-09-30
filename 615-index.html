@@ -5,15 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AS.110.615 Algebraic Topology I — Johns Hopkins University</title>
 <style>
-  /* Warm paper, deep plum, and terracotta. */
+@font-face { font-family: "TeX Gyre Termes"; src: url("algtop1fall2026/texgyretermes-regular.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "TeX Gyre Termes"; src: url("algtop1fall2026/texgyretermes-bold.otf") format("opentype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "TeX Gyre Termes"; src: url("algtop1fall2026/texgyretermes-italic.otf") format("opentype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "TeX Gyre Termes"; src: url("algtop1fall2026/texgyretermes-bolditalic.otf") format("opentype"); font-weight: 700; font-style: italic; font-display: swap; }
+  h2 { color: #176568; }
+  h3 { color: #782f40; }
+  .download { white-space: nowrap; }
+  .materials { width: 100%; }
+  .materials .date { white-space: normal; min-width: 6rem; }
+  @media (max-width: 34rem) { .materials th, .materials td { padding: .6rem .3rem; } .materials .date { min-width: 4.5rem; } }
+  /* Shared Math 615 typography and colors. */
   :root {
-    --paper:   #f7f2e8;
-    --ink:     #382c3e;
+    --paper:   #ffffff;
+    --ink:     #262626;
     --faint:   #6d626b;
     --rule:    #d7d1bf;
-    --blue:    #442e49;   /* Deep plum */
-    --blue-70: #963e2f;
-    --tint:    #eee9dc;
+    --blue:    #176568;   /* Deep plum */
+    --blue-70: #782f40;
+    --tint:    #f0f6f6;
     --chalk:   #e5dfcb;
   }
   * { box-sizing: border-box; }
@@ -22,7 +32,7 @@
     margin: 0;
     background: var(--paper);
     color: var(--ink);
-    font-family: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    font-family: "TeX Gyre Termes", Georgia, serif;
     line-height: 1.55;
   }
   a { color: var(--blue-70); text-decoration-thickness: 1px; text-underline-offset: 2px; }
@@ -95,7 +105,7 @@
     margin-bottom: .55rem;
   }
   h3 { font-size: 1.06rem; font-weight: 700; margin: 1.8rem 0 .6rem; }
-  ul { padding-left: 1.3rem; margin: .5rem 0; }
+  ol { padding-left: 1.3rem; margin: .5rem 0; }
   li { margin: .35rem 0; }
 
   /* Week-by-week: hanging labels in the margin, like lecture notes */
@@ -183,7 +193,7 @@
 <div class="page">
 <main>
 
-  <h2>About the course</h2>
+  <h2>About the Course</h2>
   <p>
     This is the first semester of the graduate algebraic topology sequence.
     The guiding idea of the subject is
@@ -200,78 +210,47 @@
     categorical language will be assumed after the first two weeks.
   </p>
 
-  <h2>Lecture notes</h2>
-  <table>
-    <thead>
-      <tr><th>Week</th><th>Dates</th><th>Topic</th></tr>
-    </thead>
-    <tbody>
-      <!-- EDIT: to post a new week's notes, copy a row and update the
-           week number, dates, title, and the href of the PDF. -->
-      <tr>
-        <td class="num">1</td>
-        <td class="date">Aug 31 &amp; Sep 2</td>
-        <td><a href="algtop1fall2026/lecture_abelian_categories.pdf">Additive and abelian categories</a></td>
-      </tr>
-      <tr>
-        <td class="num">2</td>
-        <td class="date">Sep 9</td>
-        <td><a href="algtop1fall2026/lecture2-homology-v5.pdf">The snake lemma, long exact sequences, and derived categories</a></td>
-      </tr>
-      <tr>
-        <td class="num">3</td>
-        <td class="date">Sep 14 &amp; 16</td>
-        <td><a href="algtop1fall2026/tensor-tor-ext-v4.pdf">Derived functors: tensor products, Tor, and Ext</a></td>
-      </tr>
-      <tr>
-        <td class="num">4</td>
-        <td class="date">Sep 21 &amp; 23</td>
-        <td><a href="algtop1fall2026/Lecture-04-Ext-Tor-and-Simplicial-Sets-v04.pdf">Ext, Tor, and simplicial sets</a><br><small>Review of resolutions and derived functors; introduction to simplicial chains.</small></td>
-      </tr>
-      <tr>
-        <td class="num">5</td>
-        <td class="date">Sep 28 &amp; 30</td>
-        <td><a href="algtop1fall2026/Lecture-05-Simplicial-Sets-and-Singular-Chains-v06.pdf">Simplicial sets, spaces, and singular chains</a><br><small>Realization, the singular functor, their adjunction, and the construction of singular chains.</small></td>
-      </tr>
-      <tr>
-        <td class="num">6</td>
-        <td class="date">Oct 5 &amp; 7</td>
-        <td><a href="algtop1fall2026/Lecture-06-Homotopy-Invariance-and-First-Computations-v20.pdf">Homotopy invariance and first computations</a><br><small>The homotopy category, the prism proof, absolute and relative homology.</small></td>
-      </tr>
-    </tbody>
-  </table>
-  <p>The notes are grouped into approximately one set per week. Week 4 reviews the algebra from Week 3 and introduces simplicial chains; Week 5 develops the construction in full; Week 6 uses it to prove homotopy invariance.</p>
+  <h2 id="lecture-notes">Lecture Notes</h2>
+<table class="materials"><thead><tr><th>Week</th><th>Dates</th><th>Topic and Downloads</th></tr></thead><tbody>
+<tr><td class="num">1</td><td class="date">Aug 31 &amp; Sep 2</td><td><a href="algtop1fall2026/Lecture-01-Additive-and-Abelian-Categories-v02.pdf">Additive and Abelian Categories</a><br><small class="download"><a href="algtop1fall2026/Lecture-01-Additive-and-Abelian-Categories-v02.pdf">PDF</a> · <a href="algtop1fall2026/Lecture-01-Additive-and-Abelian-Categories-v02.tex">Editable Source</a></small></td></tr>
+<tr><td class="num">2</td><td class="date">Sep 9</td><td><a href="algtop1fall2026/Lecture-02-Exact-Sequences-and-Derived-Categories-v06.pdf">Exact Sequences and Derived Categories</a><br><small class="download"><a href="algtop1fall2026/Lecture-02-Exact-Sequences-and-Derived-Categories-v06.pdf">PDF</a> · <a href="algtop1fall2026/Lecture-02-Exact-Sequences-and-Derived-Categories-v06.tex">Editable Source</a></small></td></tr>
+<tr><td class="num">3</td><td class="date">Sep 14 &amp; 16</td><td><a href="algtop1fall2026/Lecture-03-Tensor-Products-Tor-Ext-and-Simplicial-Chains-v06.pdf">Tensor Products, Tor, Ext, and Simplicial Chains</a><br><small class="download"><a href="algtop1fall2026/Lecture-03-Tensor-Products-Tor-Ext-and-Simplicial-Chains-v06.pdf">PDF</a> · <a href="algtop1fall2026/Lecture-03-Tensor-Products-Tor-Ext-and-Simplicial-Chains-v06.tex">Editable Source</a></small></td></tr>
+<tr><td class="num">4</td><td class="date">Sep 21 &amp; 23</td><td><a href="algtop1fall2026/Lecture-04-Simplicial-Sets-and-Singular-Chains-v07.pdf">Simplicial Sets, Spaces, and Singular Chains</a><br><small class="download"><a href="algtop1fall2026/Lecture-04-Simplicial-Sets-and-Singular-Chains-v07.pdf">PDF</a> · <a href="algtop1fall2026/Lecture-04-Simplicial-Sets-and-Singular-Chains-v07.tex">Editable Source</a></small></td></tr>
+<tr><td class="num">5</td><td class="date">Sep 28 &amp; 30</td><td><a href="algtop1fall2026/Lecture-05-Homotopy-Invariance-and-First-Computations-v21.pdf">Homotopy Invariance and First Computations</a><br><small class="download"><a href="algtop1fall2026/Lecture-05-Homotopy-Invariance-and-First-Computations-v21.pdf">PDF</a> · <a href="algtop1fall2026/Lecture-05-Homotopy-Invariance-and-First-Computations-v21.tex">Editable Source</a></small></td></tr>
+</tbody></table>
+<p>One set of notes accompanies each week. Lecture 3 combines the earlier tensor products, Tor, Ext, and introductory simplicial chains notes. Lecture 4 develops singular chains; Lecture 5 covers homotopy invariance for September 28–30.</p>
 
   <h2>Syllabus</h2>
 
-  <h3>Part I — Categories and homological algebra</h3>
-  <ul class="weeks">
+  <h3>Part I — Categories and Homological Algebra</h3>
+  <ol class="weeks">
     <li><span class="wk">Week 1</span><span>Categories, functors, natural transformations. Limits and colimits; adjoint functors. Additive categories; kernels, cokernels, and abelian categories.</span></li>
-    <li><span class="wk">Week 2</span><span>Chain complexes and homology as a functor. Chain homotopy. The long exact sequence of a short exact sequence of complexes; the snake lemma and diagram chases. Projective and injective objects; resolutions.</span></li>
-    <li><span class="wk">Week 3</span><span>Derived functors: Tor and Ext. Universal coefficient and Künneth theorems (algebraic form). The homotopy category K(𝒜).</span></li>
-    <li><span class="wk">Week 4</span><span>Localization of categories; the derived category D(𝒜). Triangulated structure: distinguished triangles as the replacement for short exact sequences. Derived functors from this viewpoint.</span></li>
-  </ul>
+    <li><span class="wk">Week 2</span><span>Chain complexes, chain homotopies, and homology. The snake lemma and long exact sequences. Mapping cones; the homotopy and derived categories.</span></li>
+    <li><span class="wk">Week 3</span><span>Tensor products, resolutions, derived functors, Tor, and Ext. Extensions and noncommutative examples. Introduction to simplicial chains and universal coefficients.</span></li>
+  </ol>
 
-  <h3>Part II — Simplicial sets and singular homology</h3>
-  <ul class="weeks">
-    <li><span class="wk">Week 5</span><span>The simplex category Δ; simplicial sets, faces and degeneracies. Geometric realization and the singular simplicial set; the realization–singular adjunction. Simplicial abelian groups and the associated chain complex; statement of Dold–Kan.</span></li>
-    <li><span class="wk">Week 6</span><span>Singular homology: definition, functoriality, H₀ and π₀, homology of a point. Homotopy invariance via simplicial/prism arguments.</span></li>
-    <li><span class="wk">Week 7</span><span>Relative homology. Excision and Mayer–Vietoris. Degree of self-maps of Sⁿ; Brouwer fixed point theorem; invariance of dimension and domain.</span></li>
-    <li><span class="wk">Week 8</span><span>CW complexes and cellular homology; comparison with singular homology. Euler characteristic. Homology with coefficients; topological universal coefficients and Künneth (survey); Lefschetz fixed point theorem (time permitting).</span></li>
-  </ul>
+  <h3>Part II — Simplicial Sets and Singular Homology</h3>
+  <ol class="weeks">
+    <li><span class="wk">Week 4</span><span>The simplex category Δ; simplicial sets, faces and degeneracies. Geometric realization and the singular simplicial set; the realization–singular adjunction. Simplicial abelian groups and the associated chain complex; statement of Dold–Kan.</span></li>
+    <li><span class="wk">Week 5</span><span>The homotopy category and homotopy invariant functors. Singular homology and the prism proof. H₀, contractible spaces, and relative homology.</span></li>
+    <li><span class="wk">Week 6</span><span>Relative homology. Excision and Mayer–Vietoris. Degree of self-maps of Sⁿ; Brouwer fixed point theorem; invariance of dimension and domain.</span></li>
+    <li><span class="wk">Week 7</span><span>CW complexes and cellular homology; comparison with singular homology. Euler characteristic. Homology with coefficients; topological universal coefficients and Künneth (survey); Lefschetz fixed point theorem (time permitting).</span></li>
+  </ol>
 
-  <h3>Part III — Homotopy theory and the fundamental group</h3>
-  <ul class="weeks">
-    <li><span class="wk">Week 9</span><span>Homotopy groups π<sub>n</sub>: definitions, basepoints, the action of π₁ on π<sub>n</sub>. Statement of Whitehead's theorem and the Hurewicz theorem (proofs deferred to 616).</span></li>
-    <li><span class="wk">Week 10</span><span>Fibrations: the homotopy lifting property, Serre fibrations, fiber bundles as examples. The long exact sequence of a fibration, with the Hopf fibration S¹ → S³ → S² and the computation of π₃(S²) as the flagship application. Path–loop fibration.</span></li>
-    <li><span class="wk">Week 11</span><span>The fundamental group in detail: π₁(S¹) via lifting, applications (fundamental theorem of algebra, Borsuk–Ulam in low dimension). Free products and the Seifert–van Kampen theorem.</span></li>
-    <li><span class="wk">Week 12</span><span>Covering spaces: lifting criteria, the classification of coverings via subgroups of π₁, universal covers, deck transformations, and the Galois correspondence. Covering space proofs of group-theoretic facts (subgroups of free groups are free); preview of 616.</span></li>
-  </ul>
+  <h3>Part III — Homotopy Theory and the Fundamental Group</h3>
+  <ol class="weeks">
+    <li><span class="wk">Week 8</span><span>Homotopy groups π<sub>n</sub>: definitions, basepoints, the action of π₁ on π<sub>n</sub>. Statement of Whitehead's theorem and the Hurewicz theorem (proofs deferred to 616).</span></li>
+    <li><span class="wk">Week 9</span><span>Fibrations: the homotopy lifting property, Serre fibrations, fiber bundles as examples. The long exact sequence of a fibration, with the Hopf fibration S¹ → S³ → S² and the computation of π₃(S²) as the flagship application. Path–loop fibration.</span></li>
+    <li><span class="wk">Week 10</span><span>The fundamental group in detail: π₁(S¹) via lifting, applications (fundamental theorem of algebra, Borsuk–Ulam in low dimension). Free products and the Seifert–van Kampen theorem.</span></li>
+    <li><span class="wk">Week 11</span><span>Covering spaces: lifting criteria, the classification of coverings via subgroups of π₁, universal covers, deck transformations, and the Galois correspondence. Covering space proofs of group-theoretic facts (subgroups of free groups are free); preview of 616.</span></li>
+  </ol>
 
-  <h3>Final project presentations</h3>
-  <ul class="weeks">
-    <li><span class="wk">Week 13–14</span><span>In-class final project presentations (Nov 30 – Dec 9). No new lecture material.</span></li>
-  </ul>
+  <h3>Final Project Presentations</h3>
+  <ol class="weeks">
+    <li><span class="wk">Nov 30–Dec 9</span><span>In-class final project presentations (Nov 30 – Dec 9). No new lecture material.</span></li>
+  </ol>
+
+  <p>The schedule after Week 5 is provisional; remaining class time will be used for applications, review, and project preparation.</p>
 
   <p>Thanksgiving break (late November): no classes.</p>
 
@@ -280,24 +259,23 @@
     <b>Your course grade is based entirely on class participation/attendance
     and a final project.</b> There are no exams.
   </p>
-  <ul>
+  <ol>
     <li><b>Participation and attendance (10%).</b> This is a lecture course, but a conversational one: attend regularly, ask and answer questions, and occasionally present an argument at the board when invited. The participation grade reflects consistent, good-faith engagement over the semester — not the number of times you speak, and certainly not whether your questions are "good enough." If you must miss more than an occasional class (illness, travel, conflicts), just let me know.</li>
     <li><b>Final project (90%).</b> An in-class presentation on a topic extending the course, to take place during the last two weeks of class (Nov 30 – Dec 9). There is no written paper. Suitable topics include: the Dold–Kan correspondence in full; model structures on simplicial sets; group cohomology via derived functors; the Hurewicz theorem; classifying spaces and principal bundles; Poincaré duality; the Lefschetz fixed point theorem; covering space theory from the Galois-theoretic viewpoint; braid groups and configuration spaces. Topic proposal due mid-October; optional draft of your presentation materials early November. Graded on mathematical correctness, depth of engagement with the material, and clarity of exposition — not originality of research.</li>
-    <li><b>Homework (assigned, not counted toward the grade).</b> Problem sets roughly every one to two weeks, graded for your benefit only and returned with comments. Collaboration is encouraged; write up solutions in your own words.</li>
-  </ul>
+    <li><b>Homework (assigned, not counted toward the grade).</b> One problem set per week, graded for your benefit only and returned with comments. Collaboration is encouraged; write up solutions in your own words.</li>
+  </ol>
 
-  <h2>Problem sets</h2>
-  <ul>
-    <li><a href="algtop1fall2026/homework1.pdf">Homework 1 (PDF)</a> — Additive and abelian categories, chain complexes, and chain homotopies. <a href="algtop1fall2026/homework1.tex">LaTeX source</a>.</li>
-    <li><a href="algtop1fall2026/homework2-v4.pdf">Homework 2 (PDF)</a> — Exact sequences, chain homotopies, mapping cylinders, and cones.</li>
-    <li><a href="algtop1fall2026/homework3-v2.pdf">Homework 3 (PDF)</a> — Derived functors, resolutions, dimension shifting, Tor, and Ext.</li>
-  </ul>
-  <p>
-    Sets are graded for your benefit and returned with comments; they do not
-    count toward the course grade.
-  </p>
+  <h2 id="homework">Homework</h2>
+<table class="materials"><thead><tr><th>Week</th><th>Dates</th><th>Topic and Downloads</th></tr></thead><tbody>
+<tr><td class="num">1</td><td class="date">Aug 31 &amp; Sep 2</td><td><a href="algtop1fall2026/Homework-01-Categories-and-Chain-Complexes-v02.pdf">Categories and Chain Complexes</a><br><small class="download"><a href="algtop1fall2026/Homework-01-Categories-and-Chain-Complexes-v02.pdf">PDF</a> · <a href="algtop1fall2026/Homework-01-Categories-and-Chain-Complexes-v02.tex">Editable Source</a></small></td></tr>
+<tr><td class="num">2</td><td class="date">Sep 9</td><td><a href="algtop1fall2026/Homework-02-Homotopies-Exact-Sequences-and-Cones-v05.pdf">Homotopies, Exact Sequences, and Cones</a><br><small class="download"><a href="algtop1fall2026/Homework-02-Homotopies-Exact-Sequences-and-Cones-v05.pdf">PDF</a> · <a href="algtop1fall2026/Homework-02-Homotopies-Exact-Sequences-and-Cones-v05.tex">Editable Source</a></small></td></tr>
+<tr><td class="num">3</td><td class="date">Sep 14 &amp; 16</td><td><a href="algtop1fall2026/Homework-03-Derived-Functors-Tor-and-Ext-v03.pdf">Derived Functors, Tor, and Ext</a><br><small class="download"><a href="algtop1fall2026/Homework-03-Derived-Functors-Tor-and-Ext-v03.pdf">PDF</a> · <a href="algtop1fall2026/Homework-03-Derived-Functors-Tor-and-Ext-v03.tex">Editable Source</a></small></td></tr>
+<tr><td class="num">4</td><td class="date">Sep 21 &amp; 23</td><td><a href="algtop1fall2026/Homework-04-Simplicial-Sets-and-Singular-Chains-v03.pdf">Simplicial Sets and Singular Chains</a><br><small class="download"><a href="algtop1fall2026/Homework-04-Simplicial-Sets-and-Singular-Chains-v03.pdf">PDF</a> · <a href="algtop1fall2026/Homework-04-Simplicial-Sets-and-Singular-Chains-v03.tex">Editable Source</a></small></td></tr>
+<tr><td class="num">5</td><td class="date">Sep 28 &amp; 30</td><td><a href="algtop1fall2026/Homework-05-Homotopy-Invariance-v01.pdf">Homotopy Invariance</a><br><small class="download"><a href="algtop1fall2026/Homework-05-Homotopy-Invariance-v01.pdf">PDF</a> · <a href="algtop1fall2026/Homework-05-Homotopy-Invariance-v01.tex">Editable Source</a></small></td></tr>
+</tbody></table>
+<p>One homework set accompanies each week. Sets are graded for your benefit and returned with comments; they do not count toward the course grade. Collaboration is encouraged; write up solutions in your own words.</p>
 
-  <h2>Important dates</h2>
+  <h2>Important Dates</h2>
   <table>
     <thead><tr><th>Date</th><th></th></tr></thead>
     <tbody>
@@ -310,22 +288,22 @@
   </table>
 
   <h2>Policies</h2>
-  <ul>
+  <ol>
     <li><b>Collaboration and integrity.</b> Discussion of homework with classmates is encouraged. The final project must be your own exposition; all sources (including AI tools, if used) must be cited. All work is subject to the university's graduate academic misconduct policies.</li>
     <li><b>AI use.</b> Prohibited on homework: the problem sets exist entirely for your benefit, so outsourcing them defeats the purpose. Permitted for everything else, subject to the citation requirement for the final project.</li>
     <li><b>Devices in class.</b> Discouraged. If your attention drifts, work on something productive instead — a lit screen makes it harder for everyone nearby to pay attention.</li>
     <li><b>Accommodations.</b> Students requiring accommodations should register with <a href="https://studentdisabilityservices.jhu.edu">Student Disability Services</a> and contact me early in the semester.</li>
-  </ul>
+  </ol>
 
   <h2>Texts</h2>
   <p>No single text covers the course in the order we follow. Primary references, all freely or electronically available:</p>
-  <ul>
+  <ol>
     <li>A.&nbsp;Hatcher, <i>Algebraic Topology</i> — <a href="https://pi.math.cornell.edu/~hatcher/AT/ATpage.html">free from the author's page</a>. Main reference for homology, the fundamental group, and covering spaces.</li>
     <li>C.&nbsp;Weibel, <i>An Introduction to Homological Algebra</i> — <a href="https://www.cambridge.org/core_title/gb/119879">Cambridge University Press</a>; main reference for Part I.</li>
     <li>S.&nbsp;Gelfand and Y.&nbsp;Manin, <i>Methods of Homological Algebra</i> — <a href="https://doi.org/10.1007/978-3-662-12492-5">SpringerLink</a>; for derived and triangulated categories.</li>
     <li>P.&nbsp;Goerss and J.&nbsp;F.&nbsp;Jardine, <i>Simplicial Homotopy Theory</i> — <a href="https://link.springer.com/book/10.1007/978-3-0348-8707-6">SpringerLink</a>; main reference for simplicial sets.</li>
     <li>J.&nbsp;P.&nbsp;May, <i>A Concise Course in Algebraic Topology</i> — <a href="https://www.math.uchicago.edu/~may/CONCISE/ConciseRevised.pdf">free PDF from the author's page</a>; secondary reference throughout, especially for fibrations.</li>
-  </ul>
+  </ol>
 
   <footer>
     <p>AS.110.615, Department of Mathematics, Johns Hopkins University.
