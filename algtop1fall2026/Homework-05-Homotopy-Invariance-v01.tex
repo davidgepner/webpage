@@ -1,0 +1,125 @@
+\documentclass[11pt]{article}
+% BEGIN SHARED COURSE STYLE
+% Shared Math 615 style. Embedded verbatim in standalone published sources.
+\RequirePackage[letterpaper,margin=1in]{geometry}
+\RequirePackage{amsmath,amsthm,mathtools}
+\RequirePackage{fontspec,unicode-math}
+\setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmathfont{texgyretermes-math.otf}
+\RequirePackage{microtype,tikz-cd,enumitem,needspace,xcolor,booktabs,titlesec,etoolbox}
+\definecolor{teal}{HTML}{176568}
+\definecolor{burgundy}{HTML}{782F40}
+\definecolor{inklink}{HTML}{176568}
+\definecolor{accent}{HTML}{176568}
+\titleformat{\section}{\large\bfseries\color{teal}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{burgundy}}{\thesubsection}{.65em}{}
+\titleformat{\paragraph}[runin]{\normalsize\bfseries\color{burgundy}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{2.2ex plus .5ex minus .2ex}{1ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.6ex plus .4ex minus .2ex}{.7ex plus .2ex}
+\RequirePackage{hyperref,bookmark}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,citecolor=teal,pdfstartview={XYZ null null 1.5},bookmarksnumbered=true}
+\urlstyle{same}
+\setcounter{tocdepth}{2}
+\setlist[enumerate]{label=\arabic*.,ref=\arabic*,leftmargin=*,itemsep=4pt,topsep=4pt}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\AddToHook{cmd/section/before}{\Needspace{8\baselineskip}}
+\AddToHook{cmd/subsection/before}{\Needspace{6\baselineskip}}
+\makeatletter
+\newcommand{\afterblock}{\@afterindentfalse\@afterheading}
+\makeatother
+\newcounter{result}[section]
+\renewcommand{\theresult}{\thesection.\arabic{result}}
+\newcommand{\resulttitle}[3]{#1 #2\ifstrempty{#3}{}{ (#3)}.}
+\newenvironment{result}[3]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{proof:#2}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{entry}[3]{\par\addvspace{7pt}\Needspace{3\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\textbf{\resulttitle{#1}{\theresult}{#3}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{demonstration}[1]{\par\noindent\hypertarget{proof:#1}{}{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{#1}{\textbf{Proof.}}}\quad\ignorespaces}{\unskip\nobreak\hfill\qedsymbol\par\addvspace{5pt}\afterblock}
+\newenvironment{citedresult}[4]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{urlcolor=burgundy}\href{#4}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newcommand{\usedby}[1]{\par\noindent{\small\textbf{Used in:} #1.}\par\afterblock}
+\newcommand{\coursebold}[1]{{\color{burgundy}\textbf{#1}}}
+\newcommand{\coursetitle}[3]{\begin{center}{\large\bfseries\color{teal}#1}\\[4pt]{\LARGE\bfseries\color{teal}#2}\\[6pt]Math 615: Algebraic Topology I\\Fall 2026\quad\textbar\quad #3\end{center}}
+\newcommand{\coursecontents}{{\small\setlength{\parskip}{0pt}\tableofcontents}}
+\newcommand{\homeworkstyle}{\titleformat{\section}{\large\bfseries\color{teal}}{Exercise \thesection.}{.65em}{}}
+% END SHARED COURSE STYLE
+\homeworkstyle
+\hypersetup{pdftitle={Homework 5: Homotopy Invariance},pdfauthor={Math 615 Fall 2026},pdfsubject={Revision 1}}
+\begin{document}
+\coursetitle{Homework 5}{Homotopy Invariance}{September 28 and 30}
+Use Lecture 5. Give proofs, state the source and target of every map you define, and keep the signs in chain calculations explicit. Coefficients are integers. Write $I=[0,1]$ and use all singular simplices, including degenerate ones.
+
+A homotopy from $f:X\to Y$ to $g:X\to Y$ is a continuous map $h:X\times I\to Y$ with $h(x,0)=f(x)$ and $h(x,1)=g(x)$. A homotopy inverse of $f$ is a map $g:Y\to X$ with $gf\simeq\mathrm{id}_X$ and $fg\simeq\mathrm{id}_Y$. A nonempty space is contractible if its identity map is homotopic to a constant map.
+
+The singular group $C_n(X)$ is free abelian on continuous maps $\sigma:|\Delta^n|\to X$. Write $\sigma$ also for its generator. Here
+\[
+|\Delta^n|=\{(t_0,\ldots,t_n)\in\mathbb R^{n+1}:t_i\geq0,\ \textstyle\sum_i t_i=1\},
+\]
+with standard vertices $e_0,\ldots,e_n$. The affine map $d^i:|\Delta^{n-1}|\to|\Delta^n|$ inserts a zero in position $i$, and $\partial\sigma=\sum_i(-1)^i\sigma d^i$ for $n>0$. For a subspace $X'\subseteq X$, put $C_\bullet(X,X')=C_\bullet(X)/C_\bullet(X')$ and $H_n(X,X')=H_n(C_\bullet(X,X'))$.
+
+\section{The Homotopy Category and Homotopy Invariant Functors}
+The category $\mathrm{hTop}$ has spaces as objects and homotopy classes of continuous maps as morphisms. The quotient functor is $q:\mathrm{Top}\to\mathrm{hTop}$. For a category $C$, a functor $F:\mathrm{Top}\to C$ is homotopy invariant if $F(f)=F(g)$ whenever $f\simeq g$.
+\begin{enumerate}
+\item Prove that composition in $\mathrm{hTop}$ is well defined. Prove that $F$ is homotopy invariant if and only if there is a unique functor $\overline F:\mathrm{hTop}\to C$ with $F=\overline Fq$.
+\item Prove that $[f]$ is an isomorphism in $\mathrm{hTop}$ if and only if $f$ is a homotopy equivalence. Deduce that every homotopy invariant functor sends homotopy equivalences to isomorphisms, and identify the inverse of $F(f)$.
+\item For $\epsilon\in\{0,1\}$ define $j_\epsilon:X\to X\times I$ by $j_\epsilon(x)=(x,\epsilon)$, and let $p:X\times I\to X$ be projection. Show that $F$ is homotopy invariant if and only if $F(p)$ is an isomorphism for every $X$. In the reverse implication, first show that $F(j_0)=F(j_1)$.
+\end{enumerate}
+
+\section{The Prism over a Singular Edge}
+Let $h:X\times I\to Y$ be a homotopy from $f$ to $g$, and let $\sigma:|\Delta^1|\to X$ be a singular edge. The affine maps $\tau_0,\tau_1:|\Delta^2|\to|\Delta^1|\times I$ have ordered vertices
+\[
+\tau_0:\ [(e_0,0),(e_0,1),(e_1,1)],\qquad
+\tau_1:\ [(e_0,0),(e_1,0),(e_1,1)].
+\]
+Define $P_1:C_1(X)\to C_2(Y)$ on generators by
+\[
+P_1(\sigma)=h(\sigma\times\mathrm{id}_I)\tau_0-h(\sigma\times\mathrm{id}_I)\tau_1.
+\]
+For a point $x\in X$, let $P_0(x):|\Delta^1|\to Y$ be the path $P_0(x)(t_0,t_1)=h(x,t_1)$, extended linearly to $P_0:C_0(X)\to C_1(Y)$.
+\begin{enumerate}
+\item Draw the square and its diagonal. Write both affine maps in coordinates $(t_0,t_1,t_2)$, including their two target coordinates in $|\Delta^1|\times I$.
+\item List the three ordered edges of each triangle, with their coefficients in $\partial P_1(\sigma)$. Identify the top, bottom, side, and interior edges. Explain geometrically why the diagonal is interior and the two vertical edges are side edges.
+\item Verify directly that
+\[
+\partial P_1(\sigma)+P_0(\partial\sigma)=g_\#(\sigma)-f_\#(\sigma).
+\]
+In particular, exhibit the two equal singular edges on the diagonal and their opposite coefficients.
+\end{enumerate}
+
+\section{Explicit Homotopies and Homology}
+A nonempty subset $X\subseteq\mathbb R^m$ is star shaped about $p\in X$ if $(1-t)x+tp\in X$ for every $x\in X$ and $t\in I$.
+\begin{enumerate}
+\item Construct a contraction of a star shaped space. Compute all its singular homology groups, including degree zero. Explain why the same argument applies to every nonempty convex subset.
+\item For $m\geq1$, define $r:\mathbb R^m\setminus\{0\}\to S^{m-1}$ by $r(x)=x/\|x\|$, and let $i:S^{m-1}\hookrightarrow\mathbb R^m\setminus\{0\}$ be inclusion. Construct a homotopy from $\mathrm{id}$ to $ir$ that fixes the sphere throughout. Deduce that $i_*$ and $r_*$ are inverse in every degree. No computation of the homology of a positive-dimensional sphere is required.
+\item Take $m=1$ and compute every homology group of $\mathbb R\setminus\{0\}$. Explain why the punctured line cannot be homotopy equivalent to the line.
+\end{enumerate}
+
+\section{Retracts and Chain Homotopies}
+A retraction of a subspace $X'\subseteq X$ is a map $r:X\to X'$ with $ri=\mathrm{id}_{X'}$, where $i:X'\hookrightarrow X$ is inclusion.
+\begin{enumerate}
+\item Prove that $i_*:H_n(X')\to H_n(X)$ is injective and $r_*$ is surjective. If $X$ is contractible and $X'$ is nonempty, use a contraction of $X$ to construct a contraction of $X'$.
+\item Let $u,v:A_\bullet\to B_\bullet$ be chain maps and let $K_n:A_n\to B_{n+1}$ satisfy $v-u=d_BK+Kd_A$. Show explicitly that $u$ and $v$ induce the same map on homology.
+\item Suppose $u:A_\bullet\to B_\bullet$ has a chain map $w:B_\bullet\to A_\bullet$ such that $wu$ and $uw$ are chain homotopic to the respective identities. Identify the inverse of $u_*$, and explain how the prism construction applies this algebraic fact to a homotopy equivalence of spaces.
+\end{enumerate}
+
+\section{The Interval and Its Endpoints}
+Let $X=I$ and $X'=\{0,1\}$. Use the long exact sequence associated to
+\[
+0\longrightarrow C_\bullet(X')\longrightarrow C_\bullet(X)
+\longrightarrow C_\bullet(X,X')\longrightarrow0.
+\]
+\begin{enumerate}
+\item Compute $H_n(X')$ and $H_n(X)$ for all $n$. Identify the map $H_0(X')\to H_0(X)$ under the identifications with $\mathbb Z^2$ and $\mathbb Z$.
+\item Deduce all the relative groups $H_n(X,X')$. For the singular edge $\sigma:|\Delta^1|\to I$ given by $\sigma(t_0,t_1)=t_1$, compute its relative class and its image under the connecting map to $H_0(X')$. Distinguish the two point generators from integer coefficients.
+\item The reflection $f:I\to I$, $f(x)=1-x$, preserves $X'$. Compute its induced map on $H_1(X,X')$. Show that $f$ is homotopic to $\mathrm{id}_I$ as a map of spaces, but that there is no such homotopy through maps preserving $X'$ at every time. Explain why there is no contradiction with relative homotopy invariance.
+\end{enumerate}
+
+\section{A Contractible Space with Several Marked Points}
+Let $X$ be a contractible space and let $X'=\{x_0,\ldots,x_{k-1}\}\subseteq X$ be a discrete subspace of $k\geq1$ distinct points.
+\begin{enumerate}
+\item Compute all the groups $H_n(X,X')$. Identify $H_1(X,X')$ canonically with the kernel of the homomorphism $\mathbb Z^k\to\mathbb Z$ that adds coordinates.
+\item Choose paths $\sigma_i:|\Delta^1|\to X$ from $x_0$ to $x_i$ for $1\leq i<k$. Prove that their relative homology classes form a basis of $H_1(X,X')$. Prove that these classes are independent of the chosen paths with the same endpoints.
+\item Suppose $f:X\to X$ maps $X'$ to itself, with $f(x_i)=x_{\pi(i)}$ for a permutation $\pi$. Describe the induced action on the kernel above and give its matrix in the basis from part 2. Recover the sign of reflection in the preceding exercise when $k=2$.
+\end{enumerate}
+
+\end{document}

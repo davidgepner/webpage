@@ -1,0 +1,313 @@
+\documentclass[11pt]{article}
+% BEGIN SHARED COURSE STYLE
+% Shared Math 615 style. Embedded verbatim in standalone published sources.
+\RequirePackage[letterpaper,margin=1in]{geometry}
+\RequirePackage{amsmath,amsthm,mathtools}
+\RequirePackage{fontspec,unicode-math}
+\setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmathfont{texgyretermes-math.otf}
+\RequirePackage{microtype,tikz-cd,enumitem,needspace,xcolor,booktabs,titlesec,etoolbox}
+\definecolor{teal}{HTML}{176568}
+\definecolor{burgundy}{HTML}{782F40}
+\definecolor{inklink}{HTML}{176568}
+\definecolor{accent}{HTML}{176568}
+\titleformat{\section}{\large\bfseries\color{teal}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{burgundy}}{\thesubsection}{.65em}{}
+\titleformat{\paragraph}[runin]{\normalsize\bfseries\color{burgundy}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{2.2ex plus .5ex minus .2ex}{1ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.6ex plus .4ex minus .2ex}{.7ex plus .2ex}
+\RequirePackage{hyperref,bookmark}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,citecolor=teal,pdfstartview={XYZ null null 1.5},bookmarksnumbered=true}
+\urlstyle{same}
+\setcounter{tocdepth}{2}
+\setlist[enumerate]{label=\arabic*.,ref=\arabic*,leftmargin=*,itemsep=4pt,topsep=4pt}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\AddToHook{cmd/section/before}{\Needspace{8\baselineskip}}
+\AddToHook{cmd/subsection/before}{\Needspace{6\baselineskip}}
+\makeatletter
+\newcommand{\afterblock}{\@afterindentfalse\@afterheading}
+\makeatother
+\newcounter{result}[section]
+\renewcommand{\theresult}{\thesection.\arabic{result}}
+\newcommand{\resulttitle}[3]{#1 #2\ifstrempty{#3}{}{ (#3)}.}
+\newenvironment{result}[3]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{proof:#2}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{entry}[3]{\par\addvspace{7pt}\Needspace{3\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\textbf{\resulttitle{#1}{\theresult}{#3}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{demonstration}[1]{\par\noindent\hypertarget{proof:#1}{}{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{#1}{\textbf{Proof.}}}\quad\ignorespaces}{\unskip\nobreak\hfill\qedsymbol\par\addvspace{5pt}\afterblock}
+\newenvironment{citedresult}[4]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{urlcolor=burgundy}\href{#4}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newcommand{\usedby}[1]{\par\noindent{\small\textbf{Used in:} #1.}\par\afterblock}
+\newcommand{\coursebold}[1]{{\color{burgundy}\textbf{#1}}}
+\newcommand{\coursetitle}[3]{\begin{center}{\large\bfseries\color{teal}#1}\\[4pt]{\LARGE\bfseries\color{teal}#2}\\[6pt]Math 615: Algebraic Topology I\\Fall 2026\quad\textbar\quad #3\end{center}}
+\newcommand{\coursecontents}{{\small\setlength{\parskip}{0pt}\tableofcontents}}
+\newcommand{\homeworkstyle}{\titleformat{\section}{\large\bfseries\color{teal}}{Exercise \thesection.}{.65em}{}}
+% END SHARED COURSE STYLE
+\DeclareMathOperator{\Mor}{Mor}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\coim}{coim}
+\DeclareMathOperator{\coker}{coker}
+\DeclareMathOperator{\Ch}{Ch}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\id}{\mathrm{id}}
+\homeworkstyle
+\hypersetup{pdftitle={Homework 1: Categories and Chain Complexes},pdfauthor={Math 615 Fall 2026},pdfsubject={Revision 2}}
+\begin{document}
+\coursetitle{Homework 1}{Categories and Chain Complexes}{August 31 and September 2}
+Throughout, an \emph{abelian category} means an additive category with all
+kernels and cokernels in which every monomorphism is a kernel and every
+epimorphism is a cokernel. In an arbitrary abelian category, give arguments
+using morphisms and universal properties.
+
+Use homological grading: a chain complex has differentials
+\(d_n:C_n\to C_{n-1}\) satisfying \(d_{n-1}d_n=0\).
+A chain homotopy between chain maps \(f,g:C\to D\) consists of morphisms
+\(h_n:C_n\to D_{n+1}\) satisfying
+\[
+f_n-g_n=d^D_{n+1}h_n+h_{n-1}d^C_n.
+\]
+
+\section{Mono, Epi, and Iso}
+Let \(\mathcal C\) be a category. A morphism \(f:X\to Y\) is called:
+\begin{enumerate}[leftmargin=*]
+\item a \emph{monomorphism} if, for every object \(T\) and morphisms
+\(u,v:T\to X\), the equality \(fu=fv\) implies \(u=v\);
+\item an \emph{epimorphism} if, for every object \(T\) and morphisms
+\(u,v:Y\to T\), the equality \(uf=vf\) implies \(u=v\);
+\item an \emph{isomorphism} if there exists a morphism \(g:Y\to X\)
+such that \(gf=1_X\) and \(fg=1_Y\).
+\end{enumerate}
+
+\begin{enumerate}
+\item Prove that the inverse of an isomorphism is unique, and that every
+isomorphism is both a monomorphism and an epimorphism. In the category of
+sets, prove that monomorphisms are precisely injections, epimorphisms are
+precisely surjections, and isomorphisms are precisely bijections.
+
+\item Let \(\mathbf{CRing}\) be the category of commutative rings with
+identity and identity-preserving ring homomorphisms. Show that the inclusion
+\[
+\Z\hookrightarrow\Q
+\]
+is both a monomorphism and an epimorphism, but is not an isomorphism. Thus
+an epimorphism of rings need not be surjective.
+
+\item Let \(\mathbf{Haus}\) be the category of Hausdorff topological spaces
+and continuous maps. Give \(\Q\) and \(\R\) their usual topologies. Show
+that the inclusion
+\[
+\Q\hookrightarrow\R
+\]
+is both a monomorphism and an epimorphism in \(\mathbf{Haus}\), but is not
+an isomorphism. Is this inclusion still an epimorphism in the category
+\(\mathbf{Top}\) of all topological spaces and continuous maps? Justify
+your answer.
+
+\item Let \(\mathcal A\) be an abelian category. Prove that a morphism
+in \(\mathcal A\) is an isomorphism if and only if it is both a
+monomorphism and an epimorphism.
+\end{enumerate}
+
+\section{Coimage and Image}
+Let \(f:X\to Y\) be a morphism in an abelian category. Define
+\[
+\coim(f)=\coker(\ker f),
+\qquad
+\im(f)=\ker(\coker f).
+\]
+Let \(p:X\to\coim(f)\) and \(i:\im(f)\to Y\) be the canonical morphisms.
+\begin{enumerate}
+\item Prove that there is a unique morphism
+\[
+\bar{f}:\coim(f)\longrightarrow\im(f),
+\qquad
+f=i\circ\bar{f}\circ p.
+\]
+\item Prove that \(\bar{f}\) is an isomorphism.
+\end{enumerate}
+
+\section{Matrix Algebra in Additive Categories}
+Let \(\mathcal C\) be an additive category. For a biproduct
+\(X_1\oplus X_2\), write
+\[
+\iota_j^X:X_j\longrightarrow X_1\oplus X_2,
+\qquad
+\rho_i^X:X_1\oplus X_2\longrightarrow X_i
+\]
+for its canonical inclusion and projection maps. The projections are the
+product structure maps, and the inclusions are characterized by
+\[
+\rho_i^X\iota_j^X=
+\begin{cases}
+1_{X_i},&i=j,\\
+0,&i\ne j.
+\end{cases}
+\]
+The inclusions also make \(X_1\oplus X_2\) a coproduct. Use analogous
+notation for \(Y_1\oplus Y_2\).
+
+\begin{enumerate}
+\item Show that a morphism
+\[
+f:X_1\oplus X_2\longrightarrow Y_1\oplus Y_2
+\]
+is uniquely determined by its four components
+\[
+f_{ij}=\rho_i^Y f\iota_j^X.
+\]
+Express \(f\) in terms of these components, and prove that composition
+corresponds to matrix multiplication.
+
+\item Let \(\mathcal F\) be the category of finitely generated free
+abelian groups, with all group homomorphisms as morphisms. Show that
+\(\mathcal F\) is additive. Prove that
+\[
+2:\Z\longrightarrow\Z
+\]
+is both a monomorphism and an epimorphism in \(\mathcal F\), but is not
+an isomorphism.
+
+\item Compute the kernel and cokernel of this morphism \emph{in
+\(\mathcal F\)}. Then compute its image, coimage, and the canonical morphism
+\[
+\coim(2)\longrightarrow\im(2).
+\]
+Explain why \(\mathcal F\) is not abelian.
+\end{enumerate}
+
+\section{Splittings and Idempotents}
+Let
+\[
+0\longrightarrow A\xrightarrow{i}B\xrightarrow{p}C\longrightarrow0
+\]
+be a short exact sequence in an abelian category \(\mathcal A\).
+\begin{enumerate}
+\item Suppose \(s:C\to B\) satisfies \(ps=1_C\). Construct \(r:B\to A\)
+such that
+\[
+ri=1_A,\qquad rs=0,\qquad ir+sp=1_B.
+\]
+Deduce that
+\[
+[\,i\ \ s\,]:A\oplus C\longrightarrow B
+\]
+is an isomorphism, and describe its inverse.
+
+\item Prove that \(p\) has a section if and only if \(i\) has a retraction.
+Thus either condition characterizes a split short exact sequence.
+
+\item Let \(e:X\to X\) satisfy \(e^2=e\). Construct an isomorphism
+\[
+X\cong\im(e)\oplus\ker(e)
+\]
+under which \(e\) has matrix
+\[
+\begin{pmatrix}1&0\\0&0\end{pmatrix}.
+\]
+\end{enumerate}
+
+\section{Chain Complexes Form an Abelian Category}
+Let \(\mathcal A\) be an abelian category, and write
+\(\Ch(\mathcal A)\) for its category of chain complexes and chain maps.
+\begin{enumerate}
+\item Describe addition of chain maps and finite biproducts of complexes.
+Given a chain map \(f:C\to D\), construct complexes \(K\) and \(Q\) with
+\[
+K_n=\ker(f_n),\qquad Q_n=\coker(f_n),
+\]
+and prove that they are respectively the kernel and cokernel of \(f\) in
+\(\Ch(\mathcal A)\).
+
+\item Prove that \(\Ch(\mathcal A)\) is abelian. Show that a sequence
+of complexes
+\[
+0\longrightarrow C\longrightarrow D\longrightarrow E\longrightarrow0
+\]
+is short exact if and only if it is short exact in every degree.
+
+\item Put
+\[
+Z_n(C)=\ker(d_n),\qquad B_n(C)=\im(d_{n+1}).
+\]
+Construct the canonical monomorphism \(B_n(C)\to Z_n(C)\), and define
+\[
+H_n(C)=\coker\bigl(B_n(C)\longrightarrow Z_n(C)\bigr).
+\]
+Show that chain maps induce morphisms on homology and that
+\[
+H_n:\Ch(\mathcal A)\longrightarrow\mathcal A
+\]
+is an additive functor.
+\end{enumerate}
+
+\section{What Chain Homotopy Remembers}
+Let \(C,D\) be chain complexes in an abelian category \(\mathcal A\).
+\begin{enumerate}
+\item Prove that chain homotopy is an equivalence relation on the set of
+chain maps \(C\to D\). Show that it is compatible with addition and
+composition. Deduce that complexes and homotopy classes of chain maps
+form an additive category \(K(\mathcal A)\).
+
+\item Prove that homotopic chain maps induce the same morphisms on
+homology. Deduce that a chain homotopy equivalence is a
+\emph{quasi-isomorphism}, meaning a chain map inducing isomorphisms on
+all homology objects.
+
+\item Work now in abelian groups. Let \(C\) be
+\[
+0\longrightarrow\Z\xrightarrow{\,2\,}\Z\longrightarrow0,
+\]
+concentrated in degrees \(1,0\), and let \(D\) have \(\Z\) in degree
+\(1\) and zero elsewhere.
+
+Describe all chain maps \(C\to D\), and determine exactly when two are
+chain homotopic. Compute the abelian group
+\[
+\Mor_{K(\mathbf{Ab})}(C,D).
+\]
+Show that every chain map \(C\to D\) induces zero on homology, although
+some are not nullhomotopic.
+\end{enumerate}
+
+\section{Acyclic Versus Contractible}
+A complex \(C\) is \emph{acyclic} if \(H_n(C)=0\) for every \(n\), and
+\emph{contractible} if \(1_C\) is chain homotopic to zero.
+\begin{enumerate}
+\item Prove that \(C\) is contractible if and only if it is acyclic and
+every short exact sequence
+\[
+0\longrightarrow Z_n(C)\longrightarrow C_n
+\xrightarrow{\bar{d}_n}Z_{n-1}(C)\longrightarrow0
+\]
+splits. Here \(\bar{d}_n\) is the factorization of \(d_n\) through
+\(Z_{n-1}(C)\); acyclicity makes it an epimorphism.
+
+\item Consider
+\[
+0\longrightarrow\Z\xrightarrow{\,2\,}\Z
+\xrightarrow{\mathrm{mod}\,2}\Z/2\longrightarrow0,
+\]
+with the displayed nonzero terms in degrees \(2,1,0\). Show that this
+complex is acyclic but not contractible. Deduce that a quasi-isomorphism
+need not be a chain homotopy equivalence.
+
+\item Let \(C\) be a chain complex of vector spaces over a field. Show
+that \(C\) is chain homotopy equivalent to the complex having \(H_n(C)\)
+in degree \(n\) and all differentials zero. Explain where choices enter
+your construction.
+
+\item Work with modules over the ring \(\Z\). Consider the complex
+\[
+C:\qquad 0\longrightarrow\Z\xrightarrow{\,2\,}\Z\longrightarrow0,
+\]
+concentrated in degrees \(1,0\). Compute its homology, and let \(H(C)\)
+denote its homology regarded as a complex with zero differentials.
+
+Construct a quasi-isomorphism \(C\to H(C)\), but prove that \(C\) and
+\(H(C)\) are not chain homotopy equivalent. Thus the conclusion of
+part~(c) can fail for modules over a ring that is not a field, even when
+every term of \(C\) is a free module.
+\end{enumerate}
+\end{document}

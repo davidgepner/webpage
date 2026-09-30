@@ -1,0 +1,183 @@
+\documentclass[11pt]{article}
+% BEGIN SHARED COURSE STYLE
+% Shared Math 615 style. Embedded verbatim in standalone published sources.
+\RequirePackage[letterpaper,margin=1in]{geometry}
+\RequirePackage{amsmath,amsthm,mathtools}
+\RequirePackage{fontspec,unicode-math}
+\setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmathfont{texgyretermes-math.otf}
+\RequirePackage{microtype,tikz-cd,enumitem,needspace,xcolor,booktabs,titlesec,etoolbox}
+\definecolor{teal}{HTML}{176568}
+\definecolor{burgundy}{HTML}{782F40}
+\definecolor{inklink}{HTML}{176568}
+\definecolor{accent}{HTML}{176568}
+\titleformat{\section}{\large\bfseries\color{teal}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{burgundy}}{\thesubsection}{.65em}{}
+\titleformat{\paragraph}[runin]{\normalsize\bfseries\color{burgundy}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{2.2ex plus .5ex minus .2ex}{1ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.6ex plus .4ex minus .2ex}{.7ex plus .2ex}
+\RequirePackage{hyperref,bookmark}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,citecolor=teal,pdfstartview={XYZ null null 1.5},bookmarksnumbered=true}
+\urlstyle{same}
+\setcounter{tocdepth}{2}
+\setlist[enumerate]{label=\arabic*.,ref=\arabic*,leftmargin=*,itemsep=4pt,topsep=4pt}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\AddToHook{cmd/section/before}{\Needspace{8\baselineskip}}
+\AddToHook{cmd/subsection/before}{\Needspace{6\baselineskip}}
+\makeatletter
+\newcommand{\afterblock}{\@afterindentfalse\@afterheading}
+\makeatother
+\newcounter{result}[section]
+\renewcommand{\theresult}{\thesection.\arabic{result}}
+\newcommand{\resulttitle}[3]{#1 #2\ifstrempty{#3}{}{ (#3)}.}
+\newenvironment{result}[3]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{proof:#2}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{entry}[3]{\par\addvspace{7pt}\Needspace{3\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\textbf{\resulttitle{#1}{\theresult}{#3}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{demonstration}[1]{\par\noindent\hypertarget{proof:#1}{}{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{#1}{\textbf{Proof.}}}\quad\ignorespaces}{\unskip\nobreak\hfill\qedsymbol\par\addvspace{5pt}\afterblock}
+\newenvironment{citedresult}[4]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{urlcolor=burgundy}\href{#4}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newcommand{\usedby}[1]{\par\noindent{\small\textbf{Used in:} #1.}\par\afterblock}
+\newcommand{\coursebold}[1]{{\color{burgundy}\textbf{#1}}}
+\newcommand{\coursetitle}[3]{\begin{center}{\large\bfseries\color{teal}#1}\\[4pt]{\LARGE\bfseries\color{teal}#2}\\[6pt]Math 615: Algebraic Topology I\\Fall 2026\quad\textbar\quad #3\end{center}}
+\newcommand{\coursecontents}{{\small\setlength{\parskip}{0pt}\tableofcontents}}
+\newcommand{\homeworkstyle}{\titleformat{\section}{\large\bfseries\color{teal}}{Exercise \thesection.}{.65em}{}}
+% END SHARED COURSE STYLE
+\newcommand{\Mor}{\operatorname{Mor}}\newcommand{\im}{\operatorname{im}}\newcommand{\coker}{\operatorname{coker}}\newcommand{\A}{\mathcal A}\newcommand{\Z}{\mathbb Z}\newcommand{\id}{\mathrm{id}}\DeclareMathOperator{\Cone}{Cone}\DeclareMathOperator{\Cyl}{Cyl}
+
+\homeworkstyle
+\hypersetup{pdftitle={Homework 2: Homotopies, Exact Sequences, and Cones},pdfauthor={Math 615 Fall 2026},pdfsubject={Revision 5}}
+\begin{document}
+\coursetitle{Homework 2}{Homotopies, Exact Sequences, and Cones}{September 9}
+Work in an abelian category $\A$, except where modules are specified. Use homological grading:
+$d^C_n:C_n\to C_{n-1}$. Write $Z_n(C)=\ker d^C_n$,
+$B_n(C)=\im d^C_{n+1}$, and $H_n(C)=\coker(B_n(C)\to Z_n(C))$.
+The shift is $C[1]_n=C_{n-1}$ with differential $-d^C_{n-1}$.
+A chain map is a \emph{quasi-isomorphism} if it induces isomorphisms on all homology objects.
+You may use Homework 1 and the snake lemma. In $\A$, use morphisms and universal properties; element arguments are permitted for modules. All exercises are required.
+
+\section{Chain Homotopies}\label{ex:homotopy}
+A homotopy from $g:C\to D$ to $f:C\to D$ is a family $h_n:C_n\to D_{n+1}$ satisfying
+\[
+f_n-g_n=d^D_{n+1}h_n+h_{n-1}d^C_n.
+\]
+A complex is \emph{contractible} if its identity is homotopic to zero.
+A chain map $f:C\to D$ is a \emph{chain homotopy equivalence} if there is a chain map $g:D\to C$ with $gf\simeq\id_C$ and $fg\simeq\id_D$.
+\begin{enumerate}
+\item Prove that chain homotopy is an equivalence relation on chain maps and is compatible with addition and composition. Thus complexes and chain-homotopy classes of maps form an additive category $K(\A)$.
+\item Prove that homotopic chain maps induce the same maps on homology. Deduce that every chain homotopy equivalence is a quasi-isomorphism, and every contractible complex is acyclic.
+\item Suppose $i:C\to D$ and $r:D\to C$ are chain maps with $ri=\id_C$ and $ir\simeq\id_D$. Construct the induced inverse isomorphisms on homology. Give an example in which neither $i$ nor $r$ is an isomorphism of complexes.
+\end{enumerate}
+
+\section{The Long Exact Sequence in Homology}\label{ex:les}
+Let $0\to A\xrightarrow{i}B\xrightarrow{\rho}C\to0$ be a short exact sequence of complexes, meaning that it is exact in every degree.
+\begin{enumerate}
+\item For modules, define $\delta_n:H_n(C)\to H_{n-1}(A)$ as follows: lift a cycle $c\in C_n$ to $b\in B_n$, and let $a\in A_{n-1}$ satisfy $i(a)=d^B(b)$. Prove existence and uniqueness of $a$, that $a$ is a cycle, and that sending the class of $c$ to the class of $a$ is well defined and linear.
+\item Construct $\delta_n$ in an arbitrary abelian category using the snake lemma. Specify the diagram and justify every kernel and cokernel identification. Prove exactness at all three types of terms in
+\[
+\cdots\to H_n(A)\xrightarrow{H_n(i)}H_n(B)\xrightarrow{H_n(\rho)}H_n(C)
+\xrightarrow{\delta_n}H_{n-1}(A)\to\cdots.
+\]
+\item For a morphism $(a,b,c)$ between two short exact sequences, prove that the square
+\[
+\begin{tikzcd}[row sep=small,column sep=large]
+H_n(C)\arrow[r,"\delta_n"]\arrow[d,"H_n(c)"']&H_{n-1}(A)\arrow[d,"H_{n-1}(a)"]\\
+H_n(C')\arrow[r,"\delta'_n"']&H_{n-1}(A')
+\end{tikzcd}
+\]
+commutes. Deduce that if two of $a,b,c$ are quasi-isomorphisms, so is the third.
+\end{enumerate}
+
+
+\section{Degreewise Splittings}\label{ex:split}
+Suppose $0\to A\xrightarrow{i}B\xrightarrow{\rho}C\to0$ splits in each degree. Choose sections $s_n:C_n\to B_n$ of $\rho_n$. Identify $B_n$ with $A_n\oplus C_n$ using the unique map whose restrictions to the summands are $i_n,s_n$.
+\begin{enumerate}
+\item Show that the differential has the form
+\[
+d^B_n=\begin{pmatrix}d^A_n&\tau_n\\0&d^C_n\end{pmatrix},
+\qquad \tau_n:C_n\to A_{n-1},
+\]
+and that $\tau$ is a chain map $C\to A[1]$. Identify the connecting morphism of Exercise~\ref{ex:les} with $H_n(\tau)$, including its sign.
+\item Replace $s_n$ by $s'_n=s_n+i_nu_n$. Compute $\tau'_n$ and exhibit a chain homotopy between $\tau$ and $\tau'$. Prove that the short exact sequence splits as a sequence of complexes if and only if $\tau$ is nullhomotopic.
+\item Give a degreewise split short exact sequence of complexes of abelian groups whose connecting homomorphisms all vanish but which does not split as a sequence of complexes. Specify the complexes and maps, and prove both assertions.
+\end{enumerate}
+
+\section{Mapping Cones}\label{ex:cone}
+For a chain map $f:C\to D$, define
+\[
+\Cone(f)_n=D_n\oplus C_{n-1},\qquad
+ d^{\Cone(f)}_n=\begin{pmatrix}d^D_n&f_{n-1}\\0&-d^C_{n-1}\end{pmatrix}.
+\]
+For any biproduct, $\iota_j$ and $\rho_j$ denote its canonical inclusions and projections.
+\begin{enumerate}
+\item Verify that $\Cone(f)$ is a complex and that the structure maps give a degreewise split short exact sequence
+\[
+0\to D\xrightarrow{\iota_1}\Cone(f)\xrightarrow{\rho_2}C[1]\to0.
+\]
+\item Compute the connecting morphism, including its sign, and write the resulting long exact sequence using $H_*(C)$, $H_*(D)$, and $H_*(\Cone(f))$. Prove that $f$ is a quasi-isomorphism if and only if $\Cone(f)$ is acyclic.
+\item If $f-g=d^Dh+hd^C$, construct an isomorphism $\Cone(f)\to\Cone(g)$ which is the identity on the subcomplex $D$ and on the quotient $C[1]$. Give its inverse and check its sign.
+\item Construct a contracting homotopy for $\Cone(\id_C)$, and identify $\Cone(0:C\to D)$ as a biproduct of complexes.
+\end{enumerate}
+
+
+\section{Mapping Cylinders}\label{ex:cylinder}
+For a chain map $f:C\to D$, define
+\[
+\Cyl(f)_n=D_n\oplus C_n\oplus C_{n-1},\qquad
+ d^{\Cyl(f)}_n=
+ \begin{pmatrix}
+ d^D_n&0&f_{n-1}\\
+ 0&d^C_n&-\id_{C_{n-1}}\\
+ 0&0&-d^C_{n-1}
+ \end{pmatrix}.
+\]
+Let $i:C\to\Cyl(f)$ and $j:D\to\Cyl(f)$ be the second and first inclusions, respectively. Define $p:\Cyl(f)\to D$ by its three restrictions $\id_D,f,0$.
+\begin{enumerate}
+\item Verify that the differential squares to zero, that $i,j,p$ are chain maps, and that
+\[
+\begin{tikzcd}[row sep=large,column sep=large]
+C\arrow[r,"i"]\arrow[dr,"f"']&\Cyl(f)\arrow[d,"p"]\\
+&D
+\end{tikzcd}
+\]
+commutes. Prove that $i$ is a degreewise split monomorphism and $pj=\id_D$.
+\item Construct $H_n:\Cyl(f)_n\to\Cyl(f)_{n+1}$ with
+$\id_{\Cyl(f)}-jp=dH+Hd$ and $Hj=0$.
+Deduce that every chain map factors as a degreewise split monomorphism followed by a chain homotopy equivalence.
+\item Define $q:\Cyl(f)\to\Cone(f)$ by its two components $\rho_1,\rho_3$. Prove that
+\[
+0\to C\xrightarrow{i}\Cyl(f)\xrightarrow{q}\Cone(f)\to0
+\]
+is degreewise split exact. Identify its long exact sequence with the cone sequence of Exercise~\ref{ex:cone}, using $H_*(p)$ to identify $H_*(\Cyl(f))$ with $H_*(D)$. Determine the sign of the connecting map $H_n(\Cone(f))\to H_{n-1}(C)$.
+\end{enumerate}
+
+
+\section{Acyclic Versus Contractible}\label{ex:criterion}
+Let $f:C\to D$ be a chain map.
+\begin{enumerate}
+\item Prove that $f:C\to D$ is a chain homotopy equivalence if and only if $\Cone(f)$ is contractible.
+\item Over a field, prove that every acyclic complex is contractible, without assuming boundedness. Deduce that every quasi-isomorphism of complexes of vector spaces is a chain homotopy equivalence.
+\item Let $P$ be $\Z\xrightarrow{2}\Z$ in degrees $1,0$, and let $Q$ have $\Z/2$ in degree $0$ and zero elsewhere. Let $f:P\to Q$ be reduction modulo $2$ in degree $0$. Prove that $f$ is a quasi-isomorphism but is not a chain homotopy equivalence. Describe $\Cone(f)$ and show directly that it is acyclic but not contractible.
+\end{enumerate}
+
+\section{The Bockstein Homomorphism}\label{ex:bockstein}
+Let $\ell$ be a prime and $C$ a complex of free abelian groups. Write $\overline C=C/\ell C$, with the induced differential.
+\begin{enumerate}
+\item Prove that multiplication by $\ell$ and reduction modulo $\ell$ give a short exact sequence of complexes
+\[
+0\to C\xrightarrow{\ell}C\xrightarrow{\rho}\overline C\to0.
+\]
+Let $\delta_n:H_n(\overline C)\to H_{n-1}(C)$ be its connecting morphism. Define
+\[
+\beta_n=H_{n-1}(\rho)\delta_n:
+H_n(\overline C)\to H_{n-1}(\overline C).
+\]
+Describe $\beta_n$ by lifting a cycle modulo $\ell$ and dividing its differential by $\ell$. Prove that this description is independent of all choices.
+\item Prove that $\beta_{n-1}\beta_n=0$ and that $\beta$ is natural with respect to chain maps between complexes of free abelian groups. Thus $(H_*(\overline C),\beta)$ is a complex of $\Z/\ell$-vector spaces.
+\item For every $r\geq1$, consider
+\[
+C:\qquad 0\to\Z\xrightarrow{\ell^r}\Z\to0
+\]
+in degrees $1,0$. Compute $H_*(C)$, $H_*(\overline C)$, $\delta_1$, and $\beta_1$. Explain exactly how $r=1$ differs from $r>1$.
+\end{enumerate}
+\end{document}

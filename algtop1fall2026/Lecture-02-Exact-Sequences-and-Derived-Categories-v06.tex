@@ -1,0 +1,348 @@
+\documentclass[11pt]{article}
+% BEGIN SHARED COURSE STYLE
+% Shared Math 615 style. Embedded verbatim in standalone published sources.
+\RequirePackage[letterpaper,margin=1in]{geometry}
+\RequirePackage{amsmath,amsthm,mathtools}
+\RequirePackage{fontspec,unicode-math}
+\setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmathfont{texgyretermes-math.otf}
+\RequirePackage{microtype,tikz-cd,enumitem,needspace,xcolor,booktabs,titlesec,etoolbox}
+\definecolor{teal}{HTML}{176568}
+\definecolor{burgundy}{HTML}{782F40}
+\definecolor{inklink}{HTML}{176568}
+\definecolor{accent}{HTML}{176568}
+\titleformat{\section}{\large\bfseries\color{teal}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{burgundy}}{\thesubsection}{.65em}{}
+\titleformat{\paragraph}[runin]{\normalsize\bfseries\color{burgundy}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{2.2ex plus .5ex minus .2ex}{1ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.6ex plus .4ex minus .2ex}{.7ex plus .2ex}
+\RequirePackage{hyperref,bookmark}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,citecolor=teal,pdfstartview={XYZ null null 1.5},bookmarksnumbered=true}
+\urlstyle{same}
+\setcounter{tocdepth}{2}
+\setlist[enumerate]{label=\arabic*.,ref=\arabic*,leftmargin=*,itemsep=4pt,topsep=4pt}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\AddToHook{cmd/section/before}{\Needspace{8\baselineskip}}
+\AddToHook{cmd/subsection/before}{\Needspace{6\baselineskip}}
+\makeatletter
+\newcommand{\afterblock}{\@afterindentfalse\@afterheading}
+\makeatother
+\newcounter{result}[section]
+\renewcommand{\theresult}{\thesection.\arabic{result}}
+\newcommand{\resulttitle}[3]{#1 #2\ifstrempty{#3}{}{ (#3)}.}
+\newenvironment{result}[3]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{proof:#2}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{entry}[3]{\par\addvspace{7pt}\Needspace{3\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\textbf{\resulttitle{#1}{\theresult}{#3}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{demonstration}[1]{\par\noindent\hypertarget{proof:#1}{}{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{#1}{\textbf{Proof.}}}\quad\ignorespaces}{\unskip\nobreak\hfill\qedsymbol\par\addvspace{5pt}\afterblock}
+\newenvironment{citedresult}[4]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{urlcolor=burgundy}\href{#4}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newcommand{\usedby}[1]{\par\noindent{\small\textbf{Used in:} #1.}\par\afterblock}
+\newcommand{\coursebold}[1]{{\color{burgundy}\textbf{#1}}}
+\newcommand{\coursetitle}[3]{\begin{center}{\large\bfseries\color{teal}#1}\\[4pt]{\LARGE\bfseries\color{teal}#2}\\[6pt]Math 615: Algebraic Topology I\\Fall 2026\quad\textbar\quad #3\end{center}}
+\newcommand{\coursecontents}{{\small\setlength{\parskip}{0pt}\tableofcontents}}
+\newcommand{\homeworkstyle}{\titleformat{\section}{\large\bfseries\color{teal}}{Exercise \thesection.}{.65em}{}}
+% END SHARED COURSE STYLE
+\newcommand{\Mor}{\operatorname{Mor}}
+\newcommand{\Tor}[3]{\hyperlink{def:tor}{\operatorname{Tor}^{R}_{#1}(#2,#3)}}
+\newcommand{\Extn}[3]{\hyperlink{def:ext}{\operatorname{Ext}^{#1}_{R}(#2,#3)}}
+\newcommand{\Hc}[2]{\hyperlink{def:cochain}{H^{#1}(#2)}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\coker}{\operatorname{coker}}
+\newcommand{\Ext}{\operatorname{Ext}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\A}{\mathcal A}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Ch}[1]{\hyperlink{def:complex}{\operatorname{Ch}(#1)}}
+\newcommand{\K}[1]{\hyperlink{def:K}{K(#1)}}
+\newcommand{\D}[1]{\hyperlink{def:D}{D(#1)}}
+\newcommand{\Hn}[2]{\hyperlink{def:homology}{H_{#1}(#2)}}
+\newcommand{\Zn}[2]{\hyperlink{def:homology}{Z_{#1}(#2)}}
+\newcommand{\Bn}[2]{\hyperlink{def:homology}{B_{#1}(#2)}}
+\newcommand{\shift}[2]{\hyperlink{def:shift}{#1[#2]}}
+\newcommand{\cone}[1]{\hyperlink{def:cone}{\operatorname{Cone}(#1)}}
+\newcommand{\cyl}[1]{\hyperlink{def:cylinder}{\operatorname{Cyl}(#1)}}
+
+\DeclareMathOperator{\Cone}{Cone}
+\DeclareMathOperator{\Cyl}{Cyl}
+
+
+
+\hypersetup{pdftitle={Lecture 2: Exact Sequences and Derived Categories},pdfauthor={Math 615 Fall 2026},pdfsubject={Revision 6}}
+\begin{document}
+\coursetitle{Lecture 2}{Exact Sequences and Derived Categories}{September 9}
+\noindent
+The long exact sequence, its mapping-cone interpretation, and the passage to $K(\A)$ and $D(\A)$. Section~\ref{sec:size} is supplementary reading.
+
+\coursecontents
+
+\section{From a Short Exact Sequence to Homology}\label{sec:les}
+\subsection{Conventions and the Connecting Morphism}
+Let $\A$ be a locally small abelian category. We use homological grading. Recall:
+\hypertarget{def:complex}{}a complex has differentials $d_n:C_n\to C_{n-1}$ with $d^2=0$; chain maps commute with differentials. Write $\Ch{\A}$ for their category.
+\hypertarget{def:homology}{}Set $Z_n(C)=\ker d_n$, $B_n(C)=\im d_{n+1}$, and
+\[
+H_n(C)=\coker\bigl(B_n(C)\longrightarrow Z_n(C)\bigr).
+\]
+A complex is \emph{acyclic} if its homology is zero. A chain map is a \emph{quasi-isomorphism} if every induced homology map is an isomorphism.
+
+\subsection{The Snake Lemma}
+\begin{result}{Lemma}{lem:snake}{Kernels, Cokernels, and the Connecting Map}
+Consider a commutative diagram in an abelian category with exact rows:
+\[
+\begin{tikzcd}[column sep=large,row sep=large]
+&A\arrow[r,"u"]\arrow[d,"\alpha"']&B\arrow[r,"v"]\arrow[d,"\beta"]&C\arrow[r]\arrow[d,"\gamma"]&0\\
+0\arrow[r]&A'\arrow[r,"u'"']&B'\arrow[r,"v'"']&C'.&
+\end{tikzcd}
+\]
+There is a natural exact sequence
+\[
+\ker\alpha\longrightarrow\ker\beta\longrightarrow\ker\gamma
+\xrightarrow{\delta}\coker\alpha\longrightarrow\coker\beta
+\longrightarrow\coker\gamma.
+\]
+If $u$ is monic, the sequence starts with $0$; if $v'$ is epic, it ends with $0$.
+\end{result}
+\begin{demonstration}{lem:snake}
+Let $K=\ker\gamma$ and form $T=B\times_C K$. Its projection $p:T\to K$
+is epic because it is a pullback of the epimorphism $v$. The composite
+$T\to B\xrightarrow{\beta}B'$ is killed by $v'$, so it factors uniquely
+as $u't$ for $t:T\to A'$. The induced map $A\to T$ has image $\ker p$,
+and $t$ composed with this map is $\alpha$. Thus $q_\alpha t$ vanishes
+on $\ker p$, where $q_\alpha:A'\to\coker\alpha$ is the quotient.
+There is a unique $\delta:K\to\coker\alpha$ satisfying
+$\delta p=q_\alpha t$.
+
+For clarity, the following lift calculations may be performed after
+pullback along epimorphisms. A lift of a map through an epimorphism exists
+on its pullback; such local lifts suffice to compare images and kernels,
+because epimorphisms detect equality of subobjects. Thus the calculations
+are valid in an abelian category and require no elements or chosen sections.
+At $\ker\beta$, a map whose composite with $v$ vanishes locally has the
+form $ua$; the equation $u'\alpha a=\beta ua=0$ gives $\alpha a=0$.
+At $\ker\gamma$, lift $c$ to $b$ and write $\beta b=u'a'$.
+If $\delta c=0$, lift $a'$ through the image of $\alpha$, writing
+$a'=\alpha a$ locally. Then $b-ua$ is killed by $\beta$ and still maps to $c$.
+Conversely a lift killed by $\beta$ gives zero connecting class.
+
+At $\coker\alpha$, a representative $a'$ maps to zero in $\coker\beta$
+exactly when $u'a'=\beta b$ locally. Then $vb$ is killed by $\gamma$
+and its connecting class is $[a']$. At $\coker\beta$, suppose a
+representative $b'$ maps to zero in $\coker\gamma$. Locally write
+$v'b'=\gamma c$ and lift $c=vb$. Then $b'-\beta b$ is killed by $v'$
+and hence lies in the image of $u'$, as required. The reverse inclusions
+follow from commutativity. These arguments prove exactness at all four
+interior terms. The asserted endpoint injectivity and surjectivity follow
+from those of $u$ and $v'$. The pullback construction commutes with maps
+of the original diagrams, proving naturality.
+\end{demonstration}
+\usedby{Theorem~\ref{thm:les}}
+
+For modules the construction is the familiar rule: lift $c\in\ker\gamma$
+to $b\in B$, solve $u'a'=\beta b$, and put $\delta(c)=[a']$.
+Changing $b$ to $b+ua$ changes $a'$ to $a'+\alpha a$, so the cokernel
+class does not change.
+
+\begin{result}{Theorem}{thm:les}{The Long Exact Sequence}
+A degreewise short exact sequence of complexes
+\begin{equation}\label{eq:ses}
+0\longrightarrow A\xrightarrow{i}B\xrightarrow{\rho}C\longrightarrow0
+\end{equation}
+induces natural connecting morphisms $\delta_n:\Hn{n}{C}\to\Hn{n-1}{A}$ and an exact sequence
+\begin{equation}\label{eq:les}
+\cdots\longrightarrow\Hn{n}{A}\xrightarrow{\Hn{n}{i}}\Hn{n}{B}
+\xrightarrow{\Hn{n}{\rho}}\Hn{n}{C}\xrightarrow{\delta_n}\Hn{n-1}{A}
+\longrightarrow\cdots.
+\end{equation}
+For modules, if $c\in C_n$ is a cycle, choose $b\in B_n$ with $\rho b=c$ and write $d^B b=ia$. Then $a$ is a cycle and $\delta_n$ sends the class of $c$ to the class of $a$.
+\end{result}
+
+\begin{demonstration}{thm:les}
+Put $Q_n(X)=\coker(d^X_{n+1})=X_n/\Bn{n}{X}$. The differential induces $\partial_X:Q_n(X)\to\Zn{n-1}{X}$. Its kernel is $\Hn{n}{X}$ and its cokernel is $\Hn{n-1}{X}$: its image is precisely $\Bn{n-1}{X}$.
+
+The following commutative diagram has exact rows:
+\begin{equation}\label{eq:snake}
+\begin{tikzcd}[column sep=large,row sep=large]
+&Q_n(A)\arrow[r]\arrow[d,"\partial_A"']&Q_n(B)\arrow[r]\arrow[d,"\partial_B"]&Q_n(C)\arrow[r]\arrow[d,"\partial_C"]&0\\
+0\arrow[r]&\Zn{n-1}{A}\arrow[r]&\Zn{n-1}{B}\arrow[r]&\Zn{n-1}{C}.&
+\end{tikzcd}
+\end{equation}
+The upper row is exact because cokernels preserve right exact sequences of arrows, applied to the differentials in degrees $n+1,n$. The lower row is exact because kernels preserve left exact sequences of arrows, applied in degrees $n-1,n-2$. 
+
+Lemma~\ref{lem:snake}, in its form with a right exact upper row and a left exact lower row, gives
+\[
+\ker\partial_A\to\ker\partial_B\to\ker\partial_C
+\xrightarrow{\delta_n}\coker\partial_A\to\coker\partial_B\to\coker\partial_C.
+\]
+Substituting the identifications above proves exactness at all three types of homology terms. The six-term sequences for consecutive $n$ join because their other maps are the maps induced by $i,\rho$. Naturality follows from the snake lemma; see \cite[Tag 0117]{Sta26}.
+
+For modules, $\rho d^B b=d^C c=0$, so exactness gives a unique $a$ with $ia=d^B b$. Since $i(d^A a)=d^B d^B b=0$ and $i$ is mono, $d^A a=0$. Changing $b$ to $b+ix$ changes $a$ to $a+d^A x$. Changing $c$ to $c+d^C c'$ and choosing a lift $b'$ of $c'$ changes a chosen lift to $b+d^B b'$ and leaves its differential unchanged. Thus the formula is well defined and agrees with the snake map. 
+\end{demonstration}
+\usedby{Sections~\ref{sec:cone} and~\ref{sec:derived}}
+
+\begin{entry}{Example}{ex:relative}{Relative Homology}
+If $A\subseteq B$ is a subcomplex, define the quotient complex $B/A$ degreewise. The theorem gives
+\[
+\cdots\to\Hn{n}{A}\to\Hn{n}{B}\to\Hn{n}{B/A}\xrightarrow{\delta_n}\Hn{n-1}{A}\to\cdots.
+\]
+For singular chains of a pair of spaces $(X,Y)$, take $B=C_*(X;R)$ and $A=C_*(Y;R)$. A relative cycle is represented by a chain in $X$ whose boundary lies in $Y$; $\delta$ takes the homology class of that boundary in $Y$.
+\end{entry}
+
+\section{Mapping Cones and Applications}\label{sec:cone}
+\subsection{The Cone Sequence}
+\begin{entry}{Definition}{def:shift}{Shifts}
+For $r\in\Z$, set $C[r]_n=C_{n-r}$ and $d^{C[r]}_n=(-1)^r d^C_{n-r}$. A chain map shifts by $f[r]_n=f_{n-r}$. Thus $\Hn{n}{\shift{C}{r}}=\Hn{n-r}{C}$ canonically. For any biproduct, $\iota_j$ and $\rho_j$ denote the canonical inclusions and projections.
+\end{entry}
+
+\begin{entry}{Definition}{def:cone}{The Mapping Cone}
+For a chain map $f:C\to D$, define
+\[
+\cone{f}_n=D_n\oplus C_{n-1},\qquad
+ d^{\cone{f}}_n=\begin{pmatrix}d^D_n&f_{n-1}\\0&-d^C_{n-1}\end{pmatrix}.
+\]
+The upper-right entry of its squared differential is $d^D_{n-1}f_{n-1}-f_{n-2}d^C_{n-1}=0$; all other entries vanish. There is a degreewise split short exact sequence
+\begin{equation}\label{eq:cone-ses}
+0\to D\xrightarrow{j=\iota_1}\cone{f}\xrightarrow{q=\rho_2}\shift{C}{1}\to0.
+\end{equation}
+\end{entry}
+
+\begin{result}{Proposition}{prop:cone-les}{Homology of a Cone}
+The connecting map of \eqref{eq:cone-ses} is $\Hn{n-1}{f}$. Hence
+\begin{equation}\label{eq:cone-les}
+\cdots\to\Hn{n}{C}\xrightarrow{\Hn{n}{f}}\Hn{n}{D}\xrightarrow{\Hn{n}{j}}\Hn{n}{\cone{f}}
+\xrightarrow{\Hn{n}{q}}\Hn{n-1}{C}\xrightarrow{\Hn{n-1}{f}}\Hn{n-1}{D}\to\cdots
+\end{equation}
+is exact. In particular, $f$ is a quasi-isomorphism if and only if $\cone{f}$ is acyclic.
+\end{result}
+\begin{demonstration}{prop:cone-les}
+A cycle $c\in C_{n-1}$ lifts to $(0,c)$, whose cone differential is $(fc,0)$. Thus the connecting map has the asserted positive sign. Categorically, the second-summand section of \eqref{eq:cone-ses} has the same differential defect $f$, so this computes the snake map in $\A$. Apply Theorem~\ref{thm:les}. If every $\Hn{n}{f}$ is invertible, exactness forces all cone homology to vanish. Conversely, its vanishing makes $\Hn{n}{f}$ both mono and epi, hence an isomorphism in $\A$.
+\end{demonstration}
+\usedby{Proposition~\ref{prop:ses-cone}}
+
+\begin{entry}{Example}{ex:multiplication}{Multiplication by an Integer}
+For $C=D=\Z$ concentrated in degree zero and $f=m$, the cone is $\Z\xrightarrow{m}\Z$ in degrees $1,0$. Its homology is $\ker(m)$ in degree $1$ and $\Z/m\Z$ in degree $0$.
+
+\end{entry}
+
+\subsection{Recovering a Short Exact Sequence from a Cone}
+\begin{result}{Proposition}{prop:ses-cone}{A Cone Models the Quotient}
+For \eqref{eq:ses}, let $\pi:\cone{i}\to C$ have restrictions $\rho:B\to C$ and $0:\shift{A}{1}\to C$. Then $\pi$ is a quasi-isomorphism and the diagram
+\[
+\begin{tikzcd}[column sep=large,row sep=small]
+A\arrow[r,"i"]\arrow[d,equal]&B\arrow[r,"j"]\arrow[d,equal]&\cone{i}\arrow[d,"\pi","\sim"']\\
+A\arrow[r,"i"']&B\arrow[r,"\rho"']&C
+\end{tikzcd}
+\]
+commutes. With $q:\cone{i}\to\shift{A}{1}$ the second projection, the connecting morphism in Theorem~\ref{thm:les} is
+\begin{equation}\label{eq:delta-cone}
+\delta_n=-\Hn{n}{q}\,\Hn{n}{\pi}^{-1}.
+\end{equation}
+\end{result}
+\begin{demonstration}{prop:ses-cone}
+The map $\pi$ is a degreewise epimorphism of complexes. Its kernel identifies with $\cone{\id_A}$: the inclusion sends $(x,a)$ to $(ix,a)$. On this kernel, $s_n(x,a)=(0,x)$ is a contracting homotopy, since $ds+sd=\id$. Theorem~\ref{thm:les} therefore implies that $\pi$ is a quasi-isomorphism.
+
+For the sign, lift a cycle $c$ to $b$ and write $db=ia$. The corresponding cone cycle is $(b,-a)$, so $q(b,-a)=-a$, while $\delta_n$ sends the class of $c$ to the class of $a$. The same computation with the biproduct maps gives the identity in $\A$.
+\end{demonstration}
+\usedby{Definition~\ref{def:triangles}}
+Thus the cone sequence recovers the long exact sequence of \eqref{eq:ses}; formula~\eqref{eq:delta-cone} identifies the chosen connecting map, including its sign.
+
+\section{The Homotopy and Derived Categories}\label{sec:derived}
+\subsection{Passing to Chain Homotopy Classes}
+\hypertarget{def:homotopy}{}A chain homotopy from $g$ to $f$ is a family $h_n:C_n\to D_{n+1}$ with $f-g=d^Dh+hd^C$. A complex is \emph{contractible} if its identity is nullhomotopic.
+
+\begin{entry}{Definition}{def:K}{The Homotopy Category}
+Let $N(C,D)$ be the subgroup of nullhomotopic chain maps. The category $K(\A)$ has the same objects as $\Ch{\A}$ and morphism groups
+\[
+\Mor_{K(\A)}(C,D)=\Mor_{\Ch{\A}}(C,D)/N(C,D).
+\]
+Composition is induced by composition of chain maps; homotopy is as above.
+\end{entry}
+\begin{result}{Proposition}{prop:homotopy}{Well-Defined Composition and Homology}
+Nullhomotopic maps form an additive ideal. Hence $K(\A)$ is additive and every homology functor factors through it. Its isomorphisms are precisely chain homotopy equivalences.
+\end{result}
+\begin{demonstration}{prop:homotopy}
+The sum of homotopies is a homotopy for the sum. If $f=dh+hd$ and $a,b$ are composable chain maps, then $bfa=d(bha)+(bha)d$. Thus composition descends to the quotient. On cycles, $f-g=dh$, whose image is a boundary; therefore $f,g$ induce the same homology map. An inverse in the quotient means exactly inverse chain maps up to homotopy.
+\end{demonstration}
+\usedby{Proposition~\ref{prop:small-K}}
+
+\begin{entry}{Example}{ex:acyclic}{Acyclic Is Weaker Than Contractible}
+The exact complex $0\to\Z\xrightarrow{2}\Z\to\Z/2\to0$ in degrees $2,1,0$ is acyclic. A contracting homotopy would split the quotient $\Z\to\Z/2$ in degree zero, which is impossible. It is therefore nonzero in $K(\mathbf{Ab})$.
+\end{entry}
+
+\subsection{Inverting Quasi-Isomorphisms}
+Assume here that $\A$ is essentially small or Grothendieck (for example, a category of modules). The size issue is addressed in Section~\ref{sec:size}.
+
+\begin{entry}{Definition}{def:D}{The Derived Category}
+Let $S$ be the class of quasi-isomorphisms in $K(\A)$. Define
+\[
+D(\A)=K(\A)[S^{-1}].
+\]
+It has the same objects as $K(\A)$ and a functor $Q:K(\A)\to D(\A)$ sending each $s\in S$ to an isomorphism. Its universal property is that precomposition with $Q$ identifies functors out of $D(\A)$ with functors out of $K(\A)$ which invert $S$; natural transformations correspond as well.
+\end{entry}
+
+Morphisms are represented by roofs in $K(\A)$:
+\[
+\begin{tikzcd}[column sep=large,row sep=small]
+&Z\arrow[dl,"s"',"\sim"]\arrow[dr,"u"]&\\
+C&&D.
+\end{tikzcd}
+\qquad\text{The represented map is }Q(u)Q(s)^{-1}.
+\]
+Two roofs are equivalent if they admit a common refinement in $K(\A)$ on which both maps agree, with the common map to $C$ a quasi-isomorphism. This roof description is the calculus of fractions for quasi-isomorphisms; its construction is not needed here.
+
+Homology descends to $D(\A)$ by the universal property. A complex becomes zero precisely when it is acyclic: use the quasi-isomorphism $0\to C$ in one direction, and homology in the other. Similarly, a chain map becomes invertible precisely when it is a quasi-isomorphism.
+
+\begin{entry}{Definition}{def:triangles}{The Connecting Map in the Derived Category}
+The quasi-isomorphism $\pi:\cone{i}\to C$ gives a morphism
+\[
+\partial=Q(-q)Q(\pi)^{-1}:C\longrightarrow\shift{A}{1}
+\]
+in $D(\A)$, with $\Hn{n}{\partial}=\delta_n$. Thus the short exact sequence determines
+\[
+A\xrightarrow{i}B\xrightarrow{\rho}C\xrightarrow{\partial}\shift{A}{1}.
+\]
+This is its distinguished triangle. With our signs, cone triangles have the form
+$X\xrightarrow{f}Y\xrightarrow{j}\cone{f}\xrightarrow{-q}\shift{X}{1}$.
+\end{entry}
+
+
+\section{Local Smallness: A Final Supplement}\label{sec:size}
+\begin{result}{Proposition}{prop:small-K}{Local Smallness of the Homotopy Category}
+If $\A$ is locally small, then $\Ch{\A}$ and $K(\A)$ are locally small, even for unbounded complexes.
+\end{result}
+\begin{demonstration}{prop:small-K}
+For fixed $C,D$, every chain map lies in the set
+\[
+\prod_{n\in\Z}\Mor_{\A}(C_n,D_n).
+\]
+The chain-map equations select a subset. The nullhomotopic maps form a subgroup of this set-sized abelian group; quotienting by it gives a set. The countable product here is a product of sets, not a product that must exist in $\A$.
+\end{demonstration}
+
+\begin{result}{Proposition}{prop:small-D}{Essentially Small Abelian Categories}
+If $\A$ is essentially small, then $D(\A)$ is locally small.
+\end{result}
+\begin{demonstration}{prop:small-D}
+Replace $\A$ by a small skeleton. Its complexes and chain maps form sets. Finite words in arrows and formal inverses also form a set; localization quotients this set by relations.
+\end{demonstration}
+
+\begin{result}{Proposition}{prop:small-mod}{A Direct Size Bound for Modules}
+For a set-sized ring $R$, the unbounded category $D(R\text{-}\mathbf{Mod})$ is locally small.
+\end{result}
+\begin{demonstration}{prop:small-mod}
+Fix complexes $C,D$, and an infinite cardinal $\kappa$ at least $|R|$, $\aleph_0$, and the cardinality of the disjoint union of the underlying sets $C_n$. Consider any roof $C\xleftarrow{s}E\xrightarrow{u}D$ with $s$ a quasi-isomorphism.
+
+Choose cycles in $E$ representing every homology class of $C$. They generate a subcomplex $E^{(0)}$ of total cardinality at most $\kappa$. From $E^{(m)}$, form $E^{(m+1)}$ by adjoining one bounding element in $E$ for each cycle whose image bounds in $C$, then closing under the differential and module operations. These bounds exist since $H_*(s)$ is injective; the cardinality remains at most $\kappa$.
+
+The union $E'=\bigcup_{m\ge0}E^{(m)}$ still has size at most $\kappa$, and $s|_{E'}$ is a quasi-isomorphism: chosen cycles give surjectivity, and the successive bounds give injectivity. Thus every roof refines to one whose middle complex has size at most $\kappa$. There is a set of such complexes up to isomorphism and a set of maps from each to $C,D$. Quotienting this set of roofs gives the required morphism set.
+\end{demonstration}
+
+\begin{entry}{Remark}{rem:size}{The General Case}
+A Grothendieck abelian category has small coproducts, exact filtered colimits, and a generator. Its derived category is locally small by the existence of K-injective resolutions \cite[Tags 070G, 079P]{Sta26}; that theorem is beyond this lecture. For an arbitrary locally small abelian category the conclusion can fail, even for the bounded derived category \cite{CN08}.
+\end{entry}
+
+\begin{thebibliography}{Sta26}
+\raggedright
+\bibitem[Sta26]{Sta26} The Stacks Project Authors, \emph{The Stacks Project}, 2026. \href{https://stacks.math.columbia.edu/tag/0117}{Tag 0117: Long Exact Cohomology Sequence}; \href{https://stacks.math.columbia.edu/tag/014D}{Tag 014D: Cones and Termwise Split Sequences}; \href{https://stacks.math.columbia.edu/tag/070G}{Tag 070G: K-Injective Complexes}; \href{https://stacks.math.columbia.edu/tag/079P}{Tag 079P: Existence of K-Injective Resolutions}. The source uses cohomological grading; these notes use homological grading.
+\bibitem[CN08]{CN08} Carles Casacuberta and Amnon Neeman, \emph{Brown Representability Does Not Come for Free}, arXiv:0807.1872v1, 2008. \href{https://arxiv.org/abs/0807.1872v1}{arXiv}. See Section 1 for the failure of small morphism sets.
+\end{thebibliography}
+\end{document}

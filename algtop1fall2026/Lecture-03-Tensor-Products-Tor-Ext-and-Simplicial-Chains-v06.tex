@@ -1,0 +1,1117 @@
+\documentclass[11pt]{article}
+% BEGIN SHARED COURSE STYLE
+% Shared Math 615 style. Embedded verbatim in standalone published sources.
+\RequirePackage[letterpaper,margin=1in]{geometry}
+\RequirePackage{amsmath,amsthm,mathtools}
+\RequirePackage{fontspec,unicode-math}
+\setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmathfont{texgyretermes-math.otf}
+\RequirePackage{microtype,tikz-cd,enumitem,needspace,xcolor,booktabs,titlesec,etoolbox}
+\definecolor{teal}{HTML}{176568}
+\definecolor{burgundy}{HTML}{782F40}
+\definecolor{inklink}{HTML}{176568}
+\definecolor{accent}{HTML}{176568}
+\titleformat{\section}{\large\bfseries\color{teal}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{burgundy}}{\thesubsection}{.65em}{}
+\titleformat{\paragraph}[runin]{\normalsize\bfseries\color{burgundy}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{2.2ex plus .5ex minus .2ex}{1ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.6ex plus .4ex minus .2ex}{.7ex plus .2ex}
+\RequirePackage{hyperref,bookmark}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,citecolor=teal,pdfstartview={XYZ null null 1.5},bookmarksnumbered=true}
+\urlstyle{same}
+\setcounter{tocdepth}{2}
+\setlist[enumerate]{label=\arabic*.,ref=\arabic*,leftmargin=*,itemsep=4pt,topsep=4pt}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\AddToHook{cmd/section/before}{\Needspace{8\baselineskip}}
+\AddToHook{cmd/subsection/before}{\Needspace{6\baselineskip}}
+\makeatletter
+\newcommand{\afterblock}{\@afterindentfalse\@afterheading}
+\makeatother
+\newcounter{result}[section]
+\renewcommand{\theresult}{\thesection.\arabic{result}}
+\newcommand{\resulttitle}[3]{#1 #2\ifstrempty{#3}{}{ (#3)}.}
+\newenvironment{result}[3]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{proof:#2}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{entry}[3]{\par\addvspace{7pt}\Needspace{3\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\textbf{\resulttitle{#1}{\theresult}{#3}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{demonstration}[1]{\par\noindent\hypertarget{proof:#1}{}{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{#1}{\textbf{Proof.}}}\quad\ignorespaces}{\unskip\nobreak\hfill\qedsymbol\par\addvspace{5pt}\afterblock}
+\newenvironment{citedresult}[4]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{urlcolor=burgundy}\href{#4}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newcommand{\usedby}[1]{\par\noindent{\small\textbf{Used in:} #1.}\par\afterblock}
+\newcommand{\coursebold}[1]{{\color{burgundy}\textbf{#1}}}
+\newcommand{\coursetitle}[3]{\begin{center}{\large\bfseries\color{teal}#1}\\[4pt]{\LARGE\bfseries\color{teal}#2}\\[6pt]Math 615: Algebraic Topology I\\Fall 2026\quad\textbar\quad #3\end{center}}
+\newcommand{\coursecontents}{{\small\setlength{\parskip}{0pt}\tableofcontents}}
+\newcommand{\homeworkstyle}{\titleformat{\section}{\large\bfseries\color{teal}}{Exercise \thesection.}{.65em}{}}
+% END SHARED COURSE STYLE
+\newcommand{\Mor}{\operatorname{Mor}}
+\newcommand{\Tor}[3]{\hyperlink{def:tor}{\operatorname{Tor}^{R}_{#1}(#2,#3)}}
+\newcommand{\Extn}[3]{\hyperlink{def:ext}{\operatorname{Ext}^{#1}_{R}(#2,#3)}}
+\newcommand{\Hc}[2]{\hyperlink{def:cochain}{H^{#1}(#2)}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\coker}{\operatorname{coker}}
+\newcommand{\Ext}{\operatorname{Ext}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\A}{\mathcal A}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Ch}[1]{\hyperlink{def:complex}{\operatorname{Ch}(#1)}}
+\newcommand{\K}[1]{\hyperlink{def:K}{K(#1)}}
+\newcommand{\D}[1]{\hyperlink{def:D}{D(#1)}}
+\newcommand{\Hn}[2]{\hyperlink{def:homology}{H_{#1}(#2)}}
+\newcommand{\Zn}[2]{\hyperlink{def:homology}{Z_{#1}(#2)}}
+\newcommand{\Bn}[2]{\hyperlink{def:homology}{B_{#1}(#2)}}
+\newcommand{\shift}[2]{\hyperlink{def:shift}{#1[#2]}}
+\newcommand{\cone}[1]{\hyperlink{def:cone}{\operatorname{Cone}(#1)}}
+\newcommand{\cyl}[1]{\hyperlink{def:cylinder}{\operatorname{Cyl}(#1)}}
+
+\DeclareMathOperator{\Cone}{Cone}
+\DeclareMathOperator{\Cyl}{Cyl}
+
+
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\Mod}{\mathrm{Mod}}\newcommand{\sSet}{\mathcal P(\Delta)}\newcommand{\Sing}{\operatorname{Sing}}
+\hypersetup{pdftitle={Lecture 3: Tensor Products, Tor, Ext, and Simplicial Chains},pdfauthor={Math 615 Fall 2026},pdfsubject={Revision 6}}
+\begin{document}
+\coursetitle{Lecture 3}{Tensor Products, Tor, Ext, and Simplicial Chains}{September 14 and 16}
+\noindent
+A presentation records generators and relations. Tensoring a presentation computes a tensor product. Continuing the presentation to a resolution records relations among relations; tensoring that resolution computes Tor. Applying the morphism functor to the same resolution reverses the arrows and produces the cochain complex computing Ext. The final sections introduce simplicial chains and explain the Tor and Ext terms in the universal coefficient theorems. Lecture 4 develops geometric realization and singular chains in full.
+
+All rings have an identity and all modules are unital. In Sections~\ref{sec:tensor}--\ref{sec:tor}, $R$ is commutative. In Sections~\ref{sec:cochain}--\ref{sec:ext}, $R$ is an arbitrary ring and $R$-modules are left modules. We return to commutative coefficients in Section~\ref{sec:simplicial}. Write $\Mor_R(M,N)$ for the abelian group of $R$-linear maps. Unless explicitly specified, modules and presentations need not be finitely generated.
+\coursecontents
+
+\section{Tensor Products and Their Computation}\label{sec:tensor}
+\subsection{The Universal Bilinear Map}
+Fix a commutative ring $R$. An $R$-bilinear map $b:M\times N\to L$ is linear in each variable separately. The tensor product turns such a map into a linear map with a single input.
+
+\begin{entry}{Definition}{def:tensor}{Tensor Product}
+The tensor product of $M$ and $N$ is an $R$-module $M\otimes_R N$ with a bilinear map $\tau:M\times N\to M\otimes_R N$ such that, for every bilinear $b:M\times N\to L$, there is a unique linear $\widetilde b$ with $\widetilde b\tau=b$. Write $\tau(m,n)=m\otimes n$.
+\[
+\begin{tikzcd}[column sep=large]
+M\times N\arrow[r,"b"]\arrow[d,"\tau"']&L\\
+M\otimes_R N\arrow[ur,dashed,"\widetilde b"']&
+\end{tikzcd}
+\]
+\end{entry}
+
+\begin{result}{Proposition}{prop:construction}{Construction from Arbitrary Free Resolutions}
+Choose arbitrary free resolutions
+\[
+\cdots\longrightarrow P_1\xrightarrow{d_1}P_0\xrightarrow{\epsilon}M\longrightarrow0,
+\qquad
+\cdots\longrightarrow Q_1\xrightarrow{e_1}Q_0\xrightarrow{\eta}N\longrightarrow0.
+\]
+Here a free resolution means an exact augmented sequence of free
+$R$-modules. Choose bases $P_a=\bigoplus_{i\in I_a}R$ and
+$Q_a=\bigoplus_{j\in J_a}R$ for $a=0,1$, and write
+$d_1(p_k)=\sum_i a_{ik}p_i$ and $e_1(q_\ell)=\sum_j b_{j\ell}q_j$.
+There is a natural coequalizer formula in $R$-modules
+\[
+M\otimes_R N\cong\operatorname{coeq}\left(
+\begin{tikzcd}[ampersand replacement=\&,column sep=large]
+\displaystyle
+\left(\bigoplus_{I_1\times J_0}R\right)
+\oplus\left(\bigoplus_{I_0\times J_1}R\right)
+\arrow[r,shift left=.6ex,"D"]\arrow[r,shift right=.6ex,"0"']
+\&\displaystyle\bigoplus_{I_0\times J_0}R
+\end{tikzcd}\right),
+\]
+where, writing $[i,j]$ for the target basis,
+\[
+D([k,j],0)=\sum_i a_{ik}[i,j],\qquad
+D(0,[i,\ell])=\sum_j b_{j\ell}[i,j].
+\]
+Thus $D$ is the map induced by the two degree-one differentials,
+$d_1\otimes\mathrm{id}+\mathrm{id}\otimes e_1$, under the standard
+identification of tensor products of free modules with free modules on
+pairs of basis elements.
+
+\end{result}
+\begin{demonstration}{prop:construction}
+A linear map from $\bigoplus_{I_0\times J_0}R$ to an $R$-module $L$
+is the same as an $R$-bilinear map $b:P_0\times Q_0\to L$: specify its
+values on basis pairs and extend in both variables. Such a linear map
+coequalizes $D$ and zero exactly when
+$b(d_1x,q)=0$ for all $x\in P_1$, $q\in Q_0$, and
+$b(p,e_1y)=0$ for all $p\in P_0$, $y\in Q_1$. Equivalently, $b$ vanishes
+on $\im d_1\times Q_0$ and on $P_0\times\im e_1$.
+Since $M=P_0/\im d_1$ and $N=Q_0/\im e_1$, these conditions say precisely
+that $b$ descends uniquely to an $R$-bilinear map $M\times N\to L$.
+The coequalizer therefore has the universal property in
+Definition~\ref{def:tensor}. In a module category the coequalizer of $D$
+and zero is the quotient by $\im D$.
+The universal property also gives uniqueness up to a unique isomorphism
+compatible with the universal bilinear map.
+\end{demonstration}
+\begin{result}{Corollary}{cor:tensor-relations}{Generators and Relations}
+In other words, with the free resolutions and bases of
+Proposition~\ref{prop:construction}, $M\otimes_R N$ is the free module on symbols $[i,j]$,
+for $(i,j)\in I_0\times J_0$, modulo the relations
+\[
+\sum_i a_{ik}[i,j]=0\quad(k\in I_1,\ j\in J_0),\qquad
+\sum_j b_{j\ell}[i,j]=0\quad(i\in I_0,\ \ell\in J_1).
+\]
+The class of $[i,j]$ represents $\epsilon(p_i)\otimes\eta(q_j)$.
+All sums are finite because each differential sends a basis element to a
+finite linear combination. Only degrees zero and one of the chosen
+resolutions enter this formula.
+\end{result}
+\begin{demonstration}{cor:tensor-relations}
+The coequalizer of $D$ and zero is $\coker D$. The image of $D$ is
+generated by its values on the basis elements of its two source summands,
+which are exactly the displayed relations.
+\end{demonstration}
+
+\usedby{Propositions~\ref{prop:adjunction} and~\ref{prop:presentations}}
+
+Every tensor is a finite sum of elementary tensors. Such an expression need not be unique, and a tensor need not be elementary. For example, over a field $k$, the tensor $e_1\otimes e_1+e_2\otimes e_2$ in $k^2\otimes_k k^2$ corresponds to a rank-two matrix, whereas an elementary tensor corresponds to a matrix of rank at most one.
+
+Linear maps $f:M\to M'$ and $g:N\to N'$ induce $f\otimes g:M\otimes_R N\to M'\otimes_R N'$ by $m\otimes n\mapsto f(m)\otimes g(n)$. The universal property also gives the natural isomorphisms
+\[
+R\otimes_R N\cong N,\qquad M\otimes_R N\cong N\otimes_R M,\qquad
+\left(\bigoplus_{i\in I}R\right)\otimes_R N\cong \bigoplus_{i\in I}N.
+\]
+The first map sends $r\otimes n$ to $rn$, the second interchanges the factors, and the third sends $e_i\otimes n$ to $n$ in the $i$th summand. Their inverse maps are specified on the same generators. Each vector in a direct sum has finite support. For a finite indexing set $I$, we write $R^I$ and $N^I$.
+
+\begin{result}{Proposition}{prop:adjunction}{Tensor--Morphism Adjunction and Right Exactness}
+There is a natural isomorphism
+\[
+\Mor_R(M\otimes_R N,L)\cong\Mor_R\bigl(M,\Mor_R(N,L)\bigr).
+\]
+For fixed $N$, tensoring preserves cokernels and direct sums. In particular, if $M'\xrightarrow{u}M\xrightarrow{v}M''\to0$ is exact, then
+\[
+M'\otimes_R N\xrightarrow{u\otimes\id}M\otimes_R N
+\xrightarrow{v\otimes\id}M''\otimes_R N\longrightarrow0
+\]
+is exact.
+\end{result}
+\begin{demonstration}{prop:adjunction}
+Commutativity makes $\Mor_R(N,L)$ an $R$-module by $(r\phi)(n)=r\phi(n)$. A bilinear map $b:M\times N\to L$ determines the linear map $\widetilde b:M\to\Mor_R(N,L)$ specified by $\widetilde b(m)(n)=b(m,n)$. This correspondence identifies bilinear maps with the right-hand side. The universal property identifies them with the left-hand side. Thus $-\otimes_R N$ is a left adjoint, so it preserves colimits, including cokernels and direct sums. Explicitly, a bilinear map on $M\times N$ vanishing on $u(M')\times N$ factors uniquely through $M''\times N$; this is exactly the asserted cokernel property.
+\end{demonstration}
+\usedby{Proposition~\ref{prop:presentations} and Definition~\ref{def:tor}}
+
+\subsection{Presentations Give a General Computation}
+A presentation is an exact sequence $\bigoplus_{j\in J}R\xrightarrow{A}\bigoplus_{i\in I}R\to M\to0$. Its basis elements indexed by $I$ give generators $m_i$ of $M$, and its columns give relations among those generators. Such a presentation always exists: take a free module surjecting onto $M$, then a free module surjecting onto the kernel.
+
+\begin{result}{Proposition}{prop:presentations}{One Presentation or Two}
+For an arbitrary presentation of $M$ and an arbitrary module $N$,
+\begin{equation}\label{eq:one-presentation}
+M\otimes_R N\cong\coker\bigl(A_N:\bigoplus_{j\in J}N\longrightarrow \bigoplus_{i\in I}N\bigr).
+\end{equation}
+If $A(e_j)=\sum_i a_{ij}e_i$, then
+\[
+A_N((n_j)_{j\in J})=\left(\sum_{j\in J} a_{ij}n_j\right)_{i\in I}.
+\]
+Each column of $A$ has finite support, and each input has finite support, so this formula is defined even for infinite sets.
+
+If also $\bigoplus_{j\in J'}R\xrightarrow{B}\bigoplus_{i\in I'}R\to N\to0$ is a presentation, then
+\begin{equation}\label{eq:two-presentations}
+M\otimes_R N\cong
+\frac{\bigoplus_{(i,i')\in I\times I'}R}{\im(A\otimes\id)+\im(\id\otimes B)}.
+\end{equation}
+The two maps in the denominator have domains $\bigoplus_{(j,i')\in J\times I'}R$ and $\bigoplus_{(i,j')\in I\times J'}R$, respectively, and target $\bigoplus_{(i,i')\in I\times I'}R$.
+\end{result}
+\begin{demonstration}{prop:presentations}
+Apply Proposition~\ref{prop:adjunction} to the presentation of $M$ and identify the tensors of free modules with direct sums of $N$. This proves~\eqref{eq:one-presentation}. For~\eqref{eq:two-presentations}, the generator indexed by $(i,i')$ maps to $m_i\otimes n_{i'}$. The relations from $A$ impose every relation among the $m_i$ for each fixed $n_{i'}$, and those from $B$ impose every relation among the $n_{i'}$ for each fixed $m_i$. A linear map out of this quotient is therefore precisely a bilinear map $M\times N\to L$. Apply Definition~\ref{def:tensor}.
+\end{demonstration}
+\usedby{Examples~\ref{ex:quotients}, \ref{ex:matrix}, and~\ref{ex:matrix-tor}}
+
+\begin{entry}{Remark}{rem:algorithm}{What the Formula Computes}
+For finite presentations $A:R^a\to R^b$ and $B:R^c\to R^d$, formula~\eqref{eq:two-presentations} is the cokernel of the block matrix
+\[
+\bigl[\,A\otimes I_d\ \big|\ I_b\otimes B\,\bigr]:R^{ad+bc}\longrightarrow R^{bd},
+\]
+using the basis order specified by the tensor factors. Over $\Z$ one can reduce finite matrices by Smith normal form. Over an arbitrary ring, the cokernel presentation is still a complete algebraic description, but a finite effective algorithm for simplifying it requires additional input about the ring. Arbitrary modules need not admit finite presentations.
+\end{entry}
+
+\begin{entry}{Example}{ex:quotients}{Quotients and Cyclic Modules}
+For any ideal $I\subseteq R$,
+\[
+(R/I)\otimes_R N\cong N/IN.
+\]
+The map sends $(r+I)\otimes n$ to $rn+IN$, with inverse induced by the map $N\to(R/I)\otimes_R N$ given by $n\mapsto(1+I)\otimes n$. Here $IN$ consists of finite sums of elements $an$ with $a\in I$. Hence
+\[
+(R/I)\otimes_R(R/J)\cong R/(I+J).
+\]
+For positive integers $a,b$, this gives $\Z/a\Z\otimes_{\Z}\Z/b\Z\cong\Z/\gcd(a,b)\Z$. In particular, nonzero modules can have zero tensor product.
+\end{entry}
+
+\begin{entry}{Example}{ex:matrix}{A Presentation with Two Generators}
+Let $M=\coker A$ over $\Z$, where
+\[
+A=\begin{pmatrix}2&0\\4&6\end{pmatrix}:\Z^2\longrightarrow\Z^2,
+\qquad N=\Z/4\Z.
+\]
+Tensoring replaces $A$ by its action on $N^2$, which is the diagonal matrix with entries $2,2$. Therefore
+\[
+M\otimes_{\Z} N\cong N^2/\bigl(2N\oplus2N\bigr)\cong(\Z/2\Z)^2.
+\]
+In coordinates, the map on $(\Z/4\Z)^2$ is
+\[A_N(x,y)=(2x,4x+6y)=(2x,2y).\]
+Its image consists of $(0,0),(2,0),(0,2),(2,2)$. The map $(\Z/4\Z)^2\to(\Z/2\Z)^2$ given by
+$(x,y)\mapsto(x\bmod2,y\bmod2)$ is surjective with precisely this kernel,
+so it gives the displayed quotient isomorphism. For comparison, the integer
+row operation $\mathrm{row}_2\leftarrow\mathrm{row}_2-2\mathrm{row}_1$
+changes $A$ to $\operatorname{diag}(2,6)$. Thus $M\cong\Z/2\Z\oplus\Z/6\Z$,
+and tensoring the two summands with $\Z/4\Z$ gives the same two copies of $\Z/2\Z$.
+\end{entry}
+
+\section{Resolutions and Relations Among Relations}\label{sec:resolution}
+\subsection{Free and Projective Resolutions}
+The preceding construction computes degree zero. To measure the exactness lost by tensoring, we extend a presentation to an exact sequence. The constructions in this section work for left modules over any ring; we continue with commutative $R$ until Section~\ref{sec:cochain}.
+
+\begin{entry}{Definition}{def:projective}{Projective Object and Projective Module}
+Let $\mathcal A$ be an abelian category. An object $P\in\mathcal A$ is
+\emph{projective} if for every epimorphism $q:E\to L$ in $\mathcal A$ and
+morphism $f:P\to L$, there exists a morphism $\widetilde f:P\to E$ such
+that $q\circ\widetilde f=f$. A left $R$-module is projective if it is a
+projective object of the abelian category of left $R$-modules.
+\end{entry}
+
+\begin{entry}{Definition}{def:injective}{Injective Object and Injective Module}
+Let $\mathcal A$ be an abelian category. An object $I\in\mathcal A$ is
+\emph{injective} if for every monomorphism $j:A\to B$ in $\mathcal A$ and
+morphism $f:A\to I$, there exists a morphism $\widetilde f:B\to I$ such
+that $\widetilde f\circ j=f$. A left $R$-module is injective if it is an
+injective object of the abelian category of left $R$-modules.
+\end{entry}
+
+\begin{entry}{Remark}{rem:projective-injective-tests}{Exactness and Free Modules}
+The projectivity condition is equivalent to exactness of
+$\Mor_{\mathcal A}(P,-)$; injectivity is equivalent to exactness of
+$\Mor_{\mathcal A}(-,I):\mathcal A^{\mathrm{op}}\to\mathrm{Ab}$.
+In each case the lifting property gives the required surjection, while
+exactness at the other terms follows from the kernel or cokernel universal
+property. Free modules are projective: lift the images of their basis
+elements. A projective module is a direct summand of a free module because
+a free surjection onto it splits. Conversely, a direct summand of a free
+module has the lifting property.
+\end{entry}
+
+\begin{entry}{Definition}{def:enough}{Enough Projectives and Enough Injectives}
+An abelian category $\mathcal A$ has \emph{enough projectives} if for every
+$M\in\mathcal A$ there exist a projective object $P\in\mathcal A$ and an
+epimorphism $P\to M$. It has \emph{enough injectives} if for every
+$M\in\mathcal A$ there exist an injective object $I\in\mathcal A$ and a
+monomorphism $M\to I$.
+\end{entry}
+
+Module categories have both properties. Free modules supply enough
+projectives; the following construction supplies enough injectives.
+
+\begin{result}{Proposition}{prop:enough-injectives}{Embedding in an Injective Module}
+Every left module over a unital ring embeds in an injective left module.
+\end{result}
+\begin{demonstration}{prop:enough-injectives}
+First, a divisible abelian group $D$ is injective. Given a map from a subgroup
+$A$ of an abelian group $B$, use Zorn's lemma to choose a maximal extension
+to a subgroup $C$. If $b\notin C$, the set of integers $n$ with $nb\in C$
+is an ideal. If it is zero, choose any image of $b$. Otherwise it is
+$d\Z$ for $d>0$; choose $y\in D$ with $dy=f(db)$ and set
+$f(c+nb)=f(c)+ny$. The ideal description proves this is well defined.
+Both cases extend the map to $C+\Z b$, contradicting maximality. Hence $C=B$.
+
+The group $\Q/\Z$ is divisible, and its characters separate points of any
+abelian group $M$: a nonzero element has a cyclic subgroup admitting a
+character nonzero on that element, which extends by injectivity. Therefore
+$M$ embeds by evaluation into $D=(\Q/\Z)^{\Mor_{\Z}(M,\Q/\Z)}$.
+This product is injective because each component of a map extends.
+
+For a left $R$-module $M$, take such an embedding $j:M\hookrightarrow D$
+of underlying abelian groups. Put $E=\Mor_{\Z}(R,D)$ and define
+$(r\phi)(s)=\phi(sr)$. The bijection
+\[
+\Mor_R(X,E)\cong\Mor_{\Z}(X,D)
+\]
+sends $f:X\to E$ to the map $X\to D$ whose value at $x$ is $f(x)(1)$. Its inverse sends $g:X\to D$ to the map $X\to E$ whose value at $x$ is the homomorphism $R\to D$ given by $s\mapsto g(sx)$. Since forgetting the
+$R$-action is exact and $D$ is injective, $E$ is injective.
+The map $M\to E$ given by the formula $m\mapsto\phi_m$, where $\phi_m:R\to D$ is given by $\phi_m(s)=j(sm)$ is $R$-linear
+and injective, as evaluation at $1$ recovers $j$.
+\end{demonstration}
+
+\begin{entry}{Example}{ex:injective-z}{Projective and Injective Are Different}
+The abelian group $\Z$ is free and therefore projective. It is not injective:
+the map $2\Z\to\Z$ sending $2$ to $1$ cannot extend to $\Z$.
+Both $\Q$ and $\Q/\Z$ are injective by divisibility. The nonzero group
+$\Q/\Z$ is not projective: projective abelian groups are summands of free
+abelian groups and hence torsion-free, whereas $\Q/\Z$ is torsion.
+Thus
+\[
+0\longrightarrow\Z\longrightarrow\Q\longrightarrow\Q/\Z\longrightarrow0
+\]
+is an injective resolution of $\Z$, with $\Q$ in cochain degree zero.
+\end{entry}
+
+\begin{entry}{Definition}{def:resolution}{Projective Resolution}
+A projective resolution of $M$ is an exact augmented sequence
+\begin{equation}\label{eq:resolution}
+\cdots\longrightarrow P_2\xrightarrow{d_2}P_1\xrightarrow{d_1}P_0
+\xrightarrow{\epsilon}M\longrightarrow0
+\end{equation}
+with every $P_i$ projective. The associated chain complex $P_\bullet$ has $P_i=0$ for $i<0$, differential $d_0=0$, $H_0(P_\bullet)\cong M$, and $H_i(P_\bullet)=0$ for $i>0$. The augmentation is not part of the unaugmented complex.
+\end{entry}
+
+Every module has a free resolution. Choose a free surjection $P_0\to M$; choose a free surjection $P_1\to\ker\epsilon$; choose a free surjection $P_2\to\ker d_1$; and continue. The successive kernels are called syzygies. For a completely general choice, use a free module on the underlying set of each kernel. The process may require infinite rank and may continue indefinitely.
+
+\begin{entry}{Remark}{rem:syzygy}{A Presentation Is Only the Beginning}
+A presentation supplies $d_1:P_1\to P_0$, but does not assert that $d_1$ is injective. To compute degree-one derived functors one generally also needs $d_2$, which records the relations among the original relations. To compute degree $i$, one needs the resolution through $P_{i+1}\to P_i\to P_{i-1}$.
+\end{entry}
+
+\subsection{Why the Choice of Resolution Does Not Matter}
+\begin{result}{Theorem}{thm:comparison}{Comparison of Resolutions}
+Let $P_\bullet\to M$ and $Q_\bullet\to L$ be projective resolutions. Every map $f:M\to L$ lifts to a chain map $\widetilde f:P_\bullet\to Q_\bullet$. Any two lifts of the same $f$ are chain homotopic. In particular, any two projective resolutions of $M$ are chain homotopy equivalent by maps lifting $\id_M$.
+\end{result}
+\begin{demonstration}{thm:comparison}
+Lift $f\epsilon_P$ through $Q_0\twoheadrightarrow L$ using projectivity of $P_0$. Having constructed the lift through degree $n-1$, the map $\widetilde f_{n-1}d_n$ lands in the kernel of the next differential (or of the augmentation when $n=1$). Exactness identifies this kernel with the image of $Q_n$. Projectivity of $P_n$ gives $\widetilde f_n$.
+
+For two lifts $u,v$, construct $h_n:P_n\to Q_{n+1}$ satisfying
+\[
+u_n-v_n=d^Q_{n+1}h_n+h_{n-1}d^P_n,\qquad h_{-1}=0.
+\]
+In degree zero, $u_0-v_0$ is killed by the augmentation, so lift it through $d^Q_1$. Inductively, the chain-map identities and the formula already established in degree $n-1$ show that
+\[
+d^Q_n\bigl(u_n-v_n-h_{n-1}d^P_n\bigr)=0.
+\]
+Exactness and projectivity give the required $h_n$. Finally, lifts of $\id_M$ in both directions have composites homotopic to the appropriate identities, by the uniqueness statement.
+\end{demonstration}
+\usedby{Definitions~\ref{def:tor} and~\ref{def:ext}}
+
+\subsection{Left and Right Derived Functors}
+Let $\A,\mathcal B$ be abelian categories and let all functors in this
+subsection be additive. The constructions apply to objects of $\A$;
+complexes of objects require a further construction.
+
+\begin{entry}{Definition}{def:injective-resolution}{Injective Resolution}
+Let $\mathcal A$ be an abelian category and $M\in\mathcal A$.
+An \emph{injective resolution} of $M$ is an exact sequence
+$0\to M\to I^0\to I^1\to\cdots$ in which every $I^q$ is injective.
+Its associated cochain complex $I^\bullet$ has $I^q=0$ for $q<0$;
+the augmentation $M\to I^0$ is not part of this complex.
+\end{entry}
+
+\begin{entry}{Definition}{def:derived-functors}{Left and Right Derived Functors}
+If $\A$ has enough projectives and $F:\A\to\mathcal B$ is right exact,
+choose a projective resolution $P_\bullet\to M$ and set
+\[
+\mathrm L_nF(M)=H_n(F(P_\bullet)),\qquad n\geq0.
+\]
+If $\A$ has enough injectives and $G:\A\to\mathcal B$ is left exact,
+construct an exact sequence $0\to M\to I^0\to I^1\to\cdots$ with each
+$I^q$ injective, by successively embedding the cokernels. Set
+\[
+\mathrm R^nG(M)=H^n(G(I^\bullet)),\qquad n\geq0.
+\]
+For a morphism $f:M\to N$, choose a chain map $\widetilde f$ between
+projective resolutions lifting $f$ and define
+$\mathrm L_nF(f)=H_n(F(\widetilde f))$. Dually, choose a cochain map
+$\widehat f$ between injective resolutions extending $f$ and define
+$\mathrm R^nG(f)=H^n(G(\widehat f))$. These assignments define functors
+$\mathrm L_nF,\mathrm R^nG:\mathcal A\to\mathcal B$; their
+well-definedness is proved in Proposition~\ref{prop:derived-basic}.
+For a cochain complex, $H^n$ means the kernel of the differential out of
+degree $n$ modulo the image of the differential into degree $n$.
+\end{entry}
+
+\begin{result}{Proposition}{prop:derived-basic}{Independence, Degree Zero, and Vanishing}
+These constructions give functors independent of the resolutions up to
+canonical natural isomorphism. There are natural isomorphisms
+$\mathrm L_0F\cong F$ and $\mathrm R^0G\cong G$.
+For $n>0$, $\mathrm L_nF(P)=0$ for projective $P$ and
+$\mathrm R^nG(I)=0$ for injective $I$.
+\end{result}
+\begin{demonstration}{prop:derived-basic}
+The comparison theorem and its dual lift maps of objects to maps of
+resolutions uniquely up to chain or cochain homotopy. Additive functors
+preserve the homotopy equations, so their induced homology maps are unique
+and respect identities and composition. Comparing identity lifts between
+two resolutions gives mutually inverse isomorphisms; uniqueness shows their
+compatibility with a third resolution.
+Right exactness identifies the cokernel of $F(P_1)\to F(P_0)$ with $F(M)$.
+Left exactness identifies the kernel of $G(I^0)\to G(I^1)$ with $G(M)$.
+Finally use the resolution concentrated in degree zero when the object is
+itself projective or injective, respectively.
+\end{demonstration}
+
+\begin{entry}{Remark}{rem:derived-sequences}{Long Exact Sequences and Dimension Shifting}
+The horseshoe construction resolves a short exact sequence by a degreewise
+split short exact sequence of projective resolutions. Additivity preserves
+each splitting, so applying $F$ and taking homology gives
+\[
+\cdots\to\mathrm L_1F(M)\to\mathrm L_1F(M'')\to F(M')\to F(M)\to F(M'')\to0.
+\]
+The dual construction with injectives gives
+\[
+0\to G(M')\to G(M)\to G(M'')\to\mathrm R^1G(M')\to\mathrm R^1G(M)\to\cdots.
+\]
+In particular, an exact sequence $0\to K\to P\to M\to0$ with $P$
+projective gives $\mathrm L_{n+1}F(M)\cong\mathrm L_nF(K)$ for $n\geq1$;
+an exact sequence $0\to M\to I\to C\to0$ with $I$ injective gives
+$\mathrm R^{n+1}G(M)\cong\mathrm R^nG(C)$ for $n\geq1$.
+These are the dimension-shifting isomorphisms.
+\end{entry}
+
+\section{Tor and the Failure of Exactness}\label{sec:tor}
+\subsection{Definition and a Computation Procedure}
+Again let $R$ be commutative. Tensoring the injection $2:\Z\to\Z$ with $\Z/2\Z$ gives the zero map $\Z/2\Z\to\Z/2\Z$, which is not injective. Tensor products preserve cokernels but can fail to preserve kernels.
+
+\begin{entry}{Definition}{def:tor}{Tor}
+Choose a projective resolution $P_\bullet\to M$. Define
+\[
+\Tor{i}{M}{N}=H_i(P_\bullet\otimes_R N)
+=\frac{\ker(d_i\otimes\id_N)}{\im(d_{i+1}\otimes\id_N)}\quad(i\geq0),
+\]
+where the differential out of degree zero is zero. These are $R$-modules. Right exactness gives
+\[
+\Tor{0}{M}{N}\cong M\otimes_R N.
+\]
+\end{entry}
+
+The comparison theorem makes these groups independent of the resolution up to canonical isomorphism: a chain homotopy remains a chain homotopy after tensoring. Lifting maps of $M$ gives functoriality in the first variable; tensoring maps of $N$ gives functoriality in the second. Thus Tor is covariant in both variables.
+
+For a free resolution $P_i=\bigoplus_{j\in I_i}R$, the computation is completely explicit:
+\[
+\cdots\longrightarrow \bigoplus_{j\in I_2}N\xrightarrow{(d_2)_N}\bigoplus_{j\in I_1}N
+\xrightarrow{(d_1)_N}\bigoplus_{j\in I_0}N\longrightarrow0.
+\]
+Use the same coefficient matrices as in the free resolution, now acting on direct sums of $N$; take kernels modulo images. A presentation by itself computes $\Tor{0}{M}{N}$, while $\Tor{1}{M}{N}$ generally requires the next map.
+
+\begin{entry}{Example}{ex:regular}{A Non-Zero-Divisor}
+Suppose multiplication by $a\in R$ is injective on $R$. Then $0\to R\xrightarrow{a}R\to R/(a)\to0$ is a free resolution. Writing $N[a]=\{n\in N:an=0\}$, we obtain
+\[
+\Tor{0}{R/(a)}{N}=N/aN,\qquad
+\Tor{1}{R/(a)}{N}=N[a],\qquad
+\Tor{i}{R/(a)}{N}=0\quad(i\geq2).
+\]
+In particular, for $a,b>0$, $\operatorname{Tor}^{\Z}_1(\Z/a\Z,\Z/b\Z)\cong\Z/\gcd(a,b)\Z$. The kernel description is natural; an identification with a standard cyclic group involves a choice of generator.
+\end{entry}
+
+\begin{entry}{Example}{ex:matrix-tor}{Continuing the Matrix Computation}
+For the matrix in Example~\ref{ex:matrix}, $\det A=12\neq0$, so $A:\Z^2\to\Z^2$ is injective. It therefore gives a length-one free resolution of $M$. Modulo four, $A:(\Z/4\Z)^2\to(\Z/4\Z)^2$ acts by $(x,y)\mapsto(2x,2y)$, whose kernel is $\{0,2\}^2$. Thus
+\[
+\operatorname{Tor}^{\Z}_1(M,\Z/4\Z)\cong(\Z/2\Z)^2,
+\qquad \operatorname{Tor}^{\Z}_i(M,\Z/4\Z)=0\quad(i\geq2).
+\]
+Indeed, $A(x,y)=0$ over $\Z$ implies $2x=0$, hence $x=0$, and then $6y=0$, hence $y=0$.
+The tensor complex is $0\to(\Z/4\Z)^2\xrightarrow{(2x,2y)}(\Z/4\Z)^2\to0$,
+in degrees one and zero. A degree-one cycle has each coordinate either zero or two.
+There is no degree-two term and hence no nonzero degree-one boundary.
+The map $(\Z/2\Z)^2\to(\Z/4\Z)^2$ given by $(\bar a,\bar b)\mapsto(2a,2b)$ identifies $(\Z/2\Z)^2$ with this kernel.
+In degree zero the cokernel was computed in Example~\ref{ex:matrix}.
+\end{entry}
+
+\begin{entry}{Example}{ex:dual}{A Resolution That Does Not Terminate}
+Let $R=k[\varepsilon]/(\varepsilon^2)$ for a field $k$, and let $K=R/(\varepsilon)$. Since the kernel and image of multiplication by $\varepsilon$ are both $(\varepsilon)$,
+\[
+\cdots\xrightarrow{\varepsilon}R\xrightarrow{\varepsilon}R
+\xrightarrow{\varepsilon}R\longrightarrow K\longrightarrow0
+\]
+is a free resolution. To check this directly, write an element of $R$ uniquely as $a+b\varepsilon$.
+Multiplication by $\varepsilon$ sends it to $a\varepsilon$, so its kernel
+and image are both $k\varepsilon$. The augmentation has the same kernel.
+Since $\varepsilon K=0$, tensoring gives one copy of $k$ in each nonnegative
+degree and zero differential. Every vector is a cycle and the only boundary
+is zero, so $\Tor{i}{K}{K}\cong k$ for every $i\geq0$. The non-zero-divisor hypothesis in Example~\ref{ex:regular} cannot be dropped.
+\end{entry}
+
+\subsection{Flatness and Long Exact Sequences}
+\begin{entry}{Definition}{def:flat}{Flat Module}
+A module $F$ is flat if $-\otimes_R F$ is exact. Since tensoring is right exact, this means that it preserves injections. Free modules are flat because tensoring with a free module is a direct sum of copies of the original sequence; direct sums of exact sequences of modules are exact. Direct summands of flat modules are flat, so projective modules are flat.
+\end{entry}
+
+\begin{result}{Theorem}{thm:balanced}{Either Variable Can Be Resolved}
+If $P_\bullet\to M$ and $Q_\bullet\to N$ are projective resolutions, there are natural isomorphisms
+\[
+H_i(P_\bullet\otimes_R N)\cong H_i(M\otimes_R Q_\bullet).
+\]
+Consequently $\Tor{i}{M}{N}\cong\Tor{i}{N}{M}$ naturally.
+\end{result}
+\begin{demonstration}{thm:balanced}
+Form the first-quadrant double complex $P_p\otimes_R Q_q$ and its total complex
+\[
+T_n=\bigoplus_{p+q=n}P_p\otimes_R Q_q,\qquad
+d(x\otimes y)=d_Px\otimes y+(-1)^p x\otimes d_Qy.
+\]
+The sign makes the two mixed terms in $d^2$ cancel. Since $P_p$ is flat, each augmented column is exact, with degree-zero homology $P_p\otimes_R N$. Similarly, each augmented row is exact, with degree-zero homology $M\otimes_R Q_q$.
+
+The two augmentations $T\to P_\bullet\otimes_R N$ and $T\to M\otimes_R Q_\bullet$ are quasi-isomorphisms. One elementary way to see this is to take the augmented double complex for either map: its columns, respectively rows, are exact. In a total cycle, remove the component with largest column, respectively row, index by writing it as a boundary in that exact column or row. Subtract its total boundary and repeat. Each subtraction introduces terms only at smaller indices. There are finitely many components on each total diagonal, so this procedure terminates and proves that the augmented total complex is acyclic. Taking homology gives the first assertion. The factor-interchange isomorphism then gives symmetry.
+\end{demonstration}
+\usedby{Theorem~\ref{thm:tor-les}}
+
+\begin{result}{Theorem}{thm:tor-les}{Exact Sequences and the Flatness Criterion}
+For a short exact sequence $0\to N'\to N\to N''\to0$, there is a natural long exact sequence
+\[
+\begin{aligned}
+\cdots\to\Tor{i}{M}{N'}\to\Tor{i}{M}{N}\to\Tor{i}{M}{N''}
+\xrightarrow{\partial}\Tor{i-1}{M}{N'}\to\cdots\\
+\cdots\to\Tor{1}{M}{N''}\xrightarrow{\partial}M\otimes_R N'
+\to M\otimes_R N\to M\otimes_R N''\to0.
+\end{aligned}
+\]
+There is also a long exact sequence in the first variable. A module $F$ is flat if and only if $\Tor{1}{M}{F}=0$ for every $M$; in that case all $\Tor{i}{M}{F}$ vanish for $i>0$.
+\end{result}
+\begin{demonstration}{thm:tor-les}
+Each term of a projective resolution of $M$ is flat, so tensoring the short exact sequence gives a degreewise short exact sequence of chain complexes. Its homology long exact sequence is the displayed one. Theorem~\ref{thm:balanced} gives the sequence in the first variable.
+
+If $F$ is flat, tensoring the augmented resolution of $M$ preserves exactness, so all positive homology vanishes. Conversely, apply the long exact sequence in the first variable to $0\to A\to B\to C\to0$. Vanishing of $\Tor{1}{C}{F}$ implies that $A\otimes_R F\to B\otimes_R F$ is injective. This is flatness.
+\end{demonstration}
+
+\begin{entry}{Remark}{rem:obstruction}{The Precise Obstruction}
+For a particular short exact sequence, the kernel of $M\otimes_R N'\to M\otimes_R N$ is the image of the connecting map from $\Tor{1}{M}{N''}$. That connecting map need not be injective. Thus the kernel is a quotient of this Tor group, not generally the whole group.
+\end{entry}
+
+\section{Cochain Complexes over an Arbitrary Ring}\label{sec:cochain}
+\subsection{Cohomological Indexing}
+From now on, $R$ is an arbitrary unital ring and all modules are left $R$-modules. A cochain complex uses an increasing differential. No commutativity is needed for its definition or for the usual exact-sequence arguments in $R$-modules.
+
+\begin{entry}{Definition}{def:cochain}{Cochain Complex and Cohomology}
+A cochain complex $C^\bullet$ consists of maps $d_C^n:C^n\to C^{n+1}$ with $d_C^{n+1}d_C^n=0$. Its cocycles, coboundaries, and cohomology are
+\[
+Z^n(C)=\ker d_C^n,\qquad B^n(C)=\im d_C^{n-1},\qquad
+\Hc{n}{C}=Z^n(C)/B^n(C).
+\]
+A cochain map $f:C\to D$ satisfies $d_D^nf^n=f^{n+1}d_C^n$. It induces a map on cohomology. It is a quasi-isomorphism when those maps are isomorphisms for all $n$.
+\end{entry}
+
+Reindexing a chain complex by $C^n=C_{-n}$ and $d^n=d_{-n}$ gives a cochain complex, with $H^n(C^\bullet)=H_{-n}(C_\bullet)$. By contrast, applying the contravariant morphism functor to a chain complex reverses its arrows and gives cochains in nonnegative degrees; that is the construction used for Ext.
+
+\begin{entry}{Definition}{def:cohomotopy}{Cochain Homotopy, Shift, and Cone}
+A cochain homotopy from $g$ to $f$ is a family $h^n:C^n\to D^{n-1}$ with
+\[
+f^n-g^n=d_D^{n-1}h^n+h^{n+1}d_C^n.
+\]
+On cocycles the difference is a coboundary, so homotopic maps induce the same cohomology maps. The shift is $C[r]^n=C^{n+r}$ with differential $(-1)^r d_C^{n+r}$. In particular, $H^n(C[r])=H^{n+r}(C)$.
+
+For a cochain map $f:C\to D$, its cone is
+\[
+\operatorname{Cone}(f)^n=D^n\oplus C^{n+1},\qquad
+d^n=\begin{pmatrix}d_D^n&f^{n+1}\\0&-d_C^{n+1}\end{pmatrix}.
+\]
+The chain-map equation makes this differential square to zero. Inclusion of the first summand and projection onto the second give $0\to D\to\operatorname{Cone}(f)\to C[1]\to0$.
+\end{entry}
+
+\begin{result}{Proposition}{prop:cochain-les}{The Cohomology Long Exact Sequence}
+A degreewise short exact sequence $0\to A\xrightarrow{\iota}B\xrightarrow{\rho}C\to0$ of cochain complexes gives
+\[
+\cdots\to\Hc{n}{A}\to\Hc{n}{B}\to\Hc{n}{C}
+\xrightarrow{\partial}\Hc{n+1}{A}\to\cdots.
+\]
+For a cocycle $c\in C^n$, choose $b\in B^n$ with $\rho b=c$ and write $d_Bb=\iota a$. Then $\partial[c]=[a]$.
+\end{result}
+\begin{demonstration}{prop:cochain-les}
+The equation $\rho d_Bb=d_Cc=0$ gives $a$, and $\iota d_Aa=d_B^2b=0$ makes it a cocycle. Changing $b$ by $\iota x$ changes $a$ by $d_Ax$; changing $c$ by a coboundary and lifting its primitive does not change the resulting cohomology class. The usual kernel--image chase, or the snake lemma on kernels and cokernels of consecutive differentials, gives exactness. Equivalently, reindex all three complexes as chain complexes and apply the homology long exact sequence; its connecting map is exactly this lift-and-differentiate formula.
+\end{demonstration}
+\usedby{Proposition~\ref{prop:ext-properties}}
+
+\subsection{Applying the Morphism Functor}
+\begin{entry}{Definition}{def:mor-complex}{The Cochain Complex Associated to a Resolution}
+For a chain complex $P_\bullet$ in nonnegative degrees and a module $N$, put
+\[
+\Mor_R(P_\bullet,N)^n=\Mor_R(P_n,N),\qquad
+\delta^n(\phi)=\phi\circ d_{n+1}.
+\]
+Thus the arrows run as follows:
+\[
+0\to\Mor_R(P_0,N)\xrightarrow{\delta^0}\Mor_R(P_1,N)
+\xrightarrow{\delta^1}\Mor_R(P_2,N)\to\cdots.
+\]
+The relation $\delta^{n+1}\delta^n=0$ follows from $d_{n+1}d_{n+2}=0$. For general $R$, this is a cochain complex of abelian groups, canonically of modules over the center $Z(R)$. It is not generally a complex of left $R$-modules: multiplying the values of an $R$-linear map by a noncentral element need not give an $R$-linear map.
+\end{entry}
+
+\begin{entry}{Remark}{rem:internal-hom}{The General Morphism Complex and Its Sign}
+For cochain complexes $C,D$, define the abelian-group complex
+\[
+\mathcal M^n(C,D)=\prod_p\Mor_R(C^p,D^{p+n}),\qquad
+(\delta f)^p=d_D^{p+n}f^p-(-1)^n f^{p+1}d_C^p.
+\]
+Its degree-zero cocycles are cochain maps, and its degree-zero coboundaries are nullhomotopic maps. If $C^{-n}=P_n$ and $D=N$ is concentrated in degree zero, this convention gives $\delta\phi=(-1)^{n+1}\phi d_{n+1}$. Multiplication in degree $n$ by $(-1)^{n(n+1)/2}$ identifies the unsigned complex in Definition~\ref{def:mor-complex} with this signed convention. We use the unsigned complex for the Ext computations below.
+\end{entry}
+
+\section{Ext and a Noncommutative Computation}\label{sec:ext}
+\subsection{Definition, Variance, and Computation}
+The ring $R$ remains arbitrary. Projective resolutions of left $R$-modules exist by Section~\ref{sec:resolution}.
+
+\begin{entry}{Definition}{def:ext}{Ext}
+For left modules $M,N$, choose a projective resolution $P_\bullet\to M$ and define
+\[
+\Extn{n}{M}{N}=H^n\bigl(\Mor_R(P_\bullet,N)\bigr)
+=\frac{\ker(\delta^n)}{\im(\delta^{n-1})}\quad(n\geq0),
+\]
+where the image in degree zero is zero. These are abelian groups with a natural $Z(R)$-module structure; if $R$ is an algebra over a field $k$, they are $k$-vector spaces. When $R$ is commutative, they are naturally $R$-modules.
+\end{entry}
+
+The comparison theorem again proves independence of resolutions. More explicitly, if $u,v:P_\bullet\to Q_\bullet$ satisfy $u-v=d_Qh+hd_P$, precomposition gives cochain-homotopic maps: on $\phi:Q_n\to N$ use the homomorphism $\Mor_R(Q_n,N)\to\Mor_R(P_{n-1},N)$ given by $\phi\mapsto\phi h_{n-1}$. Thus Ext is contravariant in $M$ and covariant in $N$. In degree zero, a map $P_0\to N$ lies in $\ker\delta^0$ exactly when it kills $\im d_1$, so it factors through $M$ and
+\[
+\Extn{0}{M}{N}\cong\Mor_R(M,N).
+\]
+
+For an arbitrary free resolution $P_n=\bigoplus_{i\in I_n}R$, note the essential change from tensor products:
+\[
+\Mor_R(\bigoplus_{i\in I_n}R,N)\cong\prod_{i\in I_n}N.
+\]
+Maps out of a free direct sum may have arbitrary values on its basis, so this is a product, not a direct sum. If $d_{n+1}(e_j)=\sum_i r_{ij}e_i$ with coefficients on the left, then
+\[
+\delta^n((n_i)_i)=\left(\sum_i r_{ij}n_i\right)_j.
+\]
+Every sum is finite because each column of the differential has finite support. Compute Ext by taking the kernel of this map modulo the image of the preceding map. Over a commutative ring with finite free terms, these are the transposed differential matrices acting on finite powers of $N$. For a noncommutative ring, the displayed order of the coefficients specifies the maps unambiguously.
+
+\begin{result}{Proposition}{prop:ext-properties}{Exactness and Projectivity}
+For $0\to N'\to N\to N''\to0$, there is a natural long exact sequence
+\[
+\begin{aligned}
+0\to\Mor_R(M,N')\to\Mor_R(M,N)\to\Mor_R(M,N'')\\
+\xrightarrow{\partial}\Extn{1}{M}{N'}\to\Extn{1}{M}{N}\to\Extn{1}{M}{N''}
+\xrightarrow{\partial}\Extn{2}{M}{N'}\to\cdots.
+\end{aligned}
+\]
+If $P$ is projective, $\Extn{n}{P}{N}=0$ for $n>0$. Conversely, if $\Extn{1}{M}{N}=0$ for every $N$, then $M$ is projective.
+\end{result}
+\begin{demonstration}{prop:ext-properties}
+Apply $\Mor_R(P_i,-)$ to the short exact sequence. Each resulting sequence is exact by projectivity, so Proposition~\ref{prop:cochain-les}, applied in abelian groups, gives the displayed sequence. A projective $P$ has a resolution concentrated in degree zero, proving its higher vanishing. For the converse, take a free surjection $F\to M$ with kernel $K$. The exact sequence makes $\Mor_R(M,F)\to\Mor_R(M,M)$ surjective because $\Extn{1}{M}{K}=0$. A preimage of $\id_M$ splits $F\to M$, so $M$ is projective.
+\end{demonstration}
+
+There is also a long exact sequence in the first, contravariant variable. For $0\to M'\to M\to M''\to0$, its beginning is
+\[
+\begin{aligned}
+0\to\Mor_R(M'',N)\to\Mor_R(M,N)\to\Mor_R(M',N)\\
+\to\Extn{1}{M''}{N}\to\Extn{1}{M}{N}\to\Extn{1}{M'}{N}\to\cdots.
+\end{aligned}
+\]
+One constructs compatible projective resolutions with $P_i=P'_i\oplus P''_i$ by successively lifting the maps from $P''_i$; exactness of the sequence of successive kernels permits the next lift. This is the horseshoe construction. Applying $\Mor_R(-,N)$ gives a degreewise split short exact sequence of cochain complexes in the reverse order, and hence the displayed sequence.
+
+\subsection{Extensions as Degree-One Classes}
+\begin{result}{Theorem}{thm:extensions}{The Meaning of Ext in Degree One}
+The group $\Extn{1}{M}{N}$ classifies short exact sequences of left $R$-modules
+\begin{equation}\label{eq:extension}
+0\longrightarrow N\xrightarrow{\iota}E\xrightarrow{\rho}M\longrightarrow0
+\end{equation}
+up to isomorphisms of sequences that are the identity on $N$ and $M$. The zero class consists precisely of the split extensions.
+\end{result}
+\begin{demonstration}{thm:extensions}
+Choose $0\to K\xrightarrow{j}P_0\to M\to0$ with $P_0$ projective. The definition of Ext from a resolution identifies
+\begin{equation}
+\label{eq:ext1-coker}\Extn{1}{M}{N}\cong
+\coker\bigl(\Mor_R(P_0,N)\longrightarrow\Mor_R(K,N)\bigr).
+\end{equation}
+Indeed, a map $P_1\to N$ is a cocycle exactly when it kills $\im(\partial_2)$, so it factors through $P_1/\im(\partial_2)\cong K$.
+
+Given $u:K\to N$, form the quotient
+\[
+E_u=(N\oplus P_0)/\im(-u,j).
+\]
+The construction fits into the commutative diagram with exact rows and columns
+\[
+\begin{tikzcd}[column sep=large,row sep=large]
+0 \arrow[r] & 0 \arrow[r] \arrow[d]
+& K \arrow[r,equal] \arrow[d,hook,"{(-u,j)}"]
+& K \arrow[r] \arrow[d,hook,"j"] & 0\\
+0 \arrow[r] & N \arrow[r,hook,"i"] \arrow[d,equal]
+& N\oplus P_0 \arrow[r,two heads,"\mathrm{pr}_2"] \arrow[d,two heads,"q"]
+& P_0 \arrow[r] \arrow[d,two heads,"\epsilon"] & 0\\
+0 \arrow[r] & N \arrow[r,hook,"i_u"] \arrow[d]
+& E_u \arrow[r,two heads,"\pi_u"] \arrow[d]
+& M \arrow[r] \arrow[d] & 0\\
+& 0 & 0 & 0.
+\end{tikzcd}
+\]
+The middle column exhibits $E_u=\coker\bigl(K\xrightarrow{(-u,j)}N\oplus P_0\bigr)$. Here $i:N\to N\oplus P_0$ satisfies $i(a)=(a,0)$; $q(a,p)=[(a,p)]$, $i_u(a)=[(a,0)]$, and $\pi_u([(a,p)])=\epsilon(p)$. Thus the trivial extension of $P_0$ by $N$ maps surjectively onto the desired extension of $M$ by $N$. The map $i_u$ is injective because $j$ is injective. If $\epsilon(p)=0$, write $p=j(k)$; then
+\[
+[(a,p)]=[(a+u(k),0)],
+\]
+which proves exactness at $E_u$.
+
+Conversely, given an extension $0\to N\xrightarrow{i}E\to M\to0$, projectivity gives a lift $s:P_0\to E$ of $\epsilon$. There is a unique $u:K\to N$ with $sj=iu$. The surjection
+\[
+N\oplus P_0\longrightarrow E,\qquad (a,p)\longmapsto i(a)+s(p)
+\]
+has kernel $\im(-u,j)$, so it identifies the given extension with the bottom row of the diagram.
+
+Changing the lift replaces $u$ by $u+vj$ for some $v:P_0\to N$. Conversely, if $u'=u+vj$, the map $N\oplus P_0\to N\oplus P_0$ given by $(a,p)\mapsto(a-v(p),p)$ descends to an equivalence $E_u\cong E_{u'}$. An equivalence of extensions also compares their lifts in exactly this way, so the equivalence classes are precisely the displayed cokernel. Finally, $E_0\cong N\oplus M$, and a split extension admits a lift with $u=0$. Hence the zero class corresponds precisely to split extensions.
+\end{demonstration}
+\usedby{Example~\ref{ex:triangular}}
+
+The addition transported by this classification is the Baer sum: take the direct sum of two extensions, pull back along the diagonal $M\to M\oplus M$, and push out along addition $N\oplus N\to N$. In the description above, these operations replace the two maps $\alpha,\beta:K\to N$ by $\alpha+\beta$.
+
+\subsection{An Explicit Noncommutative Ring}
+\begin{entry}{Example}{ex:triangular}{Upper-Triangular Matrices}
+Let $k$ be a field and
+\[
+R=\left\{\begin{pmatrix}a&b\\0&c\end{pmatrix}:a,b,c\in k\right\},\qquad
+e_1=\begin{pmatrix}1&0\\0&0\end{pmatrix},\quad
+e_2=\begin{pmatrix}0&0\\0&1\end{pmatrix},\quad
+u=\begin{pmatrix}0&1\\0&0\end{pmatrix}.
+\]
+This ring is noncommutative: $e_1u=u$ whereas $ue_1=0$. Define left modules $S_1=S_2=k$ as vector spaces, with actions
+\[
+\begin{pmatrix}a&b\\0&c\end{pmatrix}\cdot x=ax\quad\text{on }S_1,
+\qquad
+\begin{pmatrix}a&b\\0&c\end{pmatrix}\cdot x=cx\quad\text{on }S_2.
+\]
+The left ideals $P_1=Re_1$ and $P_2=Re_2$ are projective because $R=Re_1\oplus Re_2$. They have bases $e_1$ and $u,e_2$, respectively. There is a projective resolution
+\begin{equation}\label{eq:triangular-resolution}
+0\longrightarrow P_1\xrightarrow{d}P_2\xrightarrow{\rho}S_2\longrightarrow0,
+\qquad d(x)=xu,\qquad \rho(bu+ce_2)=c.
+\end{equation}
+Right multiplication by $u$ is a map of left modules. It sends $e_1$ to $u$, so it is injective with image $ku=\ker\rho$.
+
+For any left $R$-module $N$, evaluation at $e_i$ gives
+\[
+\Mor_R(Re_i,N)\cong e_iN.
+\]
+Indeed, $f(e_i)=e_if(e_i)$, and conversely $n\in e_iN$ determines $f_n(re_i)=rn$. Under these identifications, precomposition with $d$ is
+\[
+e_2N\longrightarrow e_1N,\qquad n\longmapsto un,
+\]
+because $d(e_1)=u=ue_2$. Thus the entire Ext computation is the two-term cochain complex
+\[
+e_2N\xrightarrow{\ u\ }e_1N
+\qquad\text{in degrees }0,1.
+\]
+Consequently
+\[
+\begin{aligned}
+\Mor_R(S_2,N)&\cong\ker(u:e_2N\to e_1N),\\
+\Extn{1}{S_2}{N}&\cong e_1N/u(e_2N),\\
+\Extn{n}{S_2}{N}&=0\qquad(n\geq2).
+\end{aligned}
+\]
+For $N=S_1$, the actions give $e_2S_1=0$ and $e_1S_1=k$.
+Thus the cochain complex is $0\to0\to k\to0$, in degrees zero and one.
+Its degree-zero cohomology is zero, and its degree-one cohomology is $k/0=k$. Hence
+\[
+\Extn{1}{S_2}{S_1}\cong k.
+\]
+For $N=S_2$, the complex instead is $0\to k\to0\to0$, so
+$\Mor_R(S_2,S_2)=k$ and $\Extn{1}{S_2}{S_2}=0$.
+For $N=P_2$, we have $e_2P_2=ke_2$ and $e_1P_2=ku$; the differential $e_2P_2\to e_1P_2$ given by
+$c e_2\mapsto c u$ is an isomorphism, so both cohomology groups vanish.
+By contrast, $S_1\cong P_1$ is projective, so $\Extn{1}{S_1}{S_2}=0$. Unlike Tor over a commutative ring, Ext is not symmetric in its variables.
+
+The resolution~\eqref{eq:triangular-resolution} itself, after identifying $P_1$ with $S_1$, is a nonsplit extension of $S_2$ by $S_1$. If it had a section, the image $v$ of $1\in S_2$ would satisfy $\rho(v)=1$, so $v=bu+e_2$ for some $b\in k$. But $u$ acts trivially on $S_2$, while $uv=u\neq0$, contradicting linearity of the section.
+
+More explicitly, the class $\lambda\in k$ corresponds to $E_\lambda=kx\oplus ky$ with
+\[
+\begin{pmatrix}a&b\\0&c\end{pmatrix}x=ax,\qquad
+\begin{pmatrix}a&b\\0&c\end{pmatrix}y=b\lambda x+cy.
+\]
+Define $i:S_1\to E_\lambda$ by $i(1)=x$ and $p:E_\lambda\to S_2$ by $p(x)=0$, $p(y)=1$. The sequence $0\to S_1\xrightarrow{i}E_\lambda\xrightarrow{p}S_2\to0$ has class $\lambda$ under~\eqref{eq:ext1-coker}. It splits exactly when $\lambda=0$; $E_1\cong P_2$. Nonzero values can give isomorphic middle modules while representing different extension classes, because equivalence of extensions must fix both end modules.
+\end{entry}
+
+\subsection{Cyclic Groups: Every Kernel and Cokernel}
+\begin{entry}{Example}{ex:cyclic-detail}{The Pair $\Z/12\Z$ and $\Z/8\Z$}
+The free resolution $0\to\Z\xrightarrow{12}\Z\to\Z/12\Z\to0$
+is exact because multiplication by $12$ is injective and its cokernel is
+$\Z/12\Z$. Set $N=\Z/8\Z$. Tensoring gives
+\[
+0\longrightarrow N\xrightarrow{4}N\longrightarrow0
+\quad\text{in chain degrees }1,0.
+\]
+The image is $\{0,4\}$, and the kernel is $\{0,2,4,6\}$.
+The quotient map $N\to\Z/4\Z$ has kernel $\{0,4\}$; hence
+$\Z/12\Z\otimes_{\Z}N\cong\Z/4\Z$.
+The map $\Z/4\Z\to N$, $[t]_4\mapsto[2t]_8$, is injective with image
+$\{0,2,4,6\}$. There is no incoming degree-two boundary, so it identifies
+$\operatorname{Tor}^{\Z}_1(\Z/12\Z,N)$ with $\Z/4\Z$. Higher Tor vanishes.
+
+Applying $\Mor_{\Z}(-,N)$ reverses the arrows and gives
+\[
+0\longrightarrow N\xrightarrow{4}N\longrightarrow0
+\quad\text{in cochain degrees }0,1.
+\]
+Thus $\Mor_{\Z}(\Z/12\Z,N)=\{0,2,4,6\}$, while
+$\operatorname{Ext}_{\Z}^1(\Z/12\Z,N)=N/\{0,4\}\cong\Z/4\Z$.
+Higher Ext vanishes. The same map is being used, but homological and
+cohomological grading put its kernel and cokernel in different degrees.
+
+For general $a,b>0$, put $g=\gcd(a,b)$, $a=ga'$, and $b=gb'$.
+The image of multiplication by $a$ on $\Z/b\Z$ equals the subgroup generated
+by $g$, by B\'ezout's identity. Its cokernel is therefore $\Z/g\Z$.
+For the kernel, $b\mid ax$ is equivalent to $b'\mid x$, since
+$\gcd(a',b')=1$. Its elements are the $g$ multiples of $b'$ modulo $b$.
+The map $\Z/g\Z\to\Z/b\Z$ given by $[t]_g\mapsto[b't]_b$ gives its cyclic-group identification.
+This computes tensor, Tor, morphism groups, and Ext in the preceding manner.
+\end{entry}
+
+\begin{entry}{Example}{ex:matrix-ext}{Ext for the Two-Generator Presentation}
+For $M=\coker\left(\begin{smallmatrix}2&0\\4&6\end{smallmatrix}\right)$
+and $N=\Z/4\Z$, a homomorphism $\Z^2\to N$ is specified by a row
+$(x,y)$. Precomposition with $A$ sends it to $(2x+4y,6y)$.
+Equivalently, on column coordinates the cochain differential is $A^{\mathrm T}$.
+Modulo four this is the map $N^2\to N^2$ given by $(x,y)\mapsto(2x,2y)$. Its kernel is
+$\{0,2\}^2$, and its image is also $\{0,2\}^2$ in the next copy of $N^2$.
+Consequently
+\[
+\Mor_{\Z}(M,N)\cong(\Z/2\Z)^2,\qquad
+\operatorname{Ext}_{\Z}^1(M,N)\cong(\Z/2\Z)^2,
+\]
+and all higher groups vanish. The map defining Ext is the transposed map,
+even though in this particular example reduction modulo four makes it
+coincide with the map used for Tor.
+\end{entry}
+
+\subsection{Computing Ext with Injective Resolutions}
+For a fixed left $R$-module $M$, the functor $\Mor_R(M,-)$ is left exact.
+Its right derived functors are the Ext groups defined above.
+
+\begin{result}{Proposition}{prop:ext-injective}{The Two Resolutions Compute the Same Ext}
+If $P_\bullet\to M$ is a projective resolution and $0\to N\to I^\bullet$
+is an injective resolution, there are natural isomorphisms
+\[
+H^n\Mor_R(P_\bullet,N)\cong H^n\Mor_R(M,I^\bullet)
+=\mathrm R^n\Mor_R(M,-)(N).
+\]
+\end{result}
+\begin{demonstration}{prop:ext-injective}
+Use the first-quadrant double complex $C^{p,q}=\Mor_R(P_p,I^q)$.
+Its horizontal map is precomposition with $d_{p+1}$, and its vertical map
+is postcomposition with the differential of $I$. These maps commute;
+on the total complex take $D=h+(-1)^p v$. Thus $D^2=0$.
+The total degree-$n$ group is $\bigoplus_{p+q=n}C^{p,q}$, a finite sum.
+
+For fixed $p$, exactness of $\Mor_R(P_p,-)$ makes the augmented column
+$0\to\Mor_R(P_p,N)\to C^{p,0}\to C^{p,1}\to\cdots$ exact.
+For fixed $q$, injectivity of $I^q$ makes the augmented row
+$0\to\Mor_R(M,I^q)\to C^{0,q}\to C^{1,q}\to\cdots$ exact.
+The augmentation maps from both single complexes to the total complex are
+quasi-isomorphisms. Here is the elementary total-complex argument: in a
+total cocycle, eliminate its component with largest positive vertical degree
+using exactness of the corresponding column, subtracting the total
+coboundary of a preimage. Repeating leaves only vertical degree zero,
+where the kernel is the column augmentation. The same elimination applied
+to a total primitive shows that a class from the augmentation is a boundary
+only if it already was one in the single complex. There are finitely many
+components in each total degree, so this process terminates. Interchanging
+rows and columns proves the other augmentation is a quasi-isomorphism.
+This also proves naturality by the comparison maps of resolutions.
+\end{demonstration}
+
+\begin{entry}{Example}{ex:injective-computation}{An Injective Calculation over $\Z$}
+To compute $\operatorname{Ext}_{\Z}^n(\Z/m\Z,\Z)$ for $m\geq2$, use
+$0\to\Z\to\Q\to\Q/\Z\to0$ from Example~\ref{ex:injective-z}.
+A homomorphism $\Z/m\Z\to\Q$ must send $1$ to an element killed by $m$;
+the only such rational number is zero. A homomorphism to $\Q/\Z$ is instead
+determined by one of
+\[
+0,\quad\tfrac1m+\Z,\quad\tfrac2m+\Z,\quad\ldots,\quad\tfrac{m-1}{m}+\Z.
+\]
+The resulting cochain complex is $0\to0\to(\tfrac1m\Z)/\Z\to0$,
+with its two terms in degrees zero and one. Hence
+\[
+\Mor_{\Z}(\Z/m\Z,\Z)=0,\qquad
+\operatorname{Ext}_{\Z}^1(\Z/m\Z,\Z)\cong\Z/m\Z,
+\]
+and higher Ext vanishes. The projective-resolution calculation gives
+$0\to\Z\xrightarrow{m}\Z\to0$, with the same kernel zero and cokernel
+$\Z/m\Z$. This checks the comparison by two distinct resolutions.
+\end{entry}
+
+\subsection{Comparing the Computations}
+For comparison with Section~\ref{sec:tor}, suppose $R$ is commutative and $a$ is a non-zero-divisor. The same resolution used there now gives
+\[
+0\longrightarrow N\xrightarrow{a}N\longrightarrow0
+\qquad\text{in cochain degrees }0,1.
+\]
+Hence $\Mor_R(R/(a),N)=N[a]$, $\Extn{1}{R/(a)}{N}=N/aN$, and higher Ext vanishes. The kernel and cokernel appear in the opposite degrees from the tensor computation. For the dual-number example, applying $\Mor_R(-,K)$ makes every differential zero, so $\Extn{n}{K}{K}\cong k$ for every $n\geq0$.
+
+The two procedures can be compared directly:
+\[
+\begin{array}{c|c|c}
+&\text{Tensor and Tor, }R\text{ commutative}&\text{Morphism Groups and Ext, }R\text{ arbitrary}\\[2pt]\hline
+\text{Resolution}&P_\bullet\twoheadrightarrow M&P_\bullet\twoheadrightarrow M\\
+\text{Complex}&P_\bullet\otimes_R N&\Mor_R(P_\bullet,N)\\
+\text{Free term }\bigoplus_{i\in I}R&\bigoplus_{i\in I}N&\prod_I N\\
+\text{Degree zero}&M\otimes_R N&\Mor_R(M,N)\\
+\text{Higher degrees}&H_i=\Tor{i}{M}{N}&H^i=\Extn{i}{M}{N}\\
+\text{Variance}&\text{covariant in both}&\text{contravariant, then covariant}
+\end{array}
+\]
+In either computation, the central work is to construct enough of a resolution and then compute a kernel modulo an image. A single presentation suffices for a tensor product; its higher relations control Tor and Ext.
+
+\section{Simplicial Sets and Their Chains}\label{sec:simplicial}
+In this section, $R$ is commutative. A simplicial set records simplices and the ways they meet. Its simplices are initially elements of sets, so there is no addition and no alternating sum of faces. Passing to free modules introduces the algebra needed for a chain complex.
+
+\begin{entry}{Definition}{l3-added:1}{The Simplex Category and Simplicial Sets}\label{def:sset}
+The simplex category $\Delta$ has objects $[n]=\{0<1<\cdots<n\}$ for $n\geq0$, and order-preserving maps as morphisms. A simplicial set is a functor $X:\Delta^{\mathrm{op}}\to\mathrm{Set}$. Write $X_n=X([n])$. A map of simplicial sets is a natural transformation, and their category is $\sSet$.
+\end{entry}
+The injection $[n-1]\to[n]$ omitting $i$ induces a face map $d_i:X_n\to X_{n-1}$. The surjection $[n+1]\to[n]$ identifying $i$ and $i+1$ induces a degeneracy map $s_i:X_n\to X_{n+1}$. These satisfy the simplicial identities
+\[
+\begin{aligned}
+d_i d_j&=d_{j-1}d_i &&(i<j),\\
+s_i s_j&=s_{j+1}s_i &&(i\leq j),\\
+d_i s_j&=
+\begin{cases}
+s_{j-1}d_i,&i<j,\\
+\id,&i=j\text{ or }i=j+1,\\
+s_jd_{i-1},&i>j+1.
+\end{cases}
+\end{aligned}
+\]
+They express the equalities among order-preserving maps in $\Delta$. A simplex in the image of a degeneracy is degenerate; otherwise it is nondegenerate.
+
+\begin{entry}{Example}{l3-added:2}{Standard Simplices and the Simplicial Circle}\label{ex:circle}
+The standard simplicial $n$-simplex is the representable functor
+\[
+\Delta^n_k=\Mor_{\Delta}([k],[n]).
+\]
+Its boundary $\partial\Delta^n$ consists of the maps whose images miss at least one vertex. The quotient $\Delta^1/\partial\Delta^1$ is a simplicial circle: it has one nondegenerate vertex $v$ and one nondegenerate edge $e$, with $d_0e=d_1e=v$, and no nondegenerate simplices in higher degrees. It still has degenerate simplices in every degree.
+\end{entry}
+
+\begin{entry}{Definition}{l3-added:3}{Singular Simplices and Realization}\label{def:sing}
+For a topological space $Y$, let
+\[
+|\Delta^n|=\{(t_0,\ldots,t_n)\in\mathbb R^{n+1}:t_i\geq0,\ \textstyle\sum_i t_i=1\}.
+\]
+The singular simplicial set $\Sing(Y)$ has continuous maps $|\Delta^n|\to Y$ as its $n$-simplices. Its structure maps are precomposition with the affine maps between topological simplices induced by maps in $\Delta$.
+
+For a simplicial set $X$, its geometric realization is
+\[
+|X|=\left(\coprod_{n\geq0}X_n\times|\Delta^n|\right)\big/\sim,
+\]
+where $(X(\alpha)(x),t)\sim(x,|\alpha|(t))$ for $\alpha:[m]\to[n]$, $x\in X_n$, and $t\in|\Delta^m|$. Each $X_n$ is given the discrete topology, and the quotient has the quotient topology.
+\end{entry}
+The equivalence relation glues faces and collapses degenerate simplices. The definitions give the natural adjunction
+\[
+\Mor_{\mathrm{Top}}(|X|,Y)\cong\Mor_{\sSet}(X,\Sing(Y)):
+\]
+a continuous map out of $|X|$ is exactly a compatible family of maps from its topological simplices. In Example~\ref{ex:circle}, realization identifies the two endpoints of an interval, giving the usual circle.
+
+\begin{entry}{Definition}{l3-added:4}{Simplicial Modules and Chains}\label{def:chains}
+A simplicial $R$-module is a functor $A_\bullet:\Delta^{\mathrm{op}}\to\Mod_R$. Its associated chain complex has $C_n(A_\bullet)=A_n$ and differential
+\[
+\partial_n=\sum_{i=0}^n(-1)^i d_i\quad(n>0),\qquad \partial_0=0.
+\]
+For a simplicial set $X$, let $R[X_n]$ be the free $R$-module on $X_n$. Extending the structure maps linearly gives a simplicial module $R[X]$, and hence a chain complex $C_\bullet(X;R)=C_\bullet(R[X])$.
+\end{entry}
+
+
+\begin{result}{Proposition}{l3-added:5}{The Boundary Squares to Zero}\label{prop:boundary}
+For a simplicial module, the alternating face differential satisfies $\partial_{n-1}\partial_n=0$.
+\end{result}
+\begin{demonstration}{l3-added:5}
+In the expanded double sum, pair the term $(-1)^{i+j}d_i d_j$ with $i<j$ with the term $(-1)^{i+j-1}d_{j-1}d_i$. The two composites agree by the face identity and have opposite signs. Every term belongs to one such pair.
+\end{demonstration}
+In dimension two this is the familiar calculation
+\[
+\partial[0,1,2]=[1,2]-[0,2]+[0,1],\qquad
+\partial^2[0,1,2]=0.
+\]
+Taking $X=\Sing(Y)$ gives the usual singular chain complex, since its basis in degree $n$ is precisely the set of singular $n$-simplices of $Y$.
+
+\subsection{The Construction in Low Degrees}
+For a simplicial abelian group $A_\bullet$, the construction is simply
+\[
+\cdots\longrightarrow A_3\xrightarrow{d_0-d_1+d_2-d_3}
+A_2\xrightarrow{d_0-d_1+d_2}A_1\xrightarrow{d_0-d_1}A_0\longrightarrow0.
+\]
+All simplices are retained. The degeneracy maps do not occur in this formula for the differential, though they remain part of the simplicial structure.
+
+It is useful to check the first nontrivial composition in full:
+\[
+\begin{aligned}
+(d_0-d_1)(d_0-d_1+d_2)
+={}&d_0d_0-d_0d_1+d_0d_2\\
+&-d_1d_0+d_1d_1-d_1d_2=0.
+\end{aligned}
+\]
+The cancellations use $d_0d_0=d_0d_1$, $d_0d_2=d_1d_0$, and $d_1d_1=d_1d_2$. Proposition~\ref{prop:boundary} is the same cancellation in every degree.
+
+A map of simplicial abelian groups $f:A_\bullet\to B_\bullet$ is a family of homomorphisms commuting with all face and degeneracy maps. In particular,
+\[
+f_{n-1}\partial_n
+=\sum_i(-1)^i f_{n-1}d_i
+=\sum_i(-1)^i d_i f_n
+=\partial_n f_n.
+\]
+Thus the associated chain complex construction is a functor: simplicial maps become chain maps, and hence induce maps on homology.
+
+\begin{entry}{Example}{l3-added:6}{A Constant Simplicial Abelian Group}
+Let $G$ be an abelian group. Set $A_n=G$ in every degree and take every face and degeneracy map to be the identity. For $n>0$ the differential is
+\[
+\partial_n=\left(\sum_{i=0}^n(-1)^i\right)\id_G
+=\begin{cases}\id_G,&n\text{ even},\\0,&n\text{ odd}.\end{cases}
+\]
+The associated chain complex is therefore
+\[
+\cdots\xrightarrow{0}G\xrightarrow{\id}G\xrightarrow{0}G
+\xrightarrow{\id}G\xrightarrow{0}G\longrightarrow0,
+\]
+where the rightmost $G$ is in degree zero. It has $H_0=G$ and $H_n=0$ for every $n>0$. A constant simplicial group is not sent to a chain complex with $G$ only in degree zero; it is sent to a larger complex with exactly that homology.
+\end{entry}
+
+\begin{entry}{Example}{l3-added:7}{Edges, Triangles, and Connected Components}
+For a simplicial set $X$, take $A_n=\Z[X_n]$. An edge $e$ has boundary $d_0e-d_1e$, its terminal vertex minus its initial vertex. Thus
+\[
+H_0(C_\bullet(X;\Z))
+=\Z[X_0]/\langle d_0e-d_1e:e\in X_1\rangle.
+\]
+This is the free abelian group on the equivalence classes of vertices under the equivalence relation generated by the edges. These are the components of the simplicial set.
+
+A triangle $t$ has boundary $d_0t-d_1t+d_2t$. Hence $H_1$ is the group of integral sums of edges with zero total boundary, modulo boundaries of sums of triangles. In the simplicial circle of Example~\ref{ex:circle}, the edge $e$ is a cycle because both of its endpoints are $v$. Degenerate simplices are retained in all of these chain groups as well.
+\end{entry}
+
+\section{Coefficients in Topology}\label{sec:topology}
+Let $X$ be a simplicial set and let $A_\bullet=C_\bullet(X;\Z)$. Each $A_n$ is a free abelian group on all $n$-simplices. Define
+\[
+H_n(X;G)=H_n(A_\bullet\otimes_{\Z}G),\qquad
+H^n(X;G)=H^n(\Mor_{\Z}(A_\bullet,G)).
+\]
+Here $G$ is an abelian group and $H_n(X;\Z)=H_n(A_\bullet)$. Applied to $X=\Sing(Y)$, these are precisely the usual definitions of singular homology and cohomology: the chains are free on singular simplices and the differential is the alternating sum of restrictions to faces.
+
+\begin{entry}{Remark}{l3-added:8}{Universal Coefficient Theorems}\label{rem:uct}
+For any chain complex $A_\bullet$ of free abelian groups concentrated in nonnegative degrees, there are natural short exact sequences
+\[
+0\longrightarrow H_n(A)\otimes_{\Z}G
+\longrightarrow H_n(A\otimes_{\Z}G)
+\longrightarrow\operatorname{Tor}_1^{\Z}(H_{n-1}(A),G)\longrightarrow0
+\]
+and
+\[
+0\longrightarrow\operatorname{Ext}_{\Z}^1(H_{n-1}(A),G)
+\longrightarrow H^n(\Mor_{\Z}(A,G))
+\longrightarrow\Mor_{\Z}(H_n(A),G)\longrightarrow0.
+\]
+Take $H_{-1}(A)=0$. Both sequences split as sequences of abelian groups, but in general there is no natural choice of splitting. These are the algebraic universal coefficient theorems; we state them here without a full proof.
+\end{entry}
+The algebra behind these statements is that subgroups of free abelian groups are free. Writing $Z_n=\ker\partial_n$ and $B_n=\im\partial_{n+1}$, the sequence
+\[
+0\longrightarrow Z_n\longrightarrow A_n\longrightarrow B_{n-1}\longrightarrow0
+\]
+splits, whereas $0\to B_n\to Z_n\to H_n(A)\to0$ is a free resolution of $H_n(A)$. Applying tensor or Hom to the latter sequence produces the Tor or Ext correction. The first sequence explains why choices of splittings enter the calculation.
+
+\begin{entry}{Example}{l3-added:9}{The Real Projective Plane}
+The cellular chain complex of $\mathbb{RP}^2$ over $\Z$ is
+\[
+0\longrightarrow\Z\xrightarrow{\,2\,}\Z\xrightarrow{\,0\,}\Z\longrightarrow0
+\]
+in degrees $2,1,0$. Thus $H_1(\mathbb{RP}^2;\Z)=\Z/2$ and $H_2(\mathbb{RP}^2;\Z)=0$. The cellular comparison theorem identifies these groups with singular homology.
+
+For coefficients $\Z/2$, the multiplication-by-two differential vanishes, giving
+\[
+H_2(\mathbb{RP}^2;\Z/2)\cong\Z/2.
+\]
+This class is invisible in $H_2(\mathbb{RP}^2;\Z)\otimes\Z/2$, which is zero. It is supplied by
+\[
+\operatorname{Tor}_1^{\Z}(H_1(\mathbb{RP}^2;\Z),\Z/2)
+=\operatorname{Tor}_1^{\Z}(\Z/2,\Z/2)\cong\Z/2.
+\]
+Likewise, applying $\Mor_{\Z}(-,\Z)$ to the cellular complex gives $H^2(\mathbb{RP}^2;\Z)\cong\Z/2$. This is the Ext contribution
+\[
+\operatorname{Ext}_{\Z}^1(H_1(\mathbb{RP}^2;\Z),\Z)\cong\Z/2,
+\]
+even though $\Mor_{\Z}(H_2(\mathbb{RP}^2;\Z),\Z)=0$.
+\end{entry}
+A simplicial chain complex is free in each degree, but it is usually not a resolution of its degree-zero homology: it may have higher homology. To compute Tor of a single module, use an actual resolution. To compute homology with coefficients of a space, retain the full chain complex of that space.
+
+\section{Further Exercises}
+\begin{enumerate}
+\item Compute $\operatorname{Tor}_n^{\Z}(\Z/12,\Z/18)$ and $\operatorname{Ext}_{\Z}^n(\Z/12,\Z/18)$ for every $n\geq0$. Identify explicitly the kernel and cokernel of multiplication by $12$ on $\Z/18$.
+\item For an extension $0\to A\to E\to\Z/m\to0$, choose a lift $e\in E$ of $1\bmod m$. Show that $me\in A$ determines a class in $A/mA$ independent of the lift, and that this class is zero precisely when the extension splits.
+\item Write out the six terms of $\partial_1\partial_2$ and pair them using the face identities. Then explain how the same pairing works for $\partial_{n-1}\partial_n$.
+\item For a simplicial abelian group, show that $\partial_1s_0=0$. Next show that $\partial_2s_0s_0(a)=s_0(a)$ for $a\in A_0$. Conclude that a degenerate edge of this form is a cycle and a boundary.
+\item Let $k$ be a field, $R=k[\varepsilon]/(\varepsilon^2)$, and $k=R/(\varepsilon)$. Verify that the complex with $P_n=R$ in every degree and differential multiplication by $\varepsilon$ is a free resolution of $k$. Compute $\operatorname{Tor}_n^R(k,k)$ and $\operatorname{Ext}_R^n(k,k)$. Explain why the degree bound for $\Z/m$ does not hold over this ring.
+\item Use the cellular complex of $\mathbb{RP}^2$ to compute $H_n(\mathbb{RP}^2;\Z/4)$ and $H^n(\mathbb{RP}^2;\Z/4)$. Match the answers to the two universal coefficient sequences.
+\end{enumerate}
+
+
+\begin{thebibliography}{9}
+\bibitem[Sta26]{Sta26} The Stacks Project Authors, \emph{The Stacks Project}, 2026. Further reading: \href{https://stacks.math.columbia.edu/tag/00CV}{Tensor Products, Tag 00CV}, and \href{https://stacks.math.columbia.edu/tag/00LY}{Tor Groups and Flatness, Tag 00LY}.
+\bibitem[May, n.d.]{May} J. Peter May, \emph{Notes on Tor and Ext}. \href{https://www.math.uchicago.edu/~may/MISC/TorExt.pdf}{University of Chicago lecture notes}.
+\end{thebibliography}
+\end{document}

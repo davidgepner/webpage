@@ -1,0 +1,349 @@
+\documentclass[11pt]{article}
+% BEGIN SHARED COURSE STYLE
+% Shared Math 615 style. Embedded verbatim in standalone published sources.
+\RequirePackage[letterpaper,margin=1in]{geometry}
+\RequirePackage{amsmath,amsthm,mathtools}
+\RequirePackage{fontspec,unicode-math}
+\setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmathfont{texgyretermes-math.otf}
+\RequirePackage{microtype,tikz-cd,enumitem,needspace,xcolor,booktabs,titlesec,etoolbox}
+\definecolor{teal}{HTML}{176568}
+\definecolor{burgundy}{HTML}{782F40}
+\definecolor{inklink}{HTML}{176568}
+\definecolor{accent}{HTML}{176568}
+\titleformat{\section}{\large\bfseries\color{teal}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{burgundy}}{\thesubsection}{.65em}{}
+\titleformat{\paragraph}[runin]{\normalsize\bfseries\color{burgundy}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{2.2ex plus .5ex minus .2ex}{1ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.6ex plus .4ex minus .2ex}{.7ex plus .2ex}
+\RequirePackage{hyperref,bookmark}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,citecolor=teal,pdfstartview={XYZ null null 1.5},bookmarksnumbered=true}
+\urlstyle{same}
+\setcounter{tocdepth}{2}
+\setlist[enumerate]{label=\arabic*.,ref=\arabic*,leftmargin=*,itemsep=4pt,topsep=4pt}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\AddToHook{cmd/section/before}{\Needspace{8\baselineskip}}
+\AddToHook{cmd/subsection/before}{\Needspace{6\baselineskip}}
+\makeatletter
+\newcommand{\afterblock}{\@afterindentfalse\@afterheading}
+\makeatother
+\newcounter{result}[section]
+\renewcommand{\theresult}{\thesection.\arabic{result}}
+\newcommand{\resulttitle}[3]{#1 #2\ifstrempty{#3}{}{ (#3)}.}
+\newenvironment{result}[3]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{proof:#2}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{entry}[3]{\par\addvspace{7pt}\Needspace{3\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\textbf{\resulttitle{#1}{\theresult}{#3}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{demonstration}[1]{\par\noindent\hypertarget{proof:#1}{}{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{#1}{\textbf{Proof.}}}\quad\ignorespaces}{\unskip\nobreak\hfill\qedsymbol\par\addvspace{5pt}\afterblock}
+\newenvironment{citedresult}[4]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{urlcolor=burgundy}\href{#4}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newcommand{\usedby}[1]{\par\noindent{\small\textbf{Used in:} #1.}\par\afterblock}
+\newcommand{\coursebold}[1]{{\color{burgundy}\textbf{#1}}}
+\newcommand{\coursetitle}[3]{\begin{center}{\large\bfseries\color{teal}#1}\\[4pt]{\LARGE\bfseries\color{teal}#2}\\[6pt]Math 615: Algebraic Topology I\\Fall 2026\quad\textbar\quad #3\end{center}}
+\newcommand{\coursecontents}{{\small\setlength{\parskip}{0pt}\tableofcontents}}
+\newcommand{\homeworkstyle}{\titleformat{\section}{\large\bfseries\color{teal}}{Exercise \thesection.}{.65em}{}}
+% END SHARED COURSE STYLE
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\sSet}{\mathcal P(\Delta)}
+\newcommand{\sAb}{\mathcal P(\Delta;\mathrm{Ab})}
+\newcommand{\Top}{\mathrm{Top}}
+\newcommand{\Sing}{\operatorname{Sing}}
+\newcommand{\Mor}{\operatorname{Mor}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\C}{C_\bullet}
+\homeworkstyle
+\hypersetup{pdftitle={Homework 4: Simplicial Sets and Singular Chains},pdfauthor={Math 615 Fall 2026},pdfsubject={Revision 3}}
+\begin{document}
+\coursetitle{Homework 4}{Simplicial Sets and Singular Chains}{September 21 and 23}
+Use the constructions and results of Lecture 4. Give proofs and justify
+all asserted naturality statements. Unless a quotient is explicitly specified,
+retain all simplices, including degenerate ones. The definitions below fix the
+notation; the exercises begin on page~\pageref{ex:standard}.
+
+\section*{Definitions and Notation}
+\coursebold{Functor Categories and Presheaves.}
+The category $\operatorname{Fun}(\mathcal C,\mathcal D)$ has functors
+$\mathcal C\to\mathcal D$ as objects and natural transformations as morphisms.
+A natural transformation $\theta:F\to G$ consists of morphisms
+$\theta_c:F(c)\to G(c)$ satisfying
+$G(f)\theta_c=\theta_{c'}F(f)$ for every $f:c\to c'$.
+The opposite category $\mathcal C^{\mathrm{op}}$ reverses all arrows of
+$\mathcal C$. Write
+\[
+\mathcal P(\mathcal C;\mathcal D)=\operatorname{Fun}(\mathcal C^{\mathrm{op}},\mathcal D),
+\qquad
+\mathcal P(\mathcal C)=\mathcal P(\mathcal C;\mathrm{Set}).
+\]
+Objects of $\mathcal P(\mathcal C)$ are called \emph{presheaves of sets}.
+Here $\mathrm{Set}$, $\mathrm{Ab}$, and $\Top$ denote the categories of sets,
+abelian groups, and topological spaces, with functions, homomorphisms, and
+continuous maps respectively. The notation $\Mor_{\mathcal C}(c,c')$ means
+the set of morphisms in $\mathcal C$.
+
+\coursebold{The Simplex Category and Simplicial Objects.}
+The category $\Delta$ has objects $[n]=\{0<\cdots<n\}$, $n\geq0$,
+and weakly increasing maps as morphisms. A simplicial set is a presheaf
+$K\in\mathcal P(\Delta)$; write $K_n=K([n])$ and
+$\alpha^*=K(\alpha):K_n\to K_m$ for $\alpha:[m]\to[n]$.
+An element of $K_n$ is an \emph{$n$-simplex}; vertices, edges, and triangles
+are simplices of degrees zero, one, and two. A simplicial map $f:K\to L$
+is a natural transformation, so $f_m\alpha^*=\alpha^*f_n$.
+A simplicial abelian group is an object of
+$\mathcal P(\Delta;\mathrm{Ab})$: its restriction maps are homomorphisms.
+
+\coursebold{Faces, Degeneracies, and the Standard Simplex.}
+For $n\geq1$ and $0\leq i\leq n$, let
+$\delta^i:[n-1]\hookrightarrow[n]$ be the injection omitting $i$.
+For $n\geq0$ and $0\leq i\leq n$, let
+$\sigma^i:[n+1]\twoheadrightarrow[n]$ be the surjection identifying
+$i$ and $i+1$. Thus
+\[
+\delta^i(k)=\begin{cases}k&k<i,\\k+1&k\geq i,\end{cases}
+\qquad
+\sigma^i(k)=\begin{cases}k&k\leq i,\\k-1&k>i.\end{cases}
+\]
+The induced maps $d_i=(\delta^i)^*:K_n\to K_{n-1}$ and
+$s_i=(\sigma^i)^*:K_n\to K_{n+1}$ are the \emph{face} and
+\emph{degeneracy} maps. For $n>0$, a simplex of $K_n$ is
+\emph{degenerate} if it lies in some $s_i(K_{n-1})$, and
+\emph{nondegenerate} otherwise; every vertex is nondegenerate.
+The standard simplicial $n$-simplex is
+\[
+\Delta^n_m=\Mor_\Delta([m],[n]),\qquad
+\beta^*(\alpha)=\alpha\circ\beta.
+\]
+A map $\alpha:[m]\to[n]$ also induces a map
+$\Delta^m\to\Delta^n$ by postcomposition.
+
+
+\coursebold{Barycentric Coordinates.}
+The standard topological $n$-simplex is
+\[
+|\Delta^n|=\{(t_0,\ldots,t_n)\in\R^{n+1}:
+ t_i\geq0,\ t_0+\cdots+t_n=1\},
+\]
+with the subspace topology from $\R^{n+1}$.
+Its vertices are the standard basis vectors $e_0,\ldots,e_n$.
+Each point has the unique expression $t_0e_0+\cdots+t_ne_n$;
+the coefficients $t_i$ are its \emph{barycentric coordinates}.
+For example,
+$(1/2,1/3,1/6)$ is a point of $|\Delta^2|$, while $(1/2,1/2,0)$
+lies on the edge opposite $e_2$. The barycenter has every coordinate
+$1/(n+1)$.
+
+For a weakly increasing map $\alpha:[m]\to[n]$, the associated affine map
+$\alpha_*:|\Delta^m|\to|\Delta^n|$ sends $e_i$ to $e_{\alpha(i)}$:
+\[
+(\alpha_*t)_j=\sum_{\alpha(i)=j}t_i
+\quad(\text{an empty sum is }0).
+\]
+In particular, $(\delta^i)_*$ inserts a zero coordinate and
+$(\sigma^i)_*$ adds adjacent coordinates $t_i+t_{i+1}$.
+A formula ``in barycentric coordinates'' is a formula in these $t_i$.
+
+\coursebold{Realization and Singular Simplices.}
+The geometric realization of $K$ is the quotient space
+\[
+|K|=\left(\coprod_{n\geq0}K_n\times|\Delta^n|\right)/\sim,
+\qquad
+(\alpha^*x,t)\sim(x,\alpha_*t),
+\]
+where each $K_n$ is discrete and the displayed pairs generate the
+equivalence relation. Write $[x,t]$ for the class of $(x,t)$.
+The characteristic map of $x\in K_n$ is
+$\chi_x:|\Delta^n|\to|K|$, $t\mapsto[x,t]$.
+A \emph{singular $n$-simplex} in $X$ is a continuous map
+$\tau:|\Delta^n|\to X$. These form the simplicial set $\Sing X$,
+with $\alpha^*\tau=\tau\circ\alpha_*$.
+The realization--singular adjunction is the natural bijection
+\[
+\Mor_\Top(|K|,X)\cong\Mor_{\mathcal P(\Delta)}(K,\Sing X).
+\]
+Its \emph{unit} $\eta_K:K\to\Sing|K|$ sends $x$ to $\chi_x$.
+
+\coursebold{Subsets, Boundaries, and Quotients.}
+A simplicial subset $L\subseteq K$ consists of subsets $L_n\subseteq K_n$
+preserved by every restriction map. The boundary
+$\partial\Delta^n\subseteq\Delta^n$ consists in degree $m$ of the
+nonsurjective maps $[m]\to[n]$. When each $L_n$ is nonempty, the
+quotient $K/L$ identifies all elements of $L_n$ to one element in each
+degree; its operators are induced from those of $K$.
+The notation $B\amalg_A C$ denotes a \emph{pushout}: an object receiving
+maps from $B$ and $C$ agreeing on $A$, universal among such objects.
+Coproducts $K\amalg L$, products $K\times L$, and pushouts of simplicial
+sets are computed degree by degree in sets.
+
+
+\section{Standard Simplices and Simplicial Operators}\label{ex:standard}
+Represent an $m$-simplex of $\Delta^n$ by a weakly increasing sequence
+$(a_0,\ldots,a_m)$ with $0\leq a_i\leq n$.
+\begin{enumerate}
+\item Describe every face and degeneracy map on these sequences. Verify
+$d_i d_j=d_{j-1}d_i$ for $i<j$, and all three cases of the identity for
+$d_i s_j$, by tracking the entries deleted or repeated.
+\item Prove that a simplex is nondegenerate precisely when its entries
+are strictly increasing. Count the $m$-simplices and the nondegenerate
+$m$-simplices of $\Delta^n$. List the edges of $\Delta^2$, distinguishing
+its degenerate and nondegenerate edges.
+\item For $x\in K_n$, define a map $\bar x:\Delta^n\to K$ by
+$\bar x_m(\alpha)=\alpha^*x$. Prove that evaluation at $\id_{[n]}$
+gives a natural bijection $\Mor_{\sSet}(\Delta^n,K)\cong K_n$.
+Under this bijection, identify precomposition by the maps of standard
+simplices induced by $\delta^i$ and $\sigma^i$.
+\end{enumerate}
+
+\section{Singular Simplices and Degeneracy}\label{ex:singular}
+The homeomorphism $[0,1]\to|\Delta^1|$ is $u\mapsto(1-u,u)$.
+For a space $X$, recall that $(\Sing X)_n=\Mor_\Top(|\Delta^n|,X)$.
+\begin{enumerate}
+\item For a singular triangle $\tau:|\Delta^2|\to X$, write formulas
+for $d_0\tau,d_1\tau,d_2\tau$ as paths parametrized by $u\in[0,1]$.
+Identify the initial and terminal vertex of each path.
+\item For a path $\gamma:[0,1]\to X$, write $s_0\gamma$ and
+$s_1\gamma$ in barycentric coordinates, and compute all three faces
+of each. Specify which resulting paths are constant.
+\item Prove that a singular edge is degenerate if and only if it is
+constant. Give an explicit nonconstant path in $\R$ whose two endpoints
+are equal. Explain why it is nevertheless nondegenerate.
+\item Describe the image in degrees zero and one of the unit
+$\eta_{\Delta^1}:\Delta^1\to\Sing|\Delta^1|$. Give a singular vertex
+and a singular edge outside the respective images. Deduce that this
+unit is not an isomorphism of simplicial sets.
+\end{enumerate}
+
+
+\section{Realization, Quotients, and Loops}\label{ex:realization}
+Let $S=\Delta^1/\partial\Delta^1$ be the degreewise quotient collapsing
+the simplicial subset generated by the two vertices to a single vertex.
+Write $v$ for its vertex and $e$ for its nondegenerate edge.
+\begin{enumerate}
+\item Describe $S_m$ in terms of weakly increasing sequences of zeros
+and ones. Prove that $v$ and $e$ are its only nondegenerate simplices.
+List all simplices in degrees one and two, including degeneracies.
+\item Use the realization--singular adjunction to prove that realization
+preserves pushouts. Apply this to
+$S=\Delta^1\amalg_{\partial\Delta^1}\Delta^0$ to identify $|S|$
+with $[0,1]/(0\sim1)$, including its topology. Explain why the
+simplicial quotient introduces no extra geometric cells.
+\item Prove that a simplicial map $S\to K$ is equivalent to the choice
+of $x\in K_0$ and $a\in K_1$ with $d_0a=d_1a=x$.
+Apply this to $K=\Sing X$ and identify such maps with pairs consisting
+of a point $x\in X$ and a continuous loop $\gamma:[0,1]\to X$
+based at $x$. These are actual loops, not homotopy classes.
+\item For this correspondence, write explicitly the associated continuous
+map $|S|\to X$. Check that it agrees with the adjunction formula
+the formula $F([z,t])=g_n(z)(t)$ for a simplicial map $g:S\to\Sing X$.
+\end{enumerate}
+
+\section{Free Simplicial Abelian Groups}\label{ex:free}
+For a set $T$, the \emph{free abelian group} $\Z[T]$ consists of finite
+formal sums $\sum_{t\in T}n_t t$ with $n_t\in\Z$.
+A function $T\to U(B)$ to the underlying set of an abelian group extends
+uniquely to a homomorphism $\Z[T]\to B$; this is the free--forgetful
+adjunction. For $K\in\sSet$, put $\Z[K]_m=\Z[K_m]$, with restriction
+maps obtained by extending those of $K$ linearly. A generator associated to
+$x\in K_m$ is denoted by the same symbol $x$. Let $A\in\sAb$, and let
+$U(A)$ be its underlying simplicial set, obtained by forgetting the group structure in each degree.
+For an adjunction $F\dashv U$, its unit $\eta:\id\to UF$ and counit
+$\epsilon:FU\to\id$ correspond to identity morphisms under the
+adjunction bijections. Their triangle identities are
+$\epsilon_{F(K)}\circ F(\eta_K)=\id_{F(K)}$ and
+$U(\epsilon_A)\circ\eta_{U(A)}=\id_{U(A)}$.
+\begin{enumerate}
+\item Combine the free--forgetful adjunction with
+Exercise~\ref{ex:standard} to construct a natural group isomorphism
+\[
+\Mor_{\sAb}(\Z[\Delta^n],A)\cong A_n.
+\]
+Describe the homomorphism associated to $a\in A_n$ on every generator
+$\alpha$ in every degree. The group structure on the left
+is pointwise addition of simplicial homomorphisms.
+\item For $S$ from Exercise~\ref{ex:realization}, identify
+$\Mor_{\sAb}(\Z[S],A)$ with the subgroup
+\[
+\{(x,a)\in A_0\times A_1:d_0a=d_1a=x\}.
+\]
+Describe directly the values of the associated homomorphism on
+$ s_0v$, $ s_0e$, and
+$ s_1e$.
+\item Write the unit $K\to U\Z[K]$ and counit $\Z[U(A)]\to A$.
+Verify the two triangle identities on generators. In $\Z[U(A)]_n$,
+exhibit a nonzero element sent to zero by the counit; explain why
+$0$ is not the zero element of this free abelian group.
+\item Prove naturally that $\Z[K\amalg L]\cong\Z[K]\oplus\Z[L]$.
+For $K=L=\Delta^0$, show that the canonical map induced by the two
+projections,
+$\Z[K\times L]\to\Z[K]\times\Z[L]$, is not an isomorphism.
+\end{enumerate}
+
+
+\section{Alternating Faces and Degenerate Chains}\label{ex:chains}
+For a simplicial abelian group $A$, let $C_n(A)=A_n$ and
+$\partial_n=\sum_{i=0}^n(-1)^i d_i$ for $n>0$.
+For a simplicial set $K$, abbreviate $C_\bullet(\Z[K])$ to
+$C_\bullet(K;\Z)$. Set $C_n=0$ for $n<0$ and $\partial_0=0$.
+A chain complex has $\partial_{n-1}\partial_n=0$; a chain map commutes
+with the differentials. A subcomplex $D_\bullet\subseteq C_\bullet$
+means $\partial_n(D_n)\subseteq D_{n-1}$, so the quotient groups carry
+an induced differential. The \emph{unnormalized} complex retains all
+simplices; the quotient by degenerate chains is called the
+\emph{normalized quotient complex}.
+\begin{enumerate}
+\item Expand $\partial_2\partial_3$ and pair its twelve terms using the
+face identities. Explain how the same pairing proves $\partial^2=0$
+in every degree. Show that a simplicial homomorphism induces a chain map.
+\item Put $D_0(A)=0$ and
+$D_n(A)=\sum_{j=0}^{n-1}\im(s_j:A_{n-1}\to A_n)$ for $n>0$.
+For $a\in A_{n-1}$, expand $\partial_n(s_ja)$ using the mixed
+face--degeneracy identities. Show that the two terms not visibly
+in a degeneracy image cancel. Deduce that $D_\bullet(A)$ is a
+subcomplex, treating $n=1$ explicitly.
+\item For $A=\Z[K]$, prove that $D_n(A)$ is freely generated by the
+degenerate $n$-simplices. Hence identify $C_n(A)/D_n(A)$ with the free
+abelian group on the nondegenerate $n$-simplices, and describe its
+induced differential. You need not prove that this quotient preserves
+homology.
+\item Compute the \emph{unnormalized} complex $C_\bullet(\Delta^0;\Z)$
+and its homology in all degrees. For its vertex $v$, explain explicitly
+why $ s_0v$ is a nonzero cycle but represents zero in
+homology. Compare with the quotient complex from the preceding part.
+\end{enumerate}
+
+\section{Components and a First Circle Calculation}\label{ex:homology}
+Write $H_n(K;\Z)=\ker(\partial_n)/\im(\partial_{n+1})$ for the
+homology of $C_\bullet(K;\Z)$: elements of the kernel are \emph{cycles}
+and elements of the image are \emph{boundaries}.
+Define $H_n^{\mathrm{sing}}(X;\Z)=H_n(\Sing X;\Z)$.
+A path from $x$ to $y$ is a continuous map $\gamma:[0,1]\to X$
+with $\gamma(0)=x$, $\gamma(1)=y$; it is a loop based at $x$ if $y=x$.
+Path components are equivalence classes under the existence of a path;
+connected components are maximal connected subsets.
+Let $\pi_0(K)$ denote the quotient of $K_0$ by the equivalence relation
+generated by $d_1a\sim d_0a$ for every $a\in K_1$.
+\begin{enumerate}
+\item Prove that the map taking each vertex to its equivalence class
+induces a natural isomorphism
+\[
+H_0(K;\Z)\cong\Z[\pi_0(K)].
+\]
+Show that the kernel of $\Z[K_0]\to\Z[\pi_0(K)]$ is generated by
+$ d_0a- d_1a$.
+\item Deduce naturally that
+$H_0^{\mathrm{sing}}(X;\Z)\cong\Z[\pi_0^{\mathrm{path}}(X)]$,
+where $\pi_0^{\mathrm{path}}(X)$ is the set of path components.
+Explain why connected components cannot simply replace path components
+in this argument. No example of a connected, non-path-connected space
+is required.
+\item If $X$ is discrete, identify $\Sing X$ and compute
+$H_n^{\mathrm{sing}}(X;\Z)$ for every $n\geq0$, including $X=\varnothing$.
+Use the actual unnormalized differential.
+\item For $S=\Delta^1/\partial\Delta^1$, use the lists from
+Exercise~\ref{ex:realization} to compute $C_0(S;\Z)$, $C_1(S;\Z)$,
+$C_2(S;\Z)$ and both differentials. Deduce $H_0(S;\Z)$ and
+$H_1(S;\Z)$, specifying a generator of $H_1$. Work directly in the
+unnormalized complex; do not assume a comparison theorem with the
+singular homology of $|S|$.
+\end{enumerate}
+\end{document}

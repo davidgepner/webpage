@@ -1,0 +1,253 @@
+\documentclass[11pt]{article}
+% BEGIN SHARED COURSE STYLE
+% Shared Math 615 style. Embedded verbatim in standalone published sources.
+\RequirePackage[letterpaper,margin=1in]{geometry}
+\RequirePackage{amsmath,amsthm,mathtools}
+\RequirePackage{fontspec,unicode-math}
+\setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmathfont{texgyretermes-math.otf}
+\RequirePackage{microtype,tikz-cd,enumitem,needspace,xcolor,booktabs,titlesec,etoolbox}
+\definecolor{teal}{HTML}{176568}
+\definecolor{burgundy}{HTML}{782F40}
+\definecolor{inklink}{HTML}{176568}
+\definecolor{accent}{HTML}{176568}
+\titleformat{\section}{\large\bfseries\color{teal}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{burgundy}}{\thesubsection}{.65em}{}
+\titleformat{\paragraph}[runin]{\normalsize\bfseries\color{burgundy}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{2.2ex plus .5ex minus .2ex}{1ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.6ex plus .4ex minus .2ex}{.7ex plus .2ex}
+\RequirePackage{hyperref,bookmark}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,citecolor=teal,pdfstartview={XYZ null null 1.5},bookmarksnumbered=true}
+\urlstyle{same}
+\setcounter{tocdepth}{2}
+\setlist[enumerate]{label=\arabic*.,ref=\arabic*,leftmargin=*,itemsep=4pt,topsep=4pt}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\AddToHook{cmd/section/before}{\Needspace{8\baselineskip}}
+\AddToHook{cmd/subsection/before}{\Needspace{6\baselineskip}}
+\makeatletter
+\newcommand{\afterblock}{\@afterindentfalse\@afterheading}
+\makeatother
+\newcounter{result}[section]
+\renewcommand{\theresult}{\thesection.\arabic{result}}
+\newcommand{\resulttitle}[3]{#1 #2\ifstrempty{#3}{}{ (#3)}.}
+\newenvironment{result}[3]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{proof:#2}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{entry}[3]{\par\addvspace{7pt}\Needspace{3\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\textbf{\resulttitle{#1}{\theresult}{#3}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{demonstration}[1]{\par\noindent\hypertarget{proof:#1}{}{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{#1}{\textbf{Proof.}}}\quad\ignorespaces}{\unskip\nobreak\hfill\qedsymbol\par\addvspace{5pt}\afterblock}
+\newenvironment{citedresult}[4]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{urlcolor=burgundy}\href{#4}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newcommand{\usedby}[1]{\par\noindent{\small\textbf{Used in:} #1.}\par\afterblock}
+\newcommand{\coursebold}[1]{{\color{burgundy}\textbf{#1}}}
+\newcommand{\coursetitle}[3]{\begin{center}{\large\bfseries\color{teal}#1}\\[4pt]{\LARGE\bfseries\color{teal}#2}\\[6pt]Math 615: Algebraic Topology I\\Fall 2026\quad\textbar\quad #3\end{center}}
+\newcommand{\coursecontents}{{\small\setlength{\parskip}{0pt}\tableofcontents}}
+\newcommand{\homeworkstyle}{\titleformat{\section}{\large\bfseries\color{teal}}{Exercise \thesection.}{.65em}{}}
+% END SHARED COURSE STYLE
+\newcommand{\Mor}{\operatorname{Mor}}\newcommand{\im}{\operatorname{im}}\newcommand{\coker}{\operatorname{coker}}\newcommand{\A}{\mathcal A}\newcommand{\Z}{\mathbb Z}\newcommand{\id}{\mathrm{id}}\DeclareMathOperator{\Cone}{Cone}\DeclareMathOperator{\Cyl}{Cyl}
+\newcommand{\B}{\mathcal B}
+\newcommand{\LF}{\mathrm L}
+\newcommand{\RF}{\mathrm R}
+\DeclareMathOperator{\Tor}{Tor}
+\DeclareMathOperator{\Ext}{Ext}
+\homeworkstyle
+\hypersetup{pdftitle={Homework 3: Derived Functors, Tor, and Ext},pdfauthor={Math 615 Fall 2026},pdfsubject={Revision 3}}
+\begin{document}
+\coursetitle{Homework 3}{Derived Functors, Tor, and Ext}{September 14 and 16}
+Let $\A$ and $\B$ be abelian categories. An object $P$ is \emph{projective} if
+$\Mor_{\A}(P,-)$ takes epimorphisms to surjections; an object $I$ is
+\emph{injective} if $\Mor_{\A}(-,I)$ takes monomorphisms to surjections.
+The category $\A$ has \emph{enough projectives} if every object is a quotient
+of a projective object, and \emph{enough injectives} if every object embeds
+in an injective object.
+
+Use homological grading for projective resolutions and cohomological grading
+for injective resolutions. All functors between abelian categories below are
+additive. You may use Homework 2, including homotopy invariance of homology and
+the long exact sequence of a short exact sequence of complexes, as well as
+their cochain analogues. In an abstract abelian category, use morphisms and
+universal properties; element arguments are permitted for modules.
+
+\section{Resolutions and Comparison Maps}\label{ex:comparison}
+Assume that $\A$ has enough projectives. A \emph{projective resolution} of $M$
+is an exact augmented complex
+\[
+\cdots\longrightarrow P_2\xrightarrow{d_2}P_1\xrightarrow{d_1}P_0
+\xrightarrow{\epsilon}M\longrightarrow0
+\]
+with every $P_n$ projective.
+\begin{enumerate}
+\item Construct a projective resolution of every $M\in\A$ by successively
+resolving kernels. For modules over a unital ring $R$, explain why free
+modules suffice. Write an arbitrary free module as $\bigoplus_{i\in I}R$.
+\item Given projective resolutions $P_\bullet\to M$ and $Q_\bullet\to N$,
+prove that every $f:M\to N$ lifts to a chain map $\widetilde f:P_\bullet\to
+Q_\bullet$. Prove that any two lifts of the same $f$ are chain homotopic.
+Specify the induction that constructs both the lift and the homotopy.
+\item Deduce that two projective resolutions of the same object are chain
+homotopy equivalent by maps lifting its identity. Explain why the induced
+maps on homology after applying any additive functor are independent of all
+choices and compatible with composition.
+\end{enumerate}
+
+\section{Left Derived Functors}\label{ex:left}
+Assume that $\A$ has enough projectives, and let $F:\A\to\B$ be right exact.
+For a projective resolution $P_\bullet\to M$, set
+\[
+\LF_nF(M)=H_n(F(P_\bullet)),\qquad n\geq0.
+\]
+\begin{enumerate}
+\item Using Exercise~\ref{ex:comparison}, define $\LF_nF$ on morphisms and
+prove that it is an additive functor, well defined up to canonical natural
+isomorphism independently of the chosen resolutions.
+\item Construct a natural isomorphism $\LF_0F\cong F$. Identify precisely
+where right exactness is used.
+\item Prove that $\LF_nF(P)=0$ for every projective $P$ and $n>0$.
+If $F$ is exact, prove that $\LF_nF(M)=0$ for every $M$ and $n>0$.
+\end{enumerate}
+
+
+\section{The Horseshoe Lemma and Connecting Maps}\label{ex:horseshoe}
+Assume that $\A$ has enough projectives. Let
+$0\to M'\to M\to M''\to0$ be exact, and choose projective resolutions
+$P'_\bullet\to M'$ and $P''_\bullet\to M''$.
+\begin{enumerate}
+\item Construct a projective resolution $P_\bullet\to M$ and a short exact
+sequence of augmented complexes lifting the given sequence such that
+\[
+0\longrightarrow P'_n\longrightarrow P_n\longrightarrow P''_n
+\longrightarrow0
+\]
+is split exact for every $n\geq0$. You may take $P_n=P'_n\oplus P''_n$;
+construct its differential and augmentation. The given sequence of objects
+is not assumed to split.
+\item For a right exact $F:\A\to\B$, explain why applying $F$ gives a short
+exact sequence of the unaugmented complexes, even though $F$ need not be
+left exact. Deduce a long exact sequence ending in
+\[
+\cdots\to\LF_1F(M)\to\LF_1F(M'')\xrightarrow{\partial}
+F(M')\to F(M)\to F(M'')\to0.
+\]
+Describe the connecting maps in all positive degrees.
+\item Prove that this long exact sequence is independent of the horseshoe
+choices and natural in morphisms of short exact sequences. Explain how to
+choose comparison maps compatible with the inclusions and projections.
+\end{enumerate}
+
+\section{Right Derived Functors}\label{ex:right}
+Now assume that $\A$ has enough injectives and let $G:\A\to\B$ be left exact.
+An \emph{injective resolution} of $M$ is an exact sequence
+$0\to M\to I^0\to I^1\to\cdots$ with each $I^n$ injective. Set
+\[
+\RF^nG(M)=H^n(G(I^\bullet)),\qquad n\geq0.
+\]
+\begin{enumerate}
+\item State and prove the injective analogues of the existence and comparison
+results in Exercise~\ref{ex:comparison}. Give the direction of the
+comparison map associated to $f:M\to N$. Deduce that $\RF^nG$ is a
+well-defined additive functor up to canonical natural isomorphism.
+\item Prove that $\RF^0G\cong G$, and that $\RF^nG(I)=0$ for injective $I$
+and $n>0$. Construct the long exact sequence beginning in
+\[
+0\to G(M')\to G(M)\to G(M'')\xrightarrow{\delta} \RF^1G(M')
+\to\RF^1G(M)\to\RF^1G(M'')\to\cdots.
+\]
+You may obtain the injective horseshoe lemma by duality.
+\item Show that $G$ is exact if and only if $\RF^1G(M)=0$ for every $M$.
+Prove the corresponding criterion for a right exact $F$ in terms of
+$\LF_1F$, assuming enough projectives.
+\end{enumerate}
+
+
+\section{Dimension Shifting and Acyclic Resolutions}\label{ex:shift}
+Continue with $F$ as in Exercise~\ref{ex:left} and $G$ as in
+Exercise~\ref{ex:right}, making the corresponding assumptions on $\A$.
+Call $A$ \emph{$F$-acyclic} if $\LF_nF(A)=0$ for every $n>0$.
+\begin{enumerate}
+\item If $0\to K\to P\to M\to0$ is exact and $P$ is projective, construct
+natural isomorphisms
+\[
+\LF_{n+1}F(M)\cong\LF_nF(K)\quad(n\geq1)
+\]
+and the exact sequence
+$0\to\LF_1F(M)\to F(K)\to F(P)\to F(M)\to0$.
+Explain why the displayed isomorphism is not asserted for $n=0$.
+\item Give and prove the dual statements for an exact sequence
+$0\to M\to I\to C\to0$ with $I$ injective.
+\item Suppose $\cdots\to A_1\to A_0\to M\to0$ is an exact resolution
+by $F$-acyclic objects. Prove that
+$H_n(F(A_\bullet))\cong\LF_nF(M)$ for every $n\geq0$.
+Use the short exact sequences involving its successive kernels and
+dimension shifting. No finite-length assumption is made.
+\end{enumerate}
+
+\section{Tensor Products and Tor}\label{ex:tor}
+Let $R$ be a commutative unital ring and $N$ an $R$-module. Define
+\[
+\Tor_n^R(M,N)=\LF_n(-\otimes_R N)(M).
+\]
+An $R$-module $N$ is \emph{flat} if $-\otimes_R N$ is exact.
+\begin{enumerate}
+\item Check that $-\otimes_R N$ is right exact. Use
+Exercise~\ref{ex:right} to prove that $N$ is flat if and only if
+$\Tor_1^R(M,N)=0$ for every $M$.
+\item Let $r\in R$ be a non-zero-divisor. Use the resolution
+$0\to R\xrightarrow{r}R\to R/(r)\to0$ to compute
+$\Tor_n^R(R/(r),N)$ for all $n\geq0$. Express the answer using $N/rN$
+and $N[r]=\{x\in N:rx=0\}$. Explain why the same resolution cannot
+be used when $r$ is a zero-divisor.
+\item Take $R=\Z$ and positive integers $m,n\geq2$. Compute
+$\Tor_i^{\Z}(\Z/m,\Z/n)$ for every $i\geq0$.
+Identify the connecting injection
+$\Tor_1^{\Z}(\Z/m,N)\to N$ obtained by tensoring
+$0\to\Z\xrightarrow{m}\Z\to\Z/m\to0$.
+\end{enumerate}
+
+
+\section{Ext and Extensions}\label{ex:ext}
+Let $R$ be a unital ring, not necessarily commutative, and work with left
+$R$-modules. Fix a module $M$ and define
+\[
+\Ext_R^n(M,N)=\RF^n\Mor_R(M,-)(N).
+\]
+You may use that module categories have enough injectives and the standard
+comparison theorem identifying these groups with
+$H^n(\Mor_R(P_\bullet,N))$ for a projective resolution $P_\bullet\to M$.
+Here the cochain differential sends $u:P_n\to N$ to $u\circ d_{n+1}$.
+For a noncommutative $R$, these are abelian groups, not in general left
+$R$-modules.
+\begin{enumerate}
+\item Given $0\to K\xrightarrow{j}P\to M\to0$ with $P$ projective,
+prove that
+\[
+\Ext_R^1(M,N)\cong
+\coker\bigl(\Mor_R(P,N)\xrightarrow{j^*}\Mor_R(K,N)\bigr).
+\]
+For $u:K\to N$, form the pushout along $u$ and obtain an extension
+$0\to N\to E_u\to M\to0$. Prove that the resulting construction
+identifies the displayed cokernel with equivalence classes of extensions,
+where equivalences induce the identities on $N$ and $M$.
+Show that the zero class corresponds exactly to split extensions.
+\item Deduce that $M$ is projective if and only if
+$\Ext_R^1(M,N)=0$ for every left $R$-module $N$.
+\item For $R=\Z$, $m\geq2$, and an abelian group $N$, compute
+$\Ext_{\Z}^i(\Z/m,N)$ in every degree. Then take $N=\Z/n$ and express
+the answer in terms of $\gcd(m,n)$.
+\end{enumerate}
+
+\section{An Infinite Resolution}\label{ex:periodic}
+Let $k$ be a field, let $R=k[\varepsilon]/(\varepsilon^2)$, and regard
+$k=R/(\varepsilon)$ as an $R$-module.
+\begin{enumerate}
+\item Prove that the augmented complex
+\[
+\cdots\xrightarrow{\varepsilon}R\xrightarrow{\varepsilon}R
+\xrightarrow{\varepsilon}R\longrightarrow k\longrightarrow0
+\]
+is a free resolution of $k$ by computing its kernels and images.
+\item Compute $\Tor_n^R(k,k)$ and $\Ext_R^n(k,k)$ for every $n\geq0$,
+including the differentials in the complexes used for these computations.
+\item Prove that $k$ has no projective resolution of finite length over $R$.
+Contrast this with the computations over $\Z$ in
+Exercises~\ref{ex:tor} and~\ref{ex:ext}.
+\end{enumerate}
+\end{document}
