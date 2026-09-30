@@ -1,0 +1,351 @@
+\documentclass[11pt]{article}
+\usepackage{GHstyle}
+\hypersetup{pdftitle={Ext, Tor, and Simplicial Sets},pdfauthor={Math 615 Fall 2026}}
+\title{\color{teal}\bfseries Ext, Tor, and Simplicial Sets}
+\author{Math 615: Algebraic Topology I}
+\date{Fall 2026}
+\begin{document}
+\maketitle
+\noindent
+Tensor products and groups of homomorphisms are easy to form, but they can lose exactness. Tor and Ext record what is lost. Simplicial sets supply a combinatorial language for spaces. Passing to free abelian groups and taking the alternating sum of face maps turns that language into a chain complex. This lecture develops Tor and Ext, then explains this direct passage from simplices to homology.
+
+We assume familiarity with modules, chain complexes, homology, and short exact sequences. Section~\ref{sec:derived} defines Tor and Ext and gives concrete computations. Section~\ref{sec:simplicial} constructs a chain complex directly from a simplicial abelian group. Section~\ref{sec:topology} explains how Tor and Ext appear when coefficients are changed. The universal coefficient theorems are stated with their hypotheses, but their full proofs are not included.
+\tableofcontents
+
+\section{Resolutions, Tor, and Ext}\label{sec:derived}
+Throughout the lecture, $R$ is a commutative ring with identity and all $R$-modules are unital. The category of $R$-modules is denoted $\Mod_R$. For modules $M$ and $A$, $\Hom_R(M,A)$ is the $R$-module of $R$-linear maps. A chain complex $C_\bullet$ has differentials $\partial_n:C_n\to C_{n-1}$ satisfying $\partial_{n-1}\partial_n=0$, and
+\[
+H_n(C_\bullet)=\ker(\partial_n)/\im(\partial_{n+1}).
+\]
+A cochain complex has differentials $\delta^n:C^n\to C^{n+1}$; its cohomology is $H^n(C^\bullet)=\ker(\delta^n)/\im(\delta^{n-1})$.
+
+\subsection{Why Derive a Functor?}
+If $0\to L\to M\to N\to0$ is exact, then
+\[
+L\otimes_R A\longrightarrow M\otimes_R A\longrightarrow N\otimes_R A\longrightarrow0
+\]
+is exact, but its first arrow need not be injective. For example, tensoring
+\[
+0\longrightarrow\Z\xrightarrow{\,m\,}\Z\longrightarrow\Z/m\longrightarrow0
+\qquad(m\geq2)
+\]
+with $\Z/m$ changes the injective multiplication-by-$m$ map into the zero map $\Z/m\to\Z/m$.
+
+In the other direction, applying $\Hom_R(-,A)$ gives an exact sequence
+\[
+0\longrightarrow\Hom_R(N,A)\longrightarrow\Hom_R(M,A)
+\longrightarrow\Hom_R(L,A),
+\]
+but the final map need not be surjective. For the same sequence with $A=\Z$, that final map is multiplication by $m$ on $\Z$, whose cokernel is $\Z/m$.
+
+The remedy is to retain a resolution before applying the functor. The resulting homology or cohomology records the failure of exactness.
+
+\begin{definition}[Projective Modules and Resolutions]\label{def:resolution}
+An $R$-module $P$ is projective if every map $P\to V$ lifts along every surjective map $U\to V$. A projective resolution of $M$ is an exact augmented sequence
+\[
+\cdots\longrightarrow P_2\xrightarrow{\partial_2}P_1
+\xrightarrow{\partial_1}P_0\xrightarrow{\epsilon}M\longrightarrow0
+\]
+with each $P_n$ projective. The underlying complex $P_\bullet$ is concentrated in nonnegative degrees; it has $H_0(P_\bullet)\cong M$ and $H_n(P_\bullet)=0$ for $n>0$.
+\end{definition}
+Free modules are projective. Every module has a free resolution: choose a free module surjecting onto $M$, a free module surjecting onto its kernel, and continue. The augmentation $\epsilon$ is not part of the differential of the nonnegative complex $P_\bullet$.
+
+\hypertarget{def:derived}{}
+\begin{definition}[Tor and Ext]\label{def:derivedlabel}
+Choose a projective resolution $P_\bullet\to M$. For $n\geq0$, define
+\[
+\Tor_n^R(M,A)=H_n(P_\bullet\otimes_R A),\qquad
+\Ext_R^n(M,A)=H^n\bigl(\Hom_R(P_\bullet,A)\bigr).
+\]
+Here $(P_\bullet\otimes_R A)_n=P_n\otimes_R A$, with differential $\partial_n\otimes\id_A$. The cochain group in degree $n$ is $\Hom_R(P_n,A)$, with
+\[
+\delta^n(f)=f\circ\partial_{n+1}.
+\]
+\end{definition}
+The equation $\delta^{n+1}\delta^n=0$ follows from $\partial_{n+1}\partial_{n+2}=0$. In degree zero, right exactness of tensor product and the universal property of $\coker(\partial_1)$ give
+\[
+\Tor_0^R(M,A)\cong M\otimes_R A,
+\qquad
+\Ext_R^0(M,A)\cong\Hom_R(M,A).
+\]
+Tor is covariant in both variables. Ext is contravariant in the first variable and covariant in the second. The notation is therefore more than a grading convention: the two constructions have different variance.
+
+\claim{comparison}
+\begin{proposition}[Independence of the Resolution]\label{prop:comparison}
+A map $f:M\to M'$ lifts to a chain map between any chosen projective resolutions of $M$ and $M'$. Any two lifts are chain homotopic. Consequently, the groups in Definition~\ref{def:derivedlabel} are independent of the resolution up to canonical isomorphism and define functors of $M$ and $A$.
+\end{proposition}
+\begin{linkedproof}{comparison}
+Let $P_\bullet\to M$ and $Q_\bullet\to M'$ be projective resolutions. Lift $f\epsilon_P$ along $Q_0\to M'$ using projectivity of $P_0$. Once $f_{n-1}$ has been constructed, $f_{n-1}\partial_n$ lands in the cycles of $Q_{n-1}$ (in degree zero, in the augmentation kernel). Exactness of $Q_\bullet\to M'$ makes $Q_n$ surject onto those cycles, so projectivity of $P_n$ gives $f_n$.
+
+For two lifts $f_\bullet,g_\bullet$, the difference in degree zero lands in the augmentation kernel. Lift it to $h_0:P_0\to Q_1$. Inductively, after constructing $h_{n-1}$, the map
+\[
+f_n-g_n-h_{n-1}\partial_n:P_n\longrightarrow Q_n
+\]
+lands in the cycles. Lift it to $h_n:P_n\to Q_{n+1}$. Thus
+\[
+f_n-g_n=\partial_{n+1}h_n+h_{n-1}\partial_n,
+\qquad h_{-1}=0.
+\]
+Tensoring preserves this equation. Precomposition gives the corresponding cochain homotopy after applying $\Hom_R(-,A)$. Homotopic maps induce the same maps on homology and cohomology. Lifts of identity maps between two resolutions are therefore mutually inverse on these groups. Composition of lifts represents composition of module maps, which proves functoriality.
+\end{linkedproof}
+
+\subsection{A Computation to Keep in Mind}
+\claim{cyclic}
+\begin{proposition}[Cyclic Modules]\label{prop:cyclic}
+For an abelian group $A$ and an integer $m\geq2$, write $A[m]=\{a\in A:ma=0\}$. Then
+\[
+\begin{aligned}
+\Tor_0^{\Z}(\Z/m,A)&\cong A/mA,&
+\Tor_1^{\Z}(\Z/m,A)&\cong A[m],\\
+\Ext_{\Z}^0(\Z/m,A)&\cong A[m],&
+\Ext_{\Z}^1(\Z/m,A)&\cong A/mA.
+\end{aligned}
+\]
+Both Tor and Ext vanish in degrees at least two for this first argument.
+\end{proposition}
+\begin{linkedproof}{cyclic}
+Use $P_1=P_0=\Z$, $\partial_1=m$, and $P_n=0$ for $n\geq2$. Tensoring gives the chain complex $A\xrightarrow{m}A$ in degrees $1,0$. Applying $\Hom_{\Z}(-,A)$ gives the cochain complex $A\xrightarrow{m}A$ in degrees $0,1$. Their kernels and cokernels give the displayed formulas.
+\end{linkedproof}
+For $A=\Z$, these formulas give $\Tor_1^{\Z}(\Z/m,\Z)=0$ but $\Ext_{\Z}^1(\Z/m,\Z)\cong\Z/m$. For $A=\Z/n$, both degree-one groups are isomorphic to $\Z/\gcd(m,n)$, although their descriptions as kernel and cokernel differ.
+
+\begin{remark}[What Tor Measures]
+An $R$-module $A$ is flat if $-\otimes_R A$ preserves short exact sequences. Projective modules are flat, and flatness implies $\Tor_n^R(M,A)=0$ for $n>0$. The cyclic computation detects ordinary integer torsion, but over general rings Tor measures failure of flatness, not merely elements annihilated by nonzero scalars.
+\end{remark}
+
+\claim{extensions}
+\begin{proposition}[The Meaning of Ext in Degree One]\label{prop:extensions}
+The elements of $\Ext_R^1(M,A)$ naturally classify equivalence classes of short exact sequences
+\[
+0\longrightarrow A\longrightarrow E\longrightarrow M\longrightarrow0.
+\]
+Equivalence means an isomorphism of middle modules inducing the identity on $A$ and $M$. The zero class corresponds precisely to split extensions.
+\end{proposition}
+\begin{linkedproof}{extensions}
+Choose $0\to K\xrightarrow{j}P_0\to M\to0$ with $P_0$ projective. The definition of Ext from a resolution identifies
+\[
+\Ext_R^1(M,A)\cong
+\coker\bigl(\Hom_R(P_0,A)\longrightarrow\Hom_R(K,A)\bigr).
+\]
+Indeed, a map $P_1\to A$ is a cocycle exactly when it kills $\im(\partial_2)$, so it factors through $P_1/\im(\partial_2)\cong K$.
+
+Given $u:K\to A$, form the quotient
+\[
+E_u=(A\oplus P_0)/\im(-u,j).
+\]
+The construction fits into the commutative diagram with exact rows and columns
+\[
+\begin{tikzcd}[column sep=large,row sep=large]
+0 \arrow[r] & 0 \arrow[r] \arrow[d]
+& K \arrow[r,equal] \arrow[d,hook,"{(-u,j)}"]
+& K \arrow[r] \arrow[d,hook,"j"] & 0\\
+0 \arrow[r] & A \arrow[r,hook,"{a\mapsto(a,0)}"] \arrow[d,equal]
+& A\oplus P_0 \arrow[r,two heads,"\mathrm{pr}_2"] \arrow[d,two heads,"q"]
+& P_0 \arrow[r] \arrow[d,two heads,"\epsilon"] & 0\\
+0 \arrow[r] & A \arrow[r,hook,"i_u"] \arrow[d]
+& E_u \arrow[r,two heads,"\pi_u"] \arrow[d]
+& M \arrow[r] \arrow[d] & 0\\
+& 0 & 0 & 0.
+\end{tikzcd}
+\]
+The middle column exhibits $E_u=\coker\bigl(K\xrightarrow{(-u,j)}A\oplus P_0\bigr)$. Here $q(a,p)=[(a,p)]$, $i_u(a)=[(a,0)]$, and $\pi_u([(a,p)])=\epsilon(p)$. Thus the trivial extension of $P_0$ by $A$ maps surjectively onto the desired extension of $M$ by $A$. The map $i_u$ is injective because $j$ is injective. If $\epsilon(p)=0$, write $p=j(k)$; then
+\[
+[(a,p)]=[(a+u(k),0)],
+\]
+which proves exactness at $E_u$.
+
+Conversely, given an extension $0\to A\xrightarrow{i}E\to M\to0$, projectivity gives a lift $s:P_0\to E$ of $\epsilon$. There is a unique $u:K\to A$ with $sj=iu$. The surjection
+\[
+A\oplus P_0\longrightarrow E,\qquad (a,p)\longmapsto i(a)+s(p)
+\]
+has kernel $\im(-u,j)$, so it identifies the given extension with the bottom row of the diagram.
+
+Changing the lift replaces $u$ by $u+vj$ for some $v:P_0\to A$. Conversely, if $u'=u+vj$, the map $(a,p)\mapsto(a-v(p),p)$ descends to an equivalence $E_u\cong E_{u'}$. An equivalence of extensions also compares their lifts in exactly this way, so the equivalence classes are precisely the displayed cokernel. Finally, $E_0\cong A\oplus M$, and a split extension admits a lift with $u=0$. Hence the zero class corresponds precisely to split extensions.
+\end{linkedproof}
+For $M=\Z/m$ and $A=\Z$, the sequence $0\to\Z\xrightarrow{m}\Z\to\Z/m\to0$ represents $1\bmod m$ under Proposition~\ref{prop:cyclic}, with the indicated choice of generator. It does not split: $\Z$ has no element of order $m$.
+
+\section{Simplicial Sets and Their Chains}\label{sec:simplicial}
+A simplicial set records simplices and the ways they meet. Its simplices are initially elements of sets, so there is no addition and no alternating sum of faces. Passing to free modules introduces the algebra needed for a chain complex.
+
+\begin{definition}[The Simplex Category and Simplicial Sets]\label{def:sset}
+The simplex category $\Delta$ has objects $[n]=\{0<1<\cdots<n\}$ for $n\geq0$, and order-preserving maps as morphisms. A simplicial set is a functor $X:\Delta^{\mathrm{op}}\to\mathrm{Set}$. Write $X_n=X([n])$. A map of simplicial sets is a natural transformation, and their category is $\sSet$.
+\end{definition}
+The injection $[n-1]\to[n]$ omitting $i$ induces a face map $d_i:X_n\to X_{n-1}$. The surjection $[n+1]\to[n]$ identifying $i$ and $i+1$ induces a degeneracy map $s_i:X_n\to X_{n+1}$. These satisfy the simplicial identities
+\[
+\begin{aligned}
+d_i d_j&=d_{j-1}d_i &&(i<j),\\
+s_i s_j&=s_{j+1}s_i &&(i\leq j),\\
+d_i s_j&=
+\begin{cases}
+s_{j-1}d_i,&i<j,\\
+\id,&i=j\text{ or }i=j+1,\\
+s_jd_{i-1},&i>j+1.
+\end{cases}
+\end{aligned}
+\]
+They express the equalities among order-preserving maps in $\Delta$. A simplex in the image of a degeneracy is degenerate; otherwise it is nondegenerate.
+
+\begin{example}[Standard Simplices and the Simplicial Circle]\label{ex:circle}
+The standard simplicial $n$-simplex is the representable functor
+\[
+\Delta^n_k=\Mor_{\Delta}([k],[n]).
+\]
+Its boundary $\partial\Delta^n$ consists of the maps whose images miss at least one vertex. The quotient $\Delta^1/\partial\Delta^1$ is a simplicial circle: it has one nondegenerate vertex $v$ and one nondegenerate edge $e$, with $d_0e=d_1e=v$, and no nondegenerate simplices in higher degrees. It still has degenerate simplices in every degree.
+\end{example}
+
+\begin{definition}[Singular Simplices and Realization]\label{def:sing}
+For a topological space $Y$, let
+\[
+|\Delta^n|=\{(t_0,\ldots,t_n)\in\mathbb R^{n+1}:t_i\geq0,\ \textstyle\sum_i t_i=1\}.
+\]
+The singular simplicial set $\Sing(Y)$ has continuous maps $|\Delta^n|\to Y$ as its $n$-simplices. Its structure maps are precomposition with the affine maps between topological simplices induced by maps in $\Delta$.
+
+For a simplicial set $X$, its geometric realization is
+\[
+|X|=\left(\coprod_{n\geq0}X_n\times|\Delta^n|\right)\big/\sim,
+\]
+where $(X(\alpha)(x),t)\sim(x,|\alpha|(t))$ for $\alpha:[m]\to[n]$, $x\in X_n$, and $t\in|\Delta^m|$. Each $X_n$ is given the discrete topology, and the quotient has the quotient topology.
+\end{definition}
+The equivalence relation glues faces and collapses degenerate simplices. The definitions give the natural adjunction
+\[
+\Mor_{\mathrm{Top}}(|X|,Y)\cong\Mor_{\sSet}(X,\Sing(Y)):
+\]
+a continuous map out of $|X|$ is exactly a compatible family of maps from its topological simplices. In Example~\ref{ex:circle}, realization identifies the two endpoints of an interval, giving the usual circle.
+
+\begin{definition}[Simplicial Modules and Chains]\label{def:chains}
+A simplicial $R$-module is a functor $A_\bullet:\Delta^{\mathrm{op}}\to\Mod_R$. Its associated chain complex has $C_n(A_\bullet)=A_n$ and differential
+\[
+\partial_n=\sum_{i=0}^n(-1)^i d_i\quad(n>0),\qquad \partial_0=0.
+\]
+For a simplicial set $X$, let $R[X_n]$ be the free $R$-module on $X_n$. Extending the structure maps linearly gives a simplicial module $R[X]$, and hence a chain complex $C_\bullet(X;R)=C_\bullet(R[X])$.
+\end{definition}
+
+\claim{boundary}
+\begin{proposition}[The Boundary Squares to Zero]\label{prop:boundary}
+For a simplicial module, the alternating face differential satisfies $\partial_{n-1}\partial_n=0$.
+\end{proposition}
+\begin{linkedproof}{boundary}
+In the expanded double sum, pair the term $(-1)^{i+j}d_i d_j$ with $i<j$ with the term $(-1)^{i+j-1}d_{j-1}d_i$. The two composites agree by the face identity and have opposite signs. Every term belongs to one such pair.
+\end{linkedproof}
+In dimension two this is the familiar calculation
+\[
+\partial[0,1,2]=[1,2]-[0,2]+[0,1],\qquad
+\partial^2[0,1,2]=0.
+\]
+Taking $X=\Sing(Y)$ gives the usual singular chain complex, since its basis in degree $n$ is precisely the set of singular $n$-simplices of $Y$.
+
+\subsection{The Construction in Low Degrees}
+For a simplicial abelian group $A_\bullet$, the construction is simply
+\[
+\cdots\longrightarrow A_3\xrightarrow{d_0-d_1+d_2-d_3}
+A_2\xrightarrow{d_0-d_1+d_2}A_1\xrightarrow{d_0-d_1}A_0\longrightarrow0.
+\]
+All simplices are retained. The degeneracy maps do not occur in this formula for the differential, though they remain part of the simplicial structure.
+
+It is useful to check the first nontrivial composition in full:
+\[
+\begin{aligned}
+(d_0-d_1)(d_0-d_1+d_2)
+={}&d_0d_0-d_0d_1+d_0d_2\\
+&-d_1d_0+d_1d_1-d_1d_2=0.
+\end{aligned}
+\]
+The cancellations use $d_0d_0=d_0d_1$, $d_0d_2=d_1d_0$, and $d_1d_1=d_1d_2$. Proposition~\ref{prop:boundary} is the same cancellation in every degree.
+
+A map of simplicial abelian groups $f:A_\bullet\to B_\bullet$ is a family of homomorphisms commuting with all face and degeneracy maps. In particular,
+\[
+f_{n-1}\partial_n
+=\sum_i(-1)^i f_{n-1}d_i
+=\sum_i(-1)^i d_i f_n
+=\partial_n f_n.
+\]
+Thus the associated chain complex construction is a functor: simplicial maps become chain maps, and hence induce maps on homology.
+
+\begin{example}[A Constant Simplicial Abelian Group]
+Let $G$ be an abelian group. Set $A_n=G$ in every degree and take every face and degeneracy map to be the identity. For $n>0$ the differential is
+\[
+\partial_n=\left(\sum_{i=0}^n(-1)^i\right)\id_G
+=\begin{cases}\id_G,&n\text{ even},\\0,&n\text{ odd}.\end{cases}
+\]
+The associated chain complex is therefore
+\[
+\cdots\xrightarrow{0}G\xrightarrow{\id}G\xrightarrow{0}G
+\xrightarrow{\id}G\xrightarrow{0}G\longrightarrow0,
+\]
+where the rightmost $G$ is in degree zero. It has $H_0=G$ and $H_n=0$ for every $n>0$. A constant simplicial group is not sent to a chain complex with $G$ only in degree zero; it is sent to a larger complex with exactly that homology.
+\end{example}
+
+\begin{example}[Edges, Triangles, and Connected Components]
+For a simplicial set $X$, take $A_n=\Z[X_n]$. An edge $e$ has boundary $d_0e-d_1e$, its terminal vertex minus its initial vertex. Thus
+\[
+H_0(C_\bullet(X;\Z))
+=\Z[X_0]/\langle d_0e-d_1e:e\in X_1\rangle.
+\]
+This is the free abelian group on the equivalence classes of vertices under the equivalence relation generated by the edges. These are the components of the simplicial set.
+
+A triangle $t$ has boundary $d_0t-d_1t+d_2t$. Hence $H_1$ is the group of integral sums of edges with zero total boundary, modulo boundaries of sums of triangles. In the simplicial circle of Example~\ref{ex:circle}, the edge $e$ is a cycle because both of its endpoints are $v$. Degenerate simplices are retained in all of these chain groups as well.
+\end{example}
+
+\section{Coefficients in Topology}\label{sec:topology}
+Let $X$ be a simplicial set and let $C_\bullet=C_\bullet(X;\Z)$. Each $C_n$ is a free abelian group on all $n$-simplices. Define
+\[
+H_n(X;A)=H_n(C_\bullet\otimes_{\Z}A),\qquad
+H^n(X;A)=H^n(\Hom_{\Z}(C_\bullet,A)).
+\]
+Here $A$ is an abelian group and $H_n(X;\Z)=H_n(C_\bullet)$. Applied to $X=\Sing(Y)$, these are precisely the usual definitions of singular homology and cohomology: the chains are free on singular simplices and the differential is the alternating sum of restrictions to faces.
+
+\begin{remark}[Universal Coefficient Theorems]\label{rem:uct}
+For any chain complex $C_\bullet$ of free abelian groups concentrated in nonnegative degrees, there are natural short exact sequences
+\[
+0\longrightarrow H_n(C)\otimes_{\Z}A
+\longrightarrow H_n(C\otimes_{\Z}A)
+\longrightarrow\Tor_1^{\Z}(H_{n-1}(C),A)\longrightarrow0
+\]
+and
+\[
+0\longrightarrow\Ext_{\Z}^1(H_{n-1}(C),A)
+\longrightarrow H^n(\Hom_{\Z}(C,A))
+\longrightarrow\Hom_{\Z}(H_n(C),A)\longrightarrow0.
+\]
+Take $H_{-1}(C)=0$. Both sequences split as sequences of abelian groups, but in general there is no natural choice of splitting. These are the algebraic universal coefficient theorems; we state them here without a full proof.
+\end{remark}
+The algebra behind these statements is that subgroups of free abelian groups are free. Writing $Z_n=\ker\partial_n$ and $B_n=\im\partial_{n+1}$, the sequence
+\[
+0\longrightarrow Z_n\longrightarrow C_n\longrightarrow B_{n-1}\longrightarrow0
+\]
+splits, whereas $0\to B_n\to Z_n\to H_n(C)\to0$ is a free resolution of $H_n(C)$. Applying tensor or Hom to the latter sequence produces the Tor or Ext correction. The first sequence explains why choices of splittings enter the calculation.
+
+\begin{example}[The Real Projective Plane]
+The cellular chain complex of $\mathbb{RP}^2$ over $\Z$ is
+\[
+0\longrightarrow\Z\xrightarrow{\,2\,}\Z\xrightarrow{\,0\,}\Z\longrightarrow0
+\]
+in degrees $2,1,0$. Thus $H_1(\mathbb{RP}^2;\Z)=\Z/2$ and $H_2(\mathbb{RP}^2;\Z)=0$. The cellular comparison theorem identifies these groups with singular homology.
+
+For coefficients $\Z/2$, the multiplication-by-two differential vanishes, giving
+\[
+H_2(\mathbb{RP}^2;\Z/2)\cong\Z/2.
+\]
+This class is invisible in $H_2(\mathbb{RP}^2;\Z)\otimes\Z/2$, which is zero. It is supplied by
+\[
+\Tor_1^{\Z}(H_1(\mathbb{RP}^2;\Z),\Z/2)
+=\Tor_1^{\Z}(\Z/2,\Z/2)\cong\Z/2.
+\]
+Likewise, applying $\Hom_{\Z}(-,\Z)$ to the cellular complex gives $H^2(\mathbb{RP}^2;\Z)\cong\Z/2$. This is the Ext contribution
+\[
+\Ext_{\Z}^1(H_1(\mathbb{RP}^2;\Z),\Z)\cong\Z/2,
+\]
+even though $\Hom_{\Z}(H_2(\mathbb{RP}^2;\Z),\Z)=0$.
+\end{example}
+A simplicial chain complex is free in each degree, but it is usually not a resolution of its degree-zero homology: it may have higher homology. To compute Tor of a single module, use an actual resolution. To compute homology with coefficients of a space, retain the full chain complex of that space.
+
+\section{Exercises}
+\begin{enumerate}
+\item Compute $\Tor_n^{\Z}(\Z/12,\Z/18)$ and $\Ext_{\Z}^n(\Z/12,\Z/18)$ for every $n\geq0$. Identify explicitly the kernel and cokernel of multiplication by $12$ on $\Z/18$.
+\item For an extension $0\to A\to E\to\Z/m\to0$, choose a lift $e\in E$ of $1\bmod m$. Show that $me\in A$ determines a class in $A/mA$ independent of the lift, and that this class is zero precisely when the extension splits.
+\item Write out the six terms of $\partial_1\partial_2$ and pair them using the face identities. Then explain how the same pairing works for $\partial_{n-1}\partial_n$.
+\item For a simplicial abelian group, show that $\partial_1s_0=0$. Next show that $\partial_2s_0s_0(a)=s_0(a)$ for $a\in A_0$. Conclude that a degenerate edge of this form is a cycle and a boundary.
+\item Let $k$ be a field, $R=k[\varepsilon]/(\varepsilon^2)$, and $k=R/(\varepsilon)$. Verify that the complex with $P_n=R$ in every degree and differential multiplication by $\varepsilon$ is a free resolution of $k$. Compute $\Tor_n^R(k,k)$ and $\Ext_R^n(k,k)$. Explain why the degree bound for $\Z/m$ does not hold over this ring.
+\item Use the cellular complex of $\mathbb{RP}^2$ to compute $H_n(\mathbb{RP}^2;\Z/4)$ and $H^n(\mathbb{RP}^2;\Z/4)$. Match the answers to the two universal coefficient sequences.
+\end{enumerate}
+
+\end{document}

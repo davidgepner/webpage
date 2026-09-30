@@ -1,0 +1,579 @@
+\documentclass[11pt]{article}
+% Course formatting embedded so this source compiles on its own.
+\RequirePackage[letterpaper,margin=1in]{geometry}
+\RequirePackage{fontspec}
+\IfFontExistsTF{texgyretermes-regular.otf}{\setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]}{\setmainfont{Latin Modern Roman}}
+\RequirePackage{amsmath,amsthm}
+\RequirePackage{unicode-math}
+\IfFontExistsTF{texgyretermes-math.otf}{\setmathfont{texgyretermes-math.otf}}{\setmathfont{latinmodern-math.otf}}
+\RequirePackage{xcolor}
+\definecolor{teal}{HTML}{185B62}
+\definecolor{burgundy}{HTML}{793D4A}
+\RequirePackage{titlesec}
+\titleformat{\section}{\large\bfseries\color{teal}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{teal}}{\thesubsection}{0.6em}{}
+\RequirePackage{enumitem}
+\setlist[enumerate]{label=\arabic*.,leftmargin=*,itemsep=4pt}
+\RequirePackage{tikz-cd}
+\RequirePackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,citecolor=teal,pdfstartview={XYZ null null 1.5}}
+\RequirePackage{bookmark}
+\newcommand{\proofdest}{}
+\newcommand{\claim}[1]{\def\proofdest{proof:#1}\hypertarget{statement:#1}{}}
+\newtheoremstyle{linked}{8pt}{6pt}{\normalfont}{} {\bfseries\color{burgundy}}{.}{0.5em}{\hyperlink{\proofdest}{\thmname{#1}\thmnumber{ #2}}\thmnote{ (#3)}}
+\theoremstyle{linked}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{theorem}[proposition]{Theorem}
+\newtheoremstyle{plainlecture}{8pt}{6pt}{\normalfont}{}{\bfseries\color{burgundy}}{.}{0.5em}{}
+\theoremstyle{plainlecture}
+\newtheorem{definition}[proposition]{Definition}
+\newtheorem{example}[proposition]{Example}
+\newtheorem{remark}[proposition]{Remark}
+\renewcommand{\proofname}{\normalfont\bfseries Proof}
+\newenvironment{linkedproof}[1]{\hypertarget{proof:#1}{}\begin{proof}[\normalfont\bfseries\hyperlink{statement:#1}{Proof}]}{\end{proof}}
+\RequirePackage{etoolbox}
+\makeatletter
+\newcommand{\afterenvnoindent}{\@afterindentfalse\@afterheading}
+\makeatother
+\AfterEndEnvironment{definition}{\afterenvnoindent}
+\AfterEndEnvironment{example}{\afterenvnoindent}
+\AfterEndEnvironment{remark}{\afterenvnoindent}
+\AfterEndEnvironment{proposition}{\afterenvnoindent}
+\AfterEndEnvironment{theorem}{\afterenvnoindent}
+\AfterEndEnvironment{linkedproof}{\afterenvnoindent}
+\setlength{\parindent}{1.1em}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{2em}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Mor}{\operatorname{Mor}}
+\newcommand{\Tor}{\hyperlink{def:derived}{\operatorname{Tor}}}
+\newcommand{\Ext}{\hyperlink{def:derived}{\operatorname{Ext}}}
+\newcommand{\PSh}{\mathcal{P}}
+\newcommand{\Fun}{\operatorname{Fun}}
+\newcommand{\Mod}{\mathrm{Mod}}
+\newcommand{\Ch}{\mathrm{Ch}}
+\newcommand{\Sing}{\operatorname{Sing}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\coker}{\operatorname{coker}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Top}{\mathrm{Top}}
+\newcommand{\Set}{\mathrm{Set}}
+\newcommand{\Ab}{\mathrm{Ab}}
+\newcommand{\C}{C^{\mathrm{alt}}}
+\hypersetup{pdftitle={Lecture 05: Simplicial Sets, Spaces, and Singular Chains},pdfauthor={Math 615 Fall 2026}}
+\title{\color{teal}\bfseries Lecture 05\\Simplicial Sets, Spaces, and Singular Chains}
+\author{Math 615: Algebraic Topology I}
+\date{Fall 2026}
+\begin{document}
+\maketitle
+\noindent
+A topological space can be studied by mapping simplices into it. These maps form a simplicial set: a collection of simplices equipped with face and degeneracy operations. Conversely, a simplicial set specifies how to glue ordinary geometric simplices into a space. To pass from this geometry to homology, first take the free abelian group on the simplices in each degree, and then take the alternating sum of faces.
+
+We use ordinary topological spaces and continuous maps. The constructions below require no separation assumptions. All chain complexes are homologically graded and concentrated in nonnegative degrees. We retain all simplices in the chain groups, including the degenerate ones.
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+\clearpage
+\section{Presheaves and Functor Categories}
+\begin{definition}[Category-Valued Presheaves]
+Let $\mathcal D$ be a small category, regarded as a diagram shape, and let $\mathcal C$ be a locally small category. The category of $\mathcal C$-valued presheaves on $\mathcal D$ is
+\[
+\PSh(\mathcal D;\mathcal C)=\Fun(\mathcal D^{\mathrm{op}},\mathcal C).
+\]
+Its objects are functors $F:\mathcal D^{\mathrm{op}}\to\mathcal C$, equivalently contravariant diagrams on $\mathcal D$. Thus $F$ assigns an object $F(d)$ to each $d\in\mathcal D$ and a restriction map $u^*=F(u):F(d')\to F(d)$ to each $u:d\to d'$, with
+\[
+\id_d^*=\id_{F(d)},\qquad (v\circ u)^*=u^*\circ v^*.
+\]
+Its morphisms are natural transformations: a morphism $\eta:F\to G$ is a family $\eta_d:F(d)\to G(d)$ satisfying
+\[
+G(u)\circ\eta_{d'}=\eta_d\circ F(u)
+\qquad\text{for every }u:d\to d'.
+\]
+Identities and composition are componentwise:
+$(\id_F)_d=\id_{F(d)}$ and $(\theta\circ\eta)_d=\theta_d\circ\eta_d$.
+\end{definition}
+The first argument of $\PSh(\mathcal D;\mathcal C)$ specifies the diagram shape; the second specifies the category of values. The opposite category $\mathcal D^{\mathrm{op}}$ reverses arrows. Here small means that objects and morphisms form sets; locally small means that morphisms between any two fixed objects form a set.
+
+More generally, the functor category $\Fun(\mathcal I,\mathcal C)$ has covariant functors $\mathcal I\to\mathcal C$ as objects and natural transformations as morphisms. For $u:i\to j$, naturality reads $G(u)\eta_i=\eta_jF(u)$; composition is again componentwise. The definition above is the case $\mathcal I=\mathcal D^{\mathrm{op}}$.
+
+\begin{definition}[Set-Valued Presheaves]
+Specializing to $\mathcal C=\Set$, write
+\[
+\PSh(\mathcal D)=\PSh(\mathcal D;\Set)
+=\Fun(\mathcal D^{\mathrm{op}},\Set).
+\]
+Thus an omitted second argument means sets. By contrast, $\PSh(\mathcal D;\Ab)$ consists of contravariant diagrams of abelian groups and homomorphisms.
+\end{definition}
+Each object $d\in\mathcal D$ defines the representable presheaf $\Mor_{\mathcal D}(-,d)$, whose value at $e$ is $\Mor_{\mathcal D}(e,d)$ and whose restriction maps are precomposition. Simplicial sets will be the case $\mathcal D=\Delta$.
+
+\claim{presheaf-yoneda}
+\begin{proposition}[Yoneda]
+For $F\in\PSh(\mathcal D)$ and $d\in\mathcal D$, evaluation at $\id_d$ gives a natural bijection
+\[
+\Mor_{\PSh(\mathcal D)}(\Mor_{\mathcal D}(-,d),F)\cong F(d).
+\]
+\end{proposition}
+\begin{linkedproof}{presheaf-yoneda}
+An element $x\in F(d)$ defines $\eta_e(u)=u^*x$ for $u:e\to d$. Functoriality makes $\eta$ natural, and naturality forces this formula from $x=\eta_d(\id_d)$. These constructions are inverse and natural.
+\end{linkedproof}
+
+\section{Simplices and Their Operators}\label{sec:simplices}
+\subsection{The Topological Simplex}
+\begin{definition}
+The standard topological $n$-simplex is
+\[
+\lvert\Delta^{n}\rvert=\left\{(t_0,\ldots,t_n)\in\mathbb R^{n+1}:
+t_i\geq0,\ \sum_{i=0}^n t_i=1\right\}.
+\]
+The realization notation will be justified when we construct geometric realization. Its vertices are the coordinate vectors $v_0,\ldots,v_n$. The coordinates $t_i$ are called barycentric coordinates.
+\end{definition}
+Thus $\lvert\Delta^{0}\rvert$ is a point, $\lvert\Delta^{1}\rvert$ is an interval, and $\lvert\Delta^{2}\rvert$ is a filled triangle. The ordering of the vertices determines the signs in its oriented boundary:
+\[
+\partial[v_0,v_1,v_2]=[v_1,v_2]-[v_0,v_2]+[v_0,v_1].
+\]
+The triangle can be displayed as
+\[
+\begin{tikzcd}[column sep=large,row sep=large]
+& v_1 \arrow[dr,"{[v_1,v_2]}"] & \\
+v_0 \arrow[ur,"{[v_0,v_1]}"] \arrow[rr,"{[v_0,v_2]}"'] && v_2.
+\end{tikzcd}
+\]
+This is an oriented geometric triangle. In a general simplicial set, its edges are not assumed to be morphisms in a category, and the triangle is not an assertion of equality between composites.
+
+\begin{definition}
+The simplex category $\Delta$ has objects $[n]=\{0<\cdots<n\}$ for $n\geq0$ and order-preserving maps as morphisms. A map $\alpha:[m]\to[n]$ determines the affine map
+\[
+\alpha_*:\lvert\Delta^{m}\rvert\longrightarrow\lvert\Delta^{n}\rvert,
+\qquad (\alpha_*t)_j=\sum_{\alpha(i)=j}t_i.
+\]
+An empty sum is zero. In particular, $\alpha_*(v_i)=v_{\alpha(i)}$.
+\end{definition}
+For $\beta:[\ell]\to[m]$, grouping the coordinates gives
+$(\alpha\beta)_*=\alpha_*\beta_*$. Thus $[n]\mapsto\lvert\Delta^{n}\rvert$ is a covariant functor from $\Delta$ to $\Top$.
+
+Two kinds of maps generate $\Delta$:
+\begin{enumerate}
+\item The coface $\delta^i:[n-1]\hookrightarrow[n]$ omits $i$. Its affine map inserts a zero into barycentric coordinates at position $i$.
+\item The codegeneracy $\sigma^i:[n+1]\twoheadrightarrow[n]$ identifies $i$ and $i+1$. Its affine map replaces the adjacent coordinates $t_i,t_{i+1}$ by their sum.
+\end{enumerate}
+Every order-preserving map factors uniquely as a surjection followed by an injection. Geometrically, it first collapses repeated vertices and then includes a face.
+
+\subsection{Simplicial Sets}
+\begin{definition}
+A simplicial set is a presheaf of sets on $\Delta$, that is, a functor $K:\Delta^{\mathrm{op}}\to\Set$. Write $K_n=K([n])$ and, for $\alpha:[m]\to[n]$, write $\alpha^*:K_n\to K_m$. A simplicial map $f:K\to L$ is a natural transformation. These objects and maps form the presheaf category $\PSh(\Delta)=\Fun(\Delta^{\mathrm{op}},\Set)$.
+\end{definition}
+The lecture is organized around the following functors:
+\[
+\begin{tikzcd}[column sep=huge]
+\Top \arrow[r,shift left=1.2ex,"\Sing"] &
+\PSh(\Delta) \arrow[l,shift left=1.2ex,"{|{-}|}"]
+\arrow[r,shift left=1.2ex,"{\Z[-]}"] &
+\PSh(\Delta;\Ab) \arrow[l,shift left=1.2ex,"U"]
+\arrow[r,"\C"] & \Ch_{\geq0}(\Ab).
+\end{tikzcd}
+\]
+Here $|{-}|\dashv\Sing$ and $\Z[-]\dashv U$: realization is left adjoint to the singular functor, and the free simplicial abelian group functor is left adjoint to forgetting addition. The composite from left to right is the singular chain functor. We will construct these functors and prove the two adjunctions explicitly.
+
+Elements of $K_n$ are called $n$-simplices. The following theorem gives an equivalent description using only faces and degeneracies.
+
+\claim{simplicial-data}
+\begin{theorem}[Simplicial Sets in Terms of Faces and Degeneracies]\label{thm:simplicial-data}
+The data of a simplicial set is equivalently a sequence of sets
+$K_0,K_1,K_2,\ldots$ equipped with face maps and degeneracy maps
+\[
+\begin{aligned}
+ d_i &:K_n\longrightarrow K_{n-1}
+ &&(n\geq1,\ 0\leq i\leq n),\\
+ s_i &:K_n\longrightarrow K_{n+1}
+ &&(n\geq0,\ 0\leq i\leq n),
+\end{aligned}
+\]
+subject to the simplicial identities
+\[
+\begin{aligned}
+d_i d_j&=d_{j-1}d_i &&(i<j),\\
+s_i s_j&=s_{j+1}s_i &&(i\leq j),\\
+d_i s_j&=
+\begin{cases}
+s_{j-1}d_i,&i<j,\\
+\id,&i=j\text{ or }i=j+1,\\
+s_jd_{i-1},&i>j+1.
+\end{cases}
+\end{aligned}
+\]
+The identities are required whenever the indicated composites are defined; composition is read from right to left.
+
+More precisely, every such system extends uniquely to a functor
+$K:\Delta^{\mathrm{op}}\to\Set$ with $K([n])=K_n$,
+$K(\delta^i)=d_i$, and $K(\sigma^i)=s_i$.
+Under this correspondence, simplicial maps are exactly families of functions
+$f_n:K_n\to L_n$ commuting with every face and degeneracy map.
+\end{theorem}
+\begin{linkedproof}{simplicial-data}
+A functor gives the stated maps by applying it to cofaces and codegeneracies. Their relations in $\Delta$, with composition reversed, give the displayed identities.
+
+Conversely, every order-preserving map factors uniquely as a surjection followed by an injection. The surjection is specified by its repeated adjacent values, and the injection by its omitted values. Thus each has a canonical expression in codegeneracies or cofaces. The elementary relations move any expression into this form: mixed relations move omissions past repetitions, cancelling when necessary, and the remaining relations order the omissions and repetitions. Consequently these relations present $\Delta$ by generators and relations.
+
+Assigning $d_i$ and $s_i$ to these generators therefore defines the pullback along every map of $\Delta$, independently of its expression. The same relations ensure functoriality. Generation gives uniqueness and also shows that commuting with faces and degeneracies is equivalent to naturality. See \cite{stacks-simplicial} for the generators-and-relations formulation.
+\end{linkedproof}
+The faces of an edge $e$ are its target $d_0e$ and source $d_1e$. The simplex $s_0v$ is the degenerate edge at $v$; both of its endpoints are $v$. Geometrically, the first identity says that deleting vertex $j$ and then vertex $i<j$ has the same effect as deleting vertex $i$ and then the renumbered vertex $j-1$.
+
+A simplex is \emph{degenerate} if it is in the image of some $s_i$; otherwise it is \emph{nondegenerate}. A degenerate simplex is still an element of $K_n$. It is not removed from the simplicial set.
+
+\begin{example}[The Standard Simplicial Simplex]
+The simplicial set $\Delta^{n}$ is defined by
+\[
+\Delta^{n}_m=\Mor_\Delta([m],[n]),
+\qquad \beta^*(\alpha)=\alpha\beta.
+\]
+Its nondegenerate $m$-simplices are precisely the injective order-preserving maps $[m]\hookrightarrow[n]$. Thus $\Delta^{1}$ has two nondegenerate vertices and one nondegenerate edge, but it has simplices in every degree.
+\end{example}
+The notations $[n]$, $\Delta^{n}$, and $\lvert\Delta^{n}\rvert$ refer respectively to an ordered set, a simplicial set, and a topological space.
+
+\claim{yoneda}
+\begin{proposition}[A Simplex Is a Map Out of a Standard Simplex]
+There is a natural bijection
+\[
+\Mor_{\PSh(\Delta)}(\Delta^{n},K)\cong K_n.
+\]
+\end{proposition}
+\begin{linkedproof}{yoneda}
+The standard simplex $\Delta^n$ is the representable presheaf $\Mor_{\Delta}(-,[n])$. Apply Yoneda: $x\in K_n$ corresponds to the map $\alpha\mapsto\alpha^*x$.
+\end{linkedproof}
+
+\section{Geometric Realization: Gluing the Simplices}
+\begin{definition}
+The geometric realization of a simplicial set $K$ is the quotient space
+\[
+|K|=\left(\coprod_{n\geq0} K_n\times\lvert\Delta^{n}\rvert\right)\big/\sim,
+\]
+where each $K_n$ has the discrete topology and the equivalence relation is generated by
+\[
+(\alpha^*x,t)\sim(x,\alpha_*t)
+\quad\text{for }\alpha:[m]\to[n],\ x\in K_n,\ t\in\lvert\Delta^{m}\rvert.
+\]
+Write $[x,t]$ for the equivalence class of $(x,t)$.
+\end{definition}
+The face relations attach the boundary of one simplex to the specified lower-dimensional simplices. The degeneracy relations collapse a redundant simplex onto its lower-dimensional source. For example,
+\[
+[s_0v,(t_0,t_1)]=[v,(1)],
+\]
+so a degenerate edge becomes a point, not an extra loop.
+
+Every $x\in K_n$ has a characteristic map
+\[
+\chi_x:\lvert\Delta^{n}\rvert\longrightarrow|K|,\qquad t\longmapsto[x,t].
+\]
+These maps obey the commutative diagrams
+\[
+\begin{tikzcd}[column sep=large,row sep=large]
+\lvert\Delta^{m}\rvert \arrow[r,"\alpha_*"] \arrow[d,"\chi_{\alpha^*x}"'] &
+\lvert\Delta^{n}\rvert \arrow[d,"\chi_x"]\\
+\lvert K\rvert \arrow[r,equal] & \lvert K\rvert.
+\end{tikzcd}
+\]
+Define the category of simplices $\Delta/K$ to have objects $([n],x)$ with $x\in K_n$; a morphism $([m],y)\to([n],x)$ is a map $\alpha:[m]\to[n]$ with $y=\alpha^*x$. Then
+\[
+|K|\cong\mathop{\operatorname{colim}}_{([n],x)\in\Delta/K}|\Delta^n|.
+\]
+This is a colimit in $\Top$: continuous maps $|K|\to X$ correspond exactly to families of continuous maps $f_x:|\Delta^n|\to X$ satisfying $f_{\alpha^*x}=f_x\alpha_*$. Indeed, such a family defines a continuous map from the disjoint union, and compatibility is precisely what makes it descend through the quotient.
+
+A simplicial map $f:K\to L$ induces
+\[
+|f|:|K|\to|L|,\qquad [x,t]\longmapsto[f_n(x),t].
+\]
+Compatibility with the relation follows from $f_m(\alpha^*x)=\alpha^*f_n(x)$. This defines a functor $|{-}|:\PSh(\Delta)\to\Top$.
+
+\begin{example}[A Point, an Interval, and a Circle]
+\begin{enumerate}
+\item The realization of the standard simplicial simplex is canonically the topological simplex introduced in Section~\ref{sec:simplices}. The homeomorphism is given by $[\alpha,t]\mapsto\alpha_*t$. Its inverse sends $u$ to $[\id_{[n]},u]$; the defining relation proves that the two composites are identities. We use $|\Delta^{n}|$ for this identified space.
+\item A constant simplicial set on a set $S$ has value $S$ and every structure map is the identity. Its realization is the discrete space $S$.
+\item Let $\partial\Delta^{1}\subset\Delta^{1}$ consist of the two vertices and all their degeneracies. The degreewise quotient
+\[
+S^1_\Delta=\Delta^{1}/\partial\Delta^{1}
+\]
+has one vertex $v$, one nondegenerate edge $e$ with $d_0e=d_1e=v$, and no higher nondegenerate simplices. Its realization is the interval with its endpoints identified, hence a circle.
+\end{enumerate}
+\end{example}
+Repeated vertices, loops, and distinct simplices with the same boundary are all allowed in a simplicial set. This flexibility goes beyond an abstract simplicial complex.
+
+\section{The Singular Functor: All Simplices Mapping into a Space}
+\begin{definition}
+For a topological space $X$, define
+\[
+(\Sing X)_n=\Mor_\Top(\lvert\Delta^{n}\rvert,X).
+\]
+For $\alpha:[m]\to[n]$, define $\alpha^*(\tau)=\tau\alpha_*$. The sets of continuous maps here are regarded simply as sets.
+\end{definition}
+Precomposition and $(\alpha\beta)_*=\alpha_*\beta_*$ give the required contravariance. Thus $\Sing X$ is a simplicial set, called the \emph{singular simplicial set} of $X$.
+
+The first few degrees have direct geometric meanings:
+\begin{enumerate}
+\item $(\Sing X)_0$ is the underlying set of points of $X$.
+\item $(\Sing X)_1$ is the set of continuous paths, with the interval parametrized by $(1-u,u)$ for $0\leq u\leq1$. Thus $d_1\gamma=\gamma(0)$ and $d_0\gamma=\gamma(1)$.
+\item $(\Sing X)_2$ consists of continuous maps of a filled triangle into $X$. Its three faces are the restrictions to its three ordered edges.
+\end{enumerate}
+A singular simplex need not be injective or linear, and its image need not look like a geometric simplex. In particular, an arbitrary space need not come with a chosen triangulation for its singular simplicial set to be defined.
+
+For $\tau:\lvert\Delta^{n}\rvert\to X$, the degeneracy $s_i\tau$ is
+\[
+(t_0,\ldots,t_{n+1})\longmapsto
+\tau(t_0,\ldots,t_{i-1},t_i+t_{i+1},t_{i+2},\ldots,t_{n+1}).
+\]
+For $n=0$, this is a constant path. A path that goes out and comes back is generally \emph{not} a degenerate edge: degeneracy means the specified factorization through a lower-dimensional standard simplex, not merely that endpoints coincide.
+
+If $f:X\to Y$ is continuous, postcomposition defines
+\[
+\Sing(f):\Sing X\to\Sing Y,\qquad \tau\longmapsto f\tau.
+\]
+Since postcomposition commutes with precomposition, this is simplicial and defines the functor $\Sing:\Top\to\PSh(\Delta)$.
+
+\begin{example}
+The singular simplicial set of a point is $\Delta^{0}$: it has one simplex in every degree. If $X$ is discrete, every map $\lvert\Delta^{n}\rvert\to X$ is constant, so $\Sing X$ is the constant simplicial set on $X$. For $X=[0,1]$, the simplicial set $\Sing X$ is much larger than $\Delta^{1}$: it includes every continuous path and every continuous singular simplex in the interval.
+\end{example}
+
+\section{The Realization--Singular Adjunction}\label{sec:adjunction}
+An adjunction here is a natural bijection between two sets of maps. The relevant bijection says that mapping a glued space into $X$ is the same as assigning compatible singular simplices in $X$ to its pieces.
+
+\claim{adjunction}
+\begin{theorem}
+For a simplicial set $K$ and a topological space $X$, there is a natural bijection
+\[
+\Mor_\Top(|K|,X)\cong\Mor_{\PSh(\Delta)}(K,\Sing X).
+\]
+Consequently, geometric realization is left adjoint to the singular functor.
+\end{theorem}
+\begin{linkedproof}{adjunction}
+By the colimit universal property, a continuous map $|K|\to X$ is a compatible family $f_x:|\Delta^n|\to X$. Since $(\Sing X)_n=\Mor_\Top(|\Delta^n|,X)$, this is exactly a family of functions
+\[
+K_n\longrightarrow(\Sing X)_n,\qquad x\longmapsto f_x,
+\]
+commuting with restriction maps: a morphism of presheaves $K\to\Sing X$. Explicitly, the inverse correspondences are
+\[
+F\longmapsto(x\mapsto F\chi_x),\qquad
+ g\longmapsto([x,t]\mapsto g_n(x)(t)).
+\]
+Both commute with precomposition in $K$ and postcomposition in $X$, so the bijection is natural.
+\end{linkedproof}
+
+\subsection{The Unit and Counit}
+The identity of $|K|$ corresponds to the \emph{unit}
+\[
+\eta_K:K\longrightarrow\Sing|K|,\qquad
+x\longmapsto\chi_x.
+\]
+Thus each abstract simplex becomes the singular simplex that parametrizes its own image in the realization.
+
+The identity of $\Sing X$ corresponds to the \emph{counit}, or evaluation map,
+\[
+\epsilon_X:|\Sing X|\longrightarrow X,\qquad
+[\tau,t]\longmapsto\tau(t).
+\]
+The triangle identities are
+\[
+\epsilon_{|K|}\circ|\eta_K|=\id_{|K|},\qquad
+\Sing(\epsilon_X)\circ\eta_{\Sing X}=\id_{\Sing X}.
+\]
+For example, the first composite sends $[x,t]$ to $[\chi_x,t]$ and then to $\chi_x(t)=[x,t]$. The second says that evaluating the characteristic simplex associated to $\tau$ recovers $\tau$.
+
+\begin{remark}[An Adjunction Does Not Assert an Isomorphism]
+The map $\eta_{\Delta^{1}}$ includes the simplices determined by the ordered vertices into all singular simplices of the interval; most continuous paths are not in its image. Likewise, evaluation need not be a homeomorphism. The deeper comparison with homotopy types is a theorem beyond the adjunction itself, and is not needed to construct singular chains.
+\end{remark}
+
+\section{The Free Simplicial Abelian Group Functor}
+\subsection{First Take the Free Abelian Group on a Set}
+\begin{definition}
+For a set $S$, the free abelian group on $S$ is
+\[
+\Z[S]=\bigoplus_{s\in S}\Z\langle s\rangle.
+\]
+Its elements are finite formal sums $\sum_s a_s\langle s\rangle$ with $a_s\in\Z$. For a function $f:S\to T$, set
+\[
+\Z[f]\left(\sum_s a_s\langle s\rangle\right)
+=\sum_s a_s\langle f(s)\rangle.
+\]
+\end{definition}
+The brackets distinguish a generator from the element of a set that labels it. If $f$ identifies two elements, their coefficients add. For example, if $f(s)=f(s')=t$, then $2\langle s\rangle-\langle s'\rangle$ maps to $\langle t\rangle$.
+
+For every abelian group $B$, a function $S\to U(B)$ extends uniquely to a homomorphism $\Z[S]\to B$ by linearity. Here $U(B)$ denotes its underlying set. Thus
+\[
+\Mor_\Ab(\Z[S],B)\cong\Mor_\Set(S,U(B)).
+\]
+
+\subsection{Apply This Construction in Every Degree}
+\begin{definition}
+A simplicial abelian group is a functor $A:\Delta^{\mathrm{op}}\to\Ab$. Its structure maps, including its faces and degeneracies, are group homomorphisms. Thus simplicial abelian groups form the presheaf category $\PSh(\Delta;\Ab)=\Fun(\Delta^{\mathrm{op}},\Ab)$. Forgetting the group structures degreewise defines $U:\PSh(\Delta;\Ab)\to\PSh(\Delta)$.
+\end{definition}
+For a simplicial set $K$, define
+\[
+\Z[K]_n=\Z[K_n],\qquad
+\alpha^*\left(\sum_x a_x\langle x\rangle\right)
+=\sum_x a_x\langle\alpha^*x\rangle.
+\]
+The simplicial identities hold on generators because they hold in $K$, and therefore hold on all finite sums. In particular,
+\[
+d_i\langle x\rangle=\langle d_ix\rangle,
+\qquad s_i\langle x\rangle=\langle s_ix\rangle.
+\]
+A simplicial map $f:K\to L$ induces the degreewise homomorphisms
+$\langle x\rangle\mapsto\langle f_n(x)\rangle$. We obtain the functor
+\[
+\Z[-]:\PSh(\Delta)\longrightarrow\PSh(\Delta;\Ab).
+\]
+The group in degree $n$ is free on \emph{all} $n$-simplices, including degenerate simplices. It is not the free group on the vertices alone.
+
+\claim{pointwise-adjunction}
+\begin{proposition}[Adjunctions Apply Pointwise]
+Let $L:\mathcal D\rightleftarrows\mathcal E:R$ be an adjunction and $\mathcal I$ a small category. Postcomposition induces an adjunction
+\[
+L_*:\Fun(\mathcal I,\mathcal D)\rightleftarrows
+\Fun(\mathcal I,\mathcal E):R_*.
+\]
+\end{proposition}
+\begin{linkedproof}{pointwise-adjunction}
+For $F:\mathcal I\to\mathcal D$ and $G:\mathcal I\to\mathcal E$, transpose each component $LF(i)\to G(i)$ under $L\dashv R$. Naturality of the adjunction bijection identifies the naturality equations for these components with those for $F(i)\to RG(i)$. Thus componentwise transposition gives a natural bijection between the two sets of natural transformations.
+\end{linkedproof}
+
+\claim{free}
+\begin{proposition}[The Free--Forgetful Adjunction]
+For $K\in\PSh(\Delta)$ and $A\in\PSh(\Delta;\Ab)$, there is a natural bijection
+\[
+\Mor_{\PSh(\Delta;\Ab)}(\Z[K],A)\cong\Mor_{\PSh(\Delta)}(K,U(A)).
+\]
+\end{proposition}
+\begin{linkedproof}{free}
+Apply the pointwise adjunction proposition to $\Z[-]:\Set\rightleftarrows\Ab:U$ with $\mathcal I=\Delta^{\mathrm{op}}$. Concretely, $g:K\to U(A)$ extends uniquely by
+\[
+\overline g_n\left(\sum_x a_x\langle x\rangle\right)=\sum_x a_xg_n(x).
+\]
+Naturality of $g$ makes these extensions commute with every simplicial operator. Restriction to generators is the inverse.
+\end{linkedproof}
+The unit sends $x$ to $\langle x\rangle$. The counit is
+\[
+\Z[U(A)]\to A,\qquad
+\sum_a n_a\langle a\rangle\longmapsto\sum_a n_a a.
+\]
+Even when the labels are elements of an abelian group, the source has formal generators: $\langle a+b\rangle$ need not equal $\langle a\rangle+\langle b\rangle$. The counit imposes the addition already present in $A$.
+
+\begin{remark}[Linearization Is Not Yet a Boundary Operator]
+The functor $\Z[-]$ freely introduces sums and additive inverses while retaining all faces and degeneracies. A simplicial abelian group still has $n+1$ face maps in degree $n$. The next construction combines them into one differential.
+\end{remark}
+
+\section{Alternating Faces and Singular Chains}
+\begin{definition}
+For a simplicial abelian group $A$, let $\C(A)_n=A_n$ for $n\geq0$, and put
+\[
+\partial_n=\sum_{i=0}^n(-1)^i d_i:A_n\to A_{n-1}\quad(n\geq1),
+\qquad \partial_0:A_0\to0.
+\]
+\end{definition}
+The first two differentials are $\partial_1=d_0-d_1$ and $\partial_2=d_0-d_1+d_2$. Thus the boundary of an edge is target minus source, and the boundary of a triangle is its three edges with alternating signs.
+
+\claim{boundary}
+\begin{proposition}
+The equation $\partial_{n-1}\partial_n=0$ holds. A simplicial homomorphism induces a chain map, so this construction defines $\C:\PSh(\Delta;\Ab)\to\Ch_{\geq0}(\Ab)$.
+\end{proposition}
+\begin{linkedproof}{boundary}
+For $n\geq2$, expand the composite as
+\[
+\sum_{i=0}^{n-1}\sum_{j=0}^n(-1)^{i+j}d_i d_j.
+\]
+Pair the term with $i<j$ with the term indexed by $(j-1,i)$. Their maps agree by $d_i d_j=d_{j-1}d_i$, and their signs are opposite because $i+j$ and $j-1+i$ differ by one. This pairs every term exactly once. In degree one the assertion follows from $\partial_0=0$.
+
+A simplicial homomorphism commutes with each face map, so it commutes with their signed sum. Identities and composition are preserved degreewise.
+\end{linkedproof}
+Each codimension-two face occurs twice, with opposite signs. See also \cite{stacks-chains}.
+
+For a simplicial set $K$, write
+\[
+C_\bullet(K;\Z)=\C(\Z[K]),\qquad
+H_n(K;\Z)=\ker(\partial_n)/\im(\partial_{n+1}).
+\]
+These are the unnormalized simplicial chains and their homology. In positive degrees,
+\[
+\partial\langle x\rangle=\sum_{i=0}^n(-1)^i\langle d_ix\rangle.
+\]
+
+\subsection{What Happens to Degenerate Simplices?}
+A degenerate simplex is not the zero element of a free chain group. For instance, the constant edge $a=s_0v$ has $\partial a=0$, but $a$ is a nonzero generator of $C_1$. It becomes a boundary: if $b=s_0s_0v$, then all three faces of $b$ equal $a$, so $\partial b=a-a+a=a$.
+
+\begin{example}[The Homology of a Point]
+For $K=\Delta^{0}$, each chain group is $\Z$, and all face maps are identities. Hence
+\[
+\partial_n=\begin{cases}0,&n\text{ odd},\\\id,&n\geq2\text{ even}.
+\end{cases}
+\]
+In low degrees the complex is
+\[
+\cdots\longrightarrow\Z\xrightarrow{0}\Z
+\xrightarrow{\id}\Z\xrightarrow{0}\Z\longrightarrow0,
+\]
+where the rightmost $\Z$ is in degree zero. It has $H_0\cong\Z$ and $H_n=0$ for $n>0$. Keeping the degenerate simplices therefore gives the correct answer without deleting any generators by hand.
+\end{example}
+
+\subsection{The Singular Chain Functor}
+\begin{definition}
+The singular chain complex of a topological space $X$ is
+\[
+C_\bullet^{\mathrm{sing}}(X;\Z)
+=\C(\Z[\Sing X]).
+\]
+Its degree-$n$ group is freely generated by continuous maps $\tau:\lvert\Delta^{n}\rvert\to X$. For $n\geq1$, its boundary is
+\[
+\partial\langle\tau\rangle
+=\sum_{i=0}^n(-1)^i\langle\tau\delta^i_*\rangle.
+\]
+The singular homology of $X$ is $H_n^{\mathrm{sing}}(X;\Z)=H_n(C_\bullet^{\mathrm{sing}}(X;\Z))$.
+\end{definition}
+The construction separates three steps:
+\begin{enumerate}
+\item $\Sing$ records all continuous simplices and their restrictions and repetitions.
+\item $\Z[-]$ permits finite integral combinations of these simplices.
+\item $\C$ adds the face maps with signs to define a boundary operator.
+\end{enumerate}
+None of these steps requires choosing a triangulation of $X$.
+
+For a continuous map $f:X\to Y$, the induced chain map sends $\langle\tau\rangle$ to $\langle f\tau\rangle$. For every $n\geq1$, we have the commutative square
+\[
+\begin{tikzcd}[column sep=huge,row sep=large]
+C_n^{\mathrm{sing}}(X;\Z) \arrow[r,"f_\#"] \arrow[d,"\partial"'] &
+C_n^{\mathrm{sing}}(Y;\Z) \arrow[d,"\partial"]\\
+C_{n-1}^{\mathrm{sing}}(X;\Z) \arrow[r,"f_\#"'] &
+C_{n-1}^{\mathrm{sing}}(Y;\Z).
+\end{tikzcd}
+\]
+It follows that singular homology is functorial.
+
+\begin{example}[Paths and Triangles]
+For a path $\gamma:x\to y$, its boundary is $\langle y\rangle-\langle x\rangle$. Consequently,
+\[
+H_0^{\mathrm{sing}}(X;\Z)\cong\Z[\pi_0^{\mathrm{path}}X],
+\]
+where $\pi_0^{\mathrm{path}}X$ is the set of path components, not merely connected components.
+
+For a singular triangle $\tau$ with ordered edges $\gamma_{01},\gamma_{02},\gamma_{12}$,
+\[
+\partial\langle\tau\rangle
+=\langle\gamma_{12}\rangle-\langle\gamma_{02}\rangle+\langle\gamma_{01}\rangle.
+\]
+Thus the cycle given by the two successive edges minus the long edge is a boundary. This is a relation among chains modulo boundaries; the individual nonclosed edges need not represent classes in $H_1$.
+\end{example}
+
+\medskip
+\noindent\textbf{Closing check.}
+A simplex of $\Sing X$ is a continuous map, a simplex of $\Z[\Sing X]$ is a finite integral combination of such maps, and the boundary of a chain is the alternating sum of its restrictions to faces. The relation $\partial^2=0$ comes from deleting two vertices in the two possible orders.
+
+\begin{thebibliography}{9}
+\bibitem{kerodon-realization}
+Kerodon, Section 1.2.3, \emph{The Geometric Realization of a Simplicial Set}, especially Proposition 1.2.3.4 and Corollary 1.2.3.5.
+\url{https://kerodon.net/tag/0021}.
+The realization--singular bijection in this lecture is proved explicitly in Section~\ref{sec:adjunction}.
+\bibitem{stacks-chains}
+The Stacks Project, Section 14.23, \emph{Simplicial Objects and Chain Complexes}.
+\url{https://stacks.math.columbia.edu/tag/0194}.
+Our notation $\C(A)$ denotes the alternating-face complex called $s(A)$ there.
+\bibitem{stacks-simplicial}
+The Stacks Project, Lemmas 14.2.4 and 14.3.2, \emph{The Category of Finite Ordered Sets} and \emph{Simplicial Objects}.
+\url{https://stacks.math.columbia.edu/tag/0169}.
+\end{thebibliography}
+\end{document}
