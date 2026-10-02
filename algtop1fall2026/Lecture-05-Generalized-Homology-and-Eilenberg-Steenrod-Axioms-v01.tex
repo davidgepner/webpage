@@ -1,0 +1,428 @@
+\documentclass[11pt]{article}
+% BEGIN SHARED COURSE STYLE
+% Shared Math 615 style. Embedded verbatim in standalone published sources.
+\RequirePackage[letterpaper,margin=1in]{geometry}
+\RequirePackage{amsmath,amsthm,mathtools}
+\RequirePackage{fontspec,unicode-math}
+\setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
+\setmathfont{texgyretermes-math.otf}
+\RequirePackage{microtype,tikz-cd,enumitem,needspace,xcolor,booktabs,titlesec,etoolbox}
+\definecolor{teal}{HTML}{176568}
+\definecolor{burgundy}{HTML}{782F40}
+\definecolor{inklink}{HTML}{176568}
+\definecolor{accent}{HTML}{176568}
+\titleformat{\section}{\large\bfseries\color{teal}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{burgundy}}{\thesubsection}{.65em}{}
+\titleformat{\paragraph}[runin]{\normalsize\bfseries\color{burgundy}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{4ex plus 1ex minus .5ex}{1.5ex plus .3ex}
+\titlespacing*{\subsection}{0pt}{3ex plus .8ex minus .4ex}{1ex plus .2ex}
+\RequirePackage{hyperref,bookmark}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,citecolor=teal,pdfstartview={XYZ null null 1.5},bookmarksnumbered=true}
+\urlstyle{same}
+\setcounter{tocdepth}{2}
+\setlist[enumerate]{label=\arabic*.,ref=\arabic*,leftmargin=*,itemsep=4pt,topsep=4pt}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\AddToHook{cmd/section/before}{\Needspace{8\baselineskip}}
+\AddToHook{cmd/subsection/before}{\Needspace{6\baselineskip}}
+\makeatletter
+\newcommand{\afterblock}{\@afterindentfalse\@afterheading}
+\makeatother
+\newcounter{result}[section]
+\renewcommand{\theresult}{\thesection.\arabic{result}}
+\newcommand{\resulttitle}[3]{#1 #2\ifstrempty{#3}{}{ (#3)}.}
+\newenvironment{result}[3]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{proof:#2}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{entry}[3]{\par\addvspace{7pt}\Needspace{3\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\textbf{\resulttitle{#1}{\theresult}{#3}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newenvironment{demonstration}[1]{\par\noindent\hypertarget{proof:#1}{}{\color{burgundy}\hypersetup{linkcolor=burgundy}\hyperlink{#1}{\textbf{Proof.}}}\quad\ignorespaces}{\unskip\nobreak\hfill\qedsymbol\par\addvspace{5pt}\afterblock}
+\newenvironment{citedresult}[4]{\par\addvspace{7pt}\Needspace{4\baselineskip}\refstepcounter{result}\hypertarget{#2}{}\label{#2}\noindent{\color{burgundy}\hypersetup{urlcolor=burgundy}\href{#4}{\textbf{\resulttitle{#1}{\theresult}{#3}}}}\quad\ignorespaces}{\par\addvspace{4pt}\afterblock}
+\newcommand{\usedby}[1]{\par\noindent{\small\textbf{Used in:} #1.}\par\afterblock}
+\newcommand{\coursebold}[1]{{\color{burgundy}\textbf{#1}}}
+\newcommand{\coursetitle}[3]{\begin{center}{\large\bfseries\color{teal}#1}\\[4pt]{\LARGE\bfseries\color{teal}#2}\\[6pt]Math 615: Algebraic Topology I\\Fall 2026\quad\textbar\quad #3\end{center}}
+\newcommand{\coursecontents}{{\small\setlength{\parskip}{0pt}\tableofcontents}}
+\newcommand{\homeworkstyle}{\titleformat{\section}{\large\bfseries\color{teal}}{Exercise \thesection.}{.65em}{}}
+% END SHARED COURSE STYLE
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\mapdef}[5]{#1:#2\longrightarrow #3,\qquad #4\longmapsto #5}
+\newcommand{\Top}{\mathrm{Top}}
+\newcommand{\Ab}{\mathrm{Ab}}
+\hypersetup{pdftitle={Lecture 5: Generalized Homology and the Eilenberg--Steenrod Axioms},pdfauthor={Math 615 Fall 2026},pdfsubject={Revision 01}}
+\begin{document}
+\coursetitle{Lecture 5}{Generalized Homology and the Eilenberg--Steenrod Axioms}{September 30}
+Homology assigns abelian groups to spaces and homomorphisms to continuous maps. Its axioms describe how those groups behave under homotopies, disjoint unions, and gluing. We use Mayer--Vietoris for homotopy pushouts as the gluing axiom. This formulation describes generalized homology without choosing a chain complex or imposing the dimension axiom.
+
+Write $I=[0,1]$ and $*$ for a one-point space. All grading indices belong to $\mathbb Z$. We work with CW complexes and spaces homotopy equivalent to CW complexes; write $\mathcal T$ for this category and $\mathrm{Ab}$ for abelian groups. Disjoint unions and the mapping-cylinder constructions below remain in this category. Homotopy pushouts are understood up to homotopy equivalence. For general spaces outside this category, replacing homotopy equivalences by weak equivalences requires an additional weak-equivalence convention.
+\coursecontents
+
+\section{Functoriality and Homotopy Pushouts}
+The first part of a homology theory is functorial data. The gluing axiom needs a construction that remembers the homotopy along which two maps agree.
+
+\begin{entry}{Definition}{def:graded}{}
+A graded homology functor is a family of covariant functors
+\[
+h_n:\mathcal T\longrightarrow\mathrm{Ab}\qquad(n\in\mathbb Z).
+\]
+For a map $f:X\longrightarrow Y$, write $f_*=h_n(f):h_n(X)\longrightarrow h_n(Y)$. Functoriality means that identities induce identities and $(gf)_*=g_*f_*$. The degree is specified by the source and target when it is omitted from $f_*$.
+\end{entry}
+
+\subsection{Homotopies and Homotopy Invariance}
+
+Let $\mathcal T$ be the category of spaces fixed above and continuous maps. Given maps
+\[
+f_0,f_1:X\longrightarrow Y,
+\]
+a \emph{homotopy} from $f_0$ to $f_1$ is a continuous map
+\[
+h:X\times I\longrightarrow Y,\qquad h(x,0)=f_0(x),\quad h(x,1)=f_1(x).
+\]
+The endpoint inclusions are
+\[
+\mapdef{\iota_0}{X}{X\times I}{x}{(x,0)},
+\]
+\[
+\mapdef{\iota_1}{X}{X\times I}{x}{(x,1)}.
+\]
+Thus the endpoint conditions say that the following triangles commute:
+\[
+\begin{tikzcd}
+X\arrow[r,"\iota_0"]\arrow[dr,"f_0"']&X\times I\arrow[d,"h"]&X\arrow[l,"\iota_1"']\arrow[dl,"f_1"]\\
+&Y&
+\end{tikzcd}
+\]
+We write $f_0\simeq f_1$. Constant homotopies, reversal of $I$, and concatenation show that this is an equivalence relation on the set of maps between two fixed spaces.
+
+\begin{entry}{Definition}{def:htop}{The Homotopy Category}
+The category $\mathrm{h}\mathcal T$ has spaces as objects and morphism sets
+\[
+\operatorname{Mor}_{\mathrm{h}\mathcal T}(X,Y)
+=\operatorname{Mor}_{\mathcal T}(X,Y)/\simeq.
+\]
+The class of a map $f$ is written $[f]$. For composable maps
+\[
+f:X\longrightarrow Y,\qquad g:Y\longrightarrow Z,
+\]
+composition and identities are defined by
+\[
+[g]\circ[f]=[g\circ f],\qquad \mathrm{id}_X=[\mathrm{id}_X].
+\]
+\end{entry}
+To check composition, take homotopies
+\[
+h:X\times I\longrightarrow Y,\qquad u:Y\times I\longrightarrow Z.
+\]
+The composite homotopy is the continuous map
+\[
+\mapdef{H}{X\times I}{Z}{(x,t)}{u(h(x,t),t)}.
+\]
+Its endpoints are the composites of the endpoint maps of $h$ and $u$. Hence composition of homotopy classes is well defined. Associativity and the identity laws follow from those in $\mathcal T$.
+
+The quotient functor is
+\[
+q:\mathcal T\longrightarrow\mathrm{h}\mathcal T,\qquad q(X)=X,\quad q(f)=[f].
+\]
+A \emph{homotopy equivalence} is a map admitting a homotopy inverse:
+\[
+f:X\longrightarrow Y,\qquad g:Y\longrightarrow X,
+\qquad gf\simeq\mathrm{id}_X,\quad fg\simeq\mathrm{id}_Y.
+\]
+Thus $f$ is a homotopy equivalence exactly when $[f]$ is an isomorphism in $\mathrm{h}\mathcal T$, with inverse $[g]$.
+
+
+\begin{entry}{Definition}{def:invariant}{Homotopy Invariant Functor}
+Let $C$ be a category. A functor
+\[
+F:\mathcal T\longrightarrow C
+\]
+is \emph{homotopy invariant} if homotopic maps have equal images: for
+\[
+f_0,f_1:X\longrightarrow Y,\qquad f_0\simeq f_1,
+\]
+one has
+\[
+F(f_0)=F(f_1):F(X)\longrightarrow F(Y).
+\]
+\end{entry}
+Equivalently, there is a unique functor
+\[
+\overline F:\mathrm{h}\mathcal T\longrightarrow C,
+\qquad \overline F(X)=F(X),\quad \overline F([f])=F(f),
+\]
+making the triangle commute:
+\[
+\begin{tikzcd}
+\mathcal T\arrow[r,"q"]\arrow[dr,"F"']&\mathrm{h}\mathcal T\arrow[d,"\overline F"]\\&C.
+\end{tikzcd}
+\]
+Homotopy invariance is exactly what makes the displayed formula on morphisms well defined. The identity and composition laws descend from $F$, and the formulas force uniqueness.
+
+\begin{result}{Proposition}{prop:invariant}{Homotopy Equivalences}
+Every homotopy invariant functor sends homotopy equivalences to isomorphisms.
+\end{result}
+\begin{demonstration}{prop:invariant}
+For a homotopy equivalence and its homotopy inverse, write
+\[
+f:X\longrightarrow Y,\qquad g:Y\longrightarrow X.
+\]
+Their images have types
+\[
+F(f):F(X)\longrightarrow F(Y),\qquad F(g):F(Y)\longrightarrow F(X).
+\]
+Functoriality and homotopy invariance give
+\[
+F(g)F(f)=F(gf)=\mathrm{id}_{F(X)},\qquad
+F(f)F(g)=F(fg)=\mathrm{id}_{F(Y)}.
+\]
+Thus $F(g)$ is the inverse of $F(f)$.
+\end{demonstration}
+
+For the algebraic analogue, let $A_\bullet$ and $B_\bullet$ be chain complexes with differentials
+\[
+d_{A,n}:A_n\longrightarrow A_{n-1},\qquad
+d_{B,n}:B_n\longrightarrow B_{n-1}.
+\]
+A chain homotopy between chain maps
+\[
+f_0,f_1:A_\bullet\longrightarrow B_\bullet
+\]
+is a family of homomorphisms
+\[
+K_n:A_n\longrightarrow B_{n+1}\qquad(n\ge0)
+\]
+satisfying, in each degree,
+\[
+f_{1,n}-f_{0,n}=d_{B,n+1}K_n+K_{n-1}d_{A,n}:A_n\longrightarrow B_n.
+\]
+For a cycle $z\in A_n$, the difference $f_{1,n}(z)-f_{0,n}(z)=d_{B,n+1}K_n(z)$ is a boundary. Consequently
+\[
+H_n(f_0)=H_n(f_1):H_n(A_\bullet)\longrightarrow H_n(B_\bullet).
+\]
+In particular, chain maps
+\[
+f:A_\bullet\longrightarrow B_\bullet,\qquad g:B_\bullet\longrightarrow A_\bullet
+\]
+whose composites are chain homotopic to the identity maps induce inverse isomorphisms on homology.
+
+
+\subsection{Homotopy Pushouts}
+The gluing axiom uses the double mapping cylinder to retain the homotopy between the two composites.
+
+\begin{entry}{Definition}{def:double-cylinder}{}
+For a span $B\xleftarrow{u}A\xrightarrow{v}C$, its double mapping cylinder is
+\[
+M(u,v)=\bigl(B+(A\times I)+C\bigr)/\sim,
+\]
+where $(a,0)\sim u(a)$ and $(a,1)\sim v(a)$. Here $+$ denotes a finite disjoint union. Let $j_B:B\longrightarrow M(u,v)$ and $j_C:C\longrightarrow M(u,v)$ be the canonical maps. The cylinder supplies a specified homotopy from $j_Bu$ to $j_Cv$.
+\end{entry}
+
+A map from $M(u,v)$ to a space $Y$ is equivalent to maps $b:B\longrightarrow Y$, $c:C\longrightarrow Y$, and a homotopy from $bu$ to $cv$. This follows from the quotient universal property: the homotopy defines the map on $A\times I$, and its endpoint conditions are precisely the identifications in the quotient.
+
+\begin{entry}{Definition}{def:hpushout}{}
+Consider maps and a specified homotopy $H:bu\simeq cv$ in a square
+\[
+\begin{tikzcd}
+A\arrow[r,"u"]\arrow[d,"v"']&B\arrow[d,"b"]\\
+C\arrow[r,"c"']&D.
+\end{tikzcd}
+\]
+The square, with $H$, is a homotopy pushout if its comparison map
+\[
+\theta_H:M(u,v)\longrightarrow D
+\]
+is a homotopy equivalence. This comparison restricts to $b,c$ and sends $(a,t)$ to $H(a,t)$.
+\end{entry}
+
+\begin{entry}{Remark}{rem:ordinary-pushout}{}
+A commutative pushout square need not be a homotopy pushout. For the span $*\leftarrow S^0\rightarrow *$, where $S^0$ has two points, the ordinary pushout is a point. Its double mapping cylinder consists of two intervals joining the two target points, hence is a circle. Thus the comparison to the ordinary pushout is not a homotopy equivalence. The specified homotopy in Definition~\ref{def:hpushout} is part of the gluing data.
+\end{entry}
+
+\section{The Three Axioms}
+We now impose homotopy invariance, additivity, and Mayer--Vietoris. The connecting homomorphisms in the third axiom are additional structure; their existence is not a consequence of functoriality alone.
+
+\begin{entry}{Axiom}{ax:homotopy}{}
+Homotopy invariance: for every $n\in\mathbb Z$ and every pair of homotopic maps $f_0,f_1:X\longrightarrow Y$,
+\[
+f_{0,*}=f_{1,*}:h_n(X)\longrightarrow h_n(Y).
+\]
+\end{entry}
+
+\begin{entry}{Axiom}{ax:additivity}{}
+Additivity: for every set-indexed family $(X_i)_{i\in J}$, the inclusions $\iota_i:X_i\longrightarrow\coprod_{i\in J}X_i$ induce an isomorphism
+\[
+\bigoplus_{i\in J}h_n(X_i)\xrightarrow{\ \cong\ }h_n\!\left(\coprod_{i\in J}X_i\right).
+\]
+The empty family is included, so $h_n(\varnothing)=0$.
+\end{entry}
+
+The homotopy in a double mapping cylinder makes $j_{B,*}u_*=j_{C,*}v_*$. Consequently the composite of the following two maps is zero:
+\[
+h_n(A)\xrightarrow{(u_*,-v_*)}h_n(B)\oplus h_n(C)
+\xrightarrow{j_{B,*}+j_{C,*}}h_n(M(u,v)).
+\]
+The gluing axiom asserts exactness and supplies the connecting maps that continue this sequence.
+
+\begin{entry}{Axiom}{ax:mv}{}
+Mayer--Vietoris: for every span $B\xleftarrow{u}A\xrightarrow{v}C$, there are homomorphisms
+\[
+\delta_n:h_n(M(u,v))\longrightarrow h_{n-1}(A)
+\]
+for which the following sequence is exact in every degree:
+\begin{equation}\label{eq:mv}
+\begin{aligned}
+\cdots\longrightarrow h_n(A)&\xrightarrow{(u_*,-v_*)}h_n(B)\oplus h_n(C)
+\xrightarrow{j_{B,*}+j_{C,*}}h_n(M(u,v))\\
+&\xrightarrow{\delta_n}h_{n-1}(A)
+\xrightarrow{(u_*,-v_*)}h_{n-1}(B)\oplus h_{n-1}(C)
+\longrightarrow\cdots.
+\end{aligned}
+\end{equation}
+The homomorphisms $\delta_n$ are natural for maps of spans and their induced maps of double mapping cylinders.
+\end{entry}
+
+For clarity, a map of spans is a triple $a:A\longrightarrow A'$, $b:B\longrightarrow B'$, $c:C\longrightarrow C'$ with $bu=u'a$ and $cv=v'a$. It induces $m:M(u,v)\longrightarrow M(u',v')$ by $(x,t)\mapsto(a(x),t)$ on cylinders. Naturality of the connecting maps means that the square
+\[
+\begin{tikzcd}
+h_n(M(u,v))\arrow[r,"\delta_n"]\arrow[d,"m_*"']&h_{n-1}(A)\arrow[d,"a_*"]\\
+h_n(M(u',v'))\arrow[r,"\delta'_n"']&h_{n-1}(A')
+\end{tikzcd}
+\]
+commutes. Exactness means that the image of each homomorphism is the kernel of the next one. Thus \eqref{eq:mv} is an assertion at every term, not just at its middle group.
+
+\begin{entry}{Definition}{def:theory}{}
+A generalized homology theory in this formulation consists of the functors of Definition~\ref{def:graded} and the natural connecting homomorphisms of Axiom~\ref{ax:mv}, satisfying Axioms~\ref{ax:homotopy}--\ref{ax:mv}. A morphism of theories is a family of natural transformations commuting with the connecting homomorphisms.
+\end{entry}
+
+\begin{result}{Proposition}{prop:pushout-sequence}{}
+For a homotopy pushout square as in Definition~\ref{def:hpushout}, there is a long exact sequence
+\[
+\cdots\longrightarrow h_n(A)\xrightarrow{(u_*,-v_*)}h_n(B)\oplus h_n(C)
+\xrightarrow{b_*+c_*}h_n(D)\xrightarrow{\delta^D_n}h_{n-1}(A)\longrightarrow\cdots.
+\]
+Here $\delta^D_n=\delta_n(\theta_{H,*})^{-1}$.
+\end{result}
+\begin{demonstration}{prop:pushout-sequence}
+Axiom~\ref{ax:homotopy} sends homotopy equivalences to isomorphisms: the image of a homotopy inverse is an inverse. Thus $\theta_{H,*}$ is invertible. Transport \eqref{eq:mv} through this isomorphism. The identities $\theta_Hj_B=b$ and $\theta_Hj_C=c$ identify its middle map with $b_*+c_*$. Naturality holds for compatible maps of these squares and their chosen cylinder comparisons.
+\end{demonstration}
+
+\begin{entry}{Remark}{rem:open-covers}{}
+An open cover $X=U\cup V$ gives the familiar square
+\[
+\begin{tikzcd}
+U\cap V\arrow[r,hook]\arrow[d,hook]&U\arrow[d,hook]\\
+V\arrow[r,hook]&X.
+\end{tikzcd}
+\]
+For a numerable cover, this is a homotopy pushout. Here numerable means that there is a subordinate partition of unity; for two sets, continuous functions $\lambda_U,\lambda_V:X\longrightarrow[0,1]$ have sum $1$ and supports contained in $U,V$, respectively. Such functions give a section of the cylinder comparison by using height $\lambda_V(x)$ on the overlap. Moving each cylinder coordinate linearly to this height gives a homotopy from the identity to the section followed by the comparison. Thus Proposition~\ref{prop:pushout-sequence} applies. Open covers of paracompact Hausdorff spaces are numerable. In particular, the covers of spheres used below satisfy this condition. We do not identify every ordinary pushout with a homotopy pushout.
+\end{entry}
+
+\section{Coefficients and the Dimension Axiom}
+The values on a point remain part of the information in a generalized theory. They determine its values on discrete and contractible spaces, but need not be concentrated in degree zero.
+
+\begin{entry}{Definition}{def:coefficients}{}
+The coefficient groups of $h$ are the graded abelian groups $G_n=h_n(*)$. The dimension axiom is the additional condition $G_n=0$ for $n\ne0$. For ordinary integral homology one further chooses $G_0\cong\mathbb Z$.
+\end{entry}
+
+\begin{result}{Proposition}{prop:elementary-values}{}
+For every nonempty contractible space $X$ and every discrete set $E$,
+\[
+h_n(X)\cong G_n,\qquad h_n(E)\cong\bigoplus_{e\in E}G_n.
+\]
+The first isomorphism is induced by the unique map to a point, and the second by the point inclusions.
+\end{result}
+\begin{demonstration}{prop:elementary-values}
+The map $X\longrightarrow *$ is a homotopy equivalence, so Axiom~\ref{ax:homotopy} gives the first isomorphism. A discrete set is a disjoint union of points; Axiom~\ref{ax:additivity} gives the second, including $E=\varnothing$.
+\end{demonstration}
+
+\begin{entry}{Example}{ex:shift}{}
+Once ordinary integral homology satisfies the axioms, its shift $h_n(X)=H_{n-1}(X;\mathbb Z)$ also satisfies them: shift every degree in its Mayer--Vietoris sequence and connecting maps. Its only nonzero coefficient group is $G_1=\mathbb Z$. This theory violates the dimension axiom while retaining homotopy invariance, additivity, and Mayer--Vietoris. A more general family is $h_n(X)=\bigoplus_{r\in\mathbb Z}H_{n-r}(X;A_r)$ for a fixed graded family of coefficient groups $(A_r)$. Direct sums of exact sequences are exact, so the same argument applies.
+\end{entry}
+
+\begin{entry}{Remark}{rem:ordinary}{}
+Generalized theories have groups in every integer degree; their long exact sequences do not stop at degree zero. Ordinary singular homology is obtained with its dimension normalization and zero negative-degree groups. The Eilenberg--Steenrod uniqueness theorem identifies ordinary theories with fixed coefficients on CW complexes, up to an isomorphism respecting that normalization. A proof requires cellular induction and the infinite-complex argument; it is not assumed in the computations here. See May, Chapter 15, Section 2.
+\end{entry}
+
+\section{Relative Homology from the Gluing Axiom}
+A homotopy cofiber makes relative homology available without taking excision as a separate axiom. The construction also explains where the long exact sequence of a pair comes from.
+
+\begin{entry}{Definition}{def:reduced}{}
+For a space $Y$ with a chosen point $y_0$, let $p:Y\longrightarrow *$ be the unique map and $s:*\longrightarrow Y$ select $y_0$. Define
+\[
+\widetilde h_n(Y)=\ker\bigl(p_*:h_n(Y)\longrightarrow G_n\bigr).
+\]
+Since $p_*s_*=\mathrm{id}$, there is an isomorphism $h_n(Y)\cong\widetilde h_n(Y)\oplus G_n$. Explicitly, $x$ is sent to $(x-s_*p_*x,p_*x)$.
+\end{entry}
+
+\begin{entry}{Definition}{def:relative}{}
+For a subspace inclusion $i:X'\hookrightarrow X$, define its homotopy cofiber $C(i)$ to be the double mapping cylinder of $X\xleftarrow{i}X'\longrightarrow *$. Its distinguished point is the copy of $*$. Define
+\[
+h_n(X,X')=\widetilde h_n(C(i)).
+\]
+A map of pairs is a commutative square
+\[
+\begin{tikzcd}
+X'\arrow[r,hook,"i"]\arrow[d,"f'"']&X\arrow[d,"f"]\\
+Y'\arrow[r,hook,"j"']&Y.
+\end{tikzcd}
+\]
+It gives a basepoint-preserving map $C(i)\longrightarrow C(j)$, hence a homomorphism of relative groups. Functoriality follows directly from the cylinder construction.
+\end{entry}
+
+\begin{result}{Proposition}{prop:pair-sequence}{}
+Every pair has a natural long exact sequence
+\[
+\cdots\longrightarrow h_n(X')\xrightarrow{i_*}h_n(X)
+\xrightarrow{q_*}h_n(X,X')\xrightarrow{\partial_n}h_{n-1}(X')\longrightarrow\cdots.
+\]
+\end{result}
+\begin{demonstration}{prop:pair-sequence}
+Let $j:X\longrightarrow C(i)$ and $s:*\longrightarrow C(i)$ be the two canonical maps. Mayer--Vietoris gives
+\[
+\cdots\longrightarrow h_n(X')\xrightarrow{(i_*,-p'_*)}h_n(X)\oplus G_n
+\xrightarrow{j_*+s_*}h_n(C(i))\xrightarrow{\delta_n}h_{n-1}(X')\longrightarrow\cdots,
+\]
+where $p':X'\longrightarrow *$ is the unique map. Under the splitting of Definition~\ref{def:reduced}, set $q_*x=j_*x-s_*p_*x$ and let $\partial_n$ be the restriction of $\delta_n$ to the reduced summand. Change coordinates on the middle direct sum by $(x,g)\mapsto(x,p_*x+g)$. The first map becomes $a\mapsto(i_*a,0)$; the next becomes $(x,g)\mapsto(q_*x,g)$. Also $\delta_ns_*=0$ by exactness. Thus the displayed sequence splits into the claimed sequence and the identity map $G_n\longrightarrow G_n$. Exactness and naturality pass to the claimed summand.
+\end{demonstration}
+
+\begin{entry}{Remark}{rem:quotient}{}
+For a CW pair, or a subspace inclusion satisfying the homotopy extension property, the map from the mapping cone to $X/X'$ is a homotopy equivalence (with a disjoint basepoint when $X'=\varnothing$). Thus the relative groups are the reduced groups of this quotient. For an arbitrary subspace, the homotopy cofiber is the construction to use; the ordinary quotient need not have its homotopy type. The homotopy extension property says that a homotopy on $X'$ extending a map on $X$ extends to a homotopy on $X$. See May, Chapter 6 and Chapter 14, Section 2.
+\end{entry}
+
+\section{Suspension and the Homology of Spheres}
+Mayer--Vietoris already gives computations before any chain-level proof of its axioms. We express the answer in terms of $G_n$, so the distinction between ordinary and generalized homology remains visible.
+
+\begin{result}{Proposition}{prop:spheres}{}
+For every $m\ge0$ and every $n\in\mathbb Z$,
+\[
+\widetilde h_n(S^m)\cong G_{n-m},\qquad
+h_n(S^m)\cong G_n\oplus G_{n-m}.
+\]
+The reduced group is defined using a chosen point of the sphere.
+\end{result}
+\begin{demonstration}{prop:spheres}
+For $S^0=\{a,b\}$, additivity identifies $h_n(S^0)$ with $G_n\oplus G_n$. The map to a point is addition, whose kernel consists of $(x,-x)$ and is isomorphic to $G_n$.
+
+For $m\ge1$, cover $S^m$ by the complements $U,V$ of its two poles. Both are contractible, and their intersection deformation retracts onto $S^{m-1}$. The resulting square is a homotopy pushout by Remark~\ref{rem:open-covers}. Under the coefficient identifications, its first map is
+\[
+h_n(S^{m-1})\longrightarrow G_n\oplus G_n,
+\qquad x\longmapsto(p_*x,-p_*x).
+\]
+Its image is the antidiagonal copy of $G_n$; its kernel is $\widetilde h_n(S^{m-1})$. Exactness gives
+\[
+0\longrightarrow G_n\longrightarrow h_n(S^m)
+\xrightarrow{\delta_n}\widetilde h_{n-1}(S^{m-1})\longrightarrow0.
+\]
+The first homomorphism is the map induced by a chosen point in $U$, so the map $S^m\longrightarrow *$ splits it. Hence $\delta_n$ restricts to an isomorphism from $\widetilde h_n(S^m)$ onto $\widetilde h_{n-1}(S^{m-1})$. Induction proves the formula.
+\end{demonstration}
+
+\begin{entry}{Example}{ex:ordinary-spheres}{}
+With $G_0=\mathbb Z$ and $G_n=0$ for $n\ne0$, Proposition~\ref{prop:spheres} gives the usual integral homology of spheres. For the shifted theory of Example~\ref{ex:shift}, the additional sphere summand occurs in degree $m+1$, and the coefficient summand occurs in degree $1$. A connected space can therefore have several nonzero groups unrelated to its dimension.
+\end{entry}
+
+\begin{entry}{Remark}{rem:next-lecture}{}
+These are deductions from axioms. The next lecture, Homotopy Invariance and First Computations, proves homotopy invariance for singular chains using the prism construction and verifies additivity directly. The singular Mayer--Vietoris theorem requires the small-chain subdivision argument, which will be supplied subsequently. We have not used that theorem as an already-proved property of singular chains.
+\end{entry}
+
+\section*{Reference}
+J. P. May, \emph{A Concise Course in Algebraic Topology}, Chapters 6, 13--15: mapping cylinders, homology axioms, reduced and relative homology, Mayer--Vietoris, and uniqueness on CW complexes. The gluing-first formulation above uses homotopy pushouts in place of a separate excision axiom.\par
+\url{https://www.math.uchicago.edu/~may/CONCISE/ConciseRevised.pdf}
+\end{document}
