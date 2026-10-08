@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AS.110.615 Algebraic Topology I — Johns Hopkins University</title>
 <style>
-@font-face { font-family: "TeX Gyre Termes"; src: url("algtop1fall2026/texgyretermes-regular.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: "TeX Gyre Termes"; src: url("algtop1fall2026/texgyretermes-bold.otf") format("opentype"); font-weight: 700; font-style: normal; font-display: swap; }
-@font-face { font-family: "TeX Gyre Termes"; src: url("algtop1fall2026/texgyretermes-italic.otf") format("opentype"); font-weight: 400; font-style: italic; font-display: swap; }
-@font-face { font-family: "TeX Gyre Termes"; src: url("algtop1fall2026/texgyretermes-bolditalic.otf") format("opentype"); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: "TeX Gyre Termes Math"; src: url("fonts/texgyretermes-math.otf") format("opentype"); }
+@font-face { font-family: "DejaVu Serif"; src: url("fonts/DejaVuSerif.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "DejaVu Serif"; src: url("fonts/DejaVuSerif-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "DejaVu Serif"; src: url("fonts/DejaVuSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "DejaVu Serif"; src: url("fonts/DejaVuSerif-BoldItalic.ttf") format("truetype"); font-weight: 700; font-style: italic; font-display: swap; }
   h2 { color: #176568; }
   h3 { color: #782f40; }
   .download { white-space: nowrap; }
@@ -32,7 +33,7 @@
     margin: 0;
     background: var(--paper);
     color: var(--ink);
-    font-family: "TeX Gyre Termes", Georgia, serif;
+    font-family: "DejaVu Serif", "TeX Gyre Termes Math", Georgia, serif;
     line-height: 1.55;
   }
   a { color: var(--blue-70); text-decoration-thickness: 1px; text-underline-offset: 2px; }
@@ -141,6 +142,36 @@
     color: var(--faint);
     font-size: .9rem;
   }
+#lecture-notes + table {table-layout:fixed;}
+#lecture-notes + table th:first-child,#lecture-notes + table td:first-child {width:1.8rem;padding-right:.35rem;}
+#lecture-notes + table th:nth-child(2),#lecture-notes + table td:nth-child(2) {width:9.1rem;padding-right:.9rem;white-space:nowrap;}
+
+@media print {
+@page {size: Letter; margin: .5in;}
+body {line-height:1.4;}
+h2,h3 {break-before:auto; break-after:avoid;}
+h2 {margin:1.5rem 0 .6rem;}
+h3 {margin:1rem 0 .5rem;}
+h2 + h3 {padding-top:.5rem;margin-top:1rem;}
+h2,h3,table,.weeks {margin-break:discard;}
+.materials {table-layout:fixed;}
+.materials th:first-child,.materials td:first-child {width:5.7rem;padding-right:1.5rem;}
+.materials th:nth-child(2),.materials td:nth-child(2) {width:9.8rem;padding-right:1rem;white-space:nowrap;}
+.materials th,.materials td {padding-top:.4rem;padding-bottom:.4rem;}
+table:not(.materials) th:first-child,table:not(.materials) td:first-child {width:10rem;padding-right:1.2rem;}
+p {orphans:3;widows:3;margin:.6rem 0;}
+tr {break-inside:avoid;}
+.band-inner {padding-top:1rem;padding-bottom:1rem;}
+.logistics-inner {padding-top:.65rem;padding-bottom:.65rem;}
+.page {padding-bottom:0;}
+.weeks li {display:block;break-inside:avoid;padding:.35rem 0;}
+.weeks li::after {content:"";display:block;clear:both;}
+.weeks li .wk {float:left;width:5.8rem;}
+.weeks li > span + span {display:block;margin-left:6.8rem;orphans:3;widows:3;}
+ol:not(.weeks) > li:nth-last-child(2) {break-after:avoid;}
+footer {margin-top:1rem;break-inside:avoid;}
+
+}
 </style>
 </head>
 <body>
@@ -210,50 +241,43 @@
     categorical language will be assumed after the first two weeks.
   </p>
 
-  <h2 id="lecture-notes">Lecture Notes</h2>
-<table class="materials"><thead><tr><th>Week</th><th>Dates</th><th>Topic and Downloads</th></tr></thead><tbody>
-<tr><td class="num">1</td><td class="date">Aug 31 &amp; Sep 2</td><td><a href="algtop1fall2026/Lecture-01-Additive-and-Abelian-Categories-v03.pdf">Additive and Abelian Categories</a><br><small class="download"><a href="algtop1fall2026/Lecture-01-Additive-and-Abelian-Categories-v03.pdf">PDF</a></small></td></tr>
-<tr><td class="num">2</td><td class="date">Sep 9</td><td><a href="algtop1fall2026/Lecture-02-Exact-Sequences-and-Derived-Categories-v07.pdf">Exact Sequences and Derived Categories</a><br><small class="download"><a href="algtop1fall2026/Lecture-02-Exact-Sequences-and-Derived-Categories-v07.pdf">PDF</a></small></td></tr>
-<tr><td class="num">3</td><td class="date">Sep 14 &amp; 16</td><td><a href="algtop1fall2026/Lecture-03-Tensor-Products-Tor-Ext-and-Simplicial-Chains-v07.pdf">Tensor Products, Tor, Ext, and Simplicial Chains</a><br><small class="download"><a href="algtop1fall2026/Lecture-03-Tensor-Products-Tor-Ext-and-Simplicial-Chains-v07.pdf">PDF</a></small></td></tr>
-<tr><td class="num">4</td><td class="date">Sep 21 &amp; 23</td><td><a href="algtop1fall2026/Lecture-04-Simplicial-Sets-and-Singular-Chains-v08.pdf">Simplicial Sets, Spaces, and Singular Chains</a><br><small class="download"><a href="algtop1fall2026/Lecture-04-Simplicial-Sets-and-Singular-Chains-v08.pdf">PDF</a></small></td></tr>
-<tr><td class="num">5</td><td class="date">Sep 28 &amp; 30</td><td><a href="algtop1fall2026/Lecture-05-Generalized-Homology-and-Eilenberg-Steenrod-Axioms-v03.pdf">Generalized Homology and the Eilenberg–Steenrod Axioms</a><br><small class="download"><a href="algtop1fall2026/Lecture-05-Generalized-Homology-and-Eilenberg-Steenrod-Axioms-v03.pdf">PDF</a></small></td></tr>
-<tr><td class="num">6</td><td class="date">Oct 5 &amp; 7</td><td><a href="algtop1fall2026/Lecture-06-Homotopy-Invariance-and-First-Computations-v32.pdf">Homotopy Invariance and First Computations</a><br><small class="download"><a href="algtop1fall2026/Lecture-06-Homotopy-Invariance-and-First-Computations-v32.pdf">PDF</a></small></td></tr>
+  <h2 id="lecture-notes">Lectures</h2>
+<table class="materials"><thead><tr><th scope="col" aria-label="Lecture"></th><th>Dates</th><th>Topic</th></tr></thead><tbody>
+<tr><td class="num">1</td><td class="date">Aug 31 &amp; Sep 2</td><td><a href="algtop1fall2026/Lecture-01-Additive-and-Abelian-Categories-v03.pdf">Additive and Abelian Categories</a></td></tr>
+<tr><td class="num">2</td><td class="date">Sep 9</td><td><a href="algtop1fall2026/Lecture-02-Exact-Sequences-and-Derived-Categories-v07.pdf">Exact Sequences and Derived Categories</a></td></tr>
+<tr><td class="num">3</td><td class="date">Sep 14 &amp; 16</td><td><a href="algtop1fall2026/Lecture-03-Tensor-Products-Tor-Ext-and-Simplicial-Chains-v07.pdf">Tensor Products, Tor, Ext, and Simplicial Chains</a></td></tr>
+<tr><td class="num">4</td><td class="date">Sep 21 &amp; 23</td><td><a href="algtop1fall2026/Lecture-04-Simplicial-Sets-and-Singular-Chains-v08.pdf">Simplicial Sets, Spaces, and Singular Chains</a></td></tr>
+<tr><td class="num">5</td><td class="date">Sep 28 &amp; 30</td><td><a href="algtop1fall2026/Lecture-05-Generalized-Homology-and-Eilenberg-Steenrod-Axioms-v03.pdf">Generalized Homology and the Eilenberg–Steenrod Axioms</a></td></tr>
+<tr><td class="num">6</td><td class="date">Oct 5 &amp; 7</td><td><a href="algtop1fall2026/Lecture-06-Homotopy-Invariance-and-First-Computations-v32.pdf">Homotopy Invariance and First Computations</a></td></tr>
+<tr><td class="num">7</td><td class="date">Oct 12 &amp; 14</td><td><a href="algtop1fall2026/Lecture-07-Homotopy-Pushouts-and-Mayer-Vietoris-v04.pdf">Homotopy Pushouts and Mayer–Vietoris</a></td></tr>
+<tr><td class="num">8</td><td class="date"></td><td><a href="algtop1fall2026/Lecture-08-Homotopy-Pushouts-and-Singular-Chains-Part-I-v01.pdf">Homotopy Pushouts and Singular Chains, <span style="white-space:nowrap">Part I</span></a></td></tr>
 </tbody></table>
 
-  <h2>Syllabus</h2>
-
-  <h3>Part I — Categories and Homological Algebra</h3>
-  <ol class="weeks">
-    <li><span class="wk">Week 1</span><span>Categories, functors, natural transformations. Limits and colimits; adjoint functors. Additive categories; kernels, cokernels, and abelian categories.</span></li>
-    <li><span class="wk">Week 2</span><span>Chain complexes, chain homotopies, and homology. The snake lemma and long exact sequences. Mapping cones; the homotopy and derived categories.</span></li>
-    <li><span class="wk">Week 3</span><span>Tensor products, resolutions, derived functors, Tor, and Ext. Extensions and noncommutative examples. Introduction to simplicial chains and universal coefficients.</span></li>
-  </ol>
-
-  <h3>Part II — Simplicial Sets and Singular Homology</h3>
-  <ol class="weeks">
-    <li><span class="wk">Week 4</span><span>The simplex category Δ; simplicial sets, faces and degeneracies. Geometric realization and the singular simplicial set; the realization–singular adjunction. Simplicial abelian groups and the associated chain complex; statement of Dold–Kan.</span></li>
-    <li><span class="wk">Week 5</span><span>The homotopy category and homotopy invariant functors. Singular homology and the prism proof. H₀, contractible spaces, and relative homology.</span></li>
-    <li><span class="wk">Week 6</span><span>Relative homology. Excision and Mayer–Vietoris. Degree of self-maps of Sⁿ; Brouwer fixed point theorem; invariance of dimension and domain.</span></li>
-    <li><span class="wk">Week 7</span><span>CW complexes and cellular homology; comparison with singular homology. Euler characteristic. Homology with coefficients; topological universal coefficients and Künneth (survey); Lefschetz fixed point theorem (time permitting).</span></li>
-  </ol>
-
-  <h3>Part III — Homotopy Theory and the Fundamental Group</h3>
-  <ol class="weeks">
-    <li><span class="wk">Week 8</span><span>Homotopy groups π<sub>n</sub>: definitions, basepoints, the action of π₁ on π<sub>n</sub>. Statement of Whitehead's theorem and the Hurewicz theorem (proofs deferred to 616).</span></li>
-    <li><span class="wk">Week 9</span><span>Fibrations: the homotopy lifting property, Serre fibrations, fiber bundles as examples. The long exact sequence of a fibration, with the Hopf fibration S¹ → S³ → S² and the computation of π₃(S²) as the flagship application. Path–loop fibration.</span></li>
-    <li><span class="wk">Week 10</span><span>The fundamental group in detail: π₁(S¹) via lifting, applications (fundamental theorem of algebra, Borsuk–Ulam in low dimension). Free products and the Seifert–van Kampen theorem.</span></li>
-    <li><span class="wk">Week 11</span><span>Covering spaces: lifting criteria, the classification of coverings via subgroups of π₁, universal covers, deck transformations, and the Galois correspondence. Covering space proofs of group-theoretic facts (subgroups of free groups are free); preview of 616.</span></li>
-  </ol>
-
-  <h3>Final Project Presentations</h3>
-  <ol class="weeks">
-    <li><span class="wk">Nov 30–Dec 9</span><span>In-class final project presentations (Nov 30 – Dec 9). No new lecture material.</span></li>
-  </ol>
-
-  <p>The schedule after Week 5 is provisional; remaining class time will be used for applications, review, and project preparation.</p>
-
-  <p>Thanksgiving break (late November): no classes.</p>
-
+<h2>Syllabus</h2>
+<h3>Part I — Categories and Homological Algebra</h3>
+<ol class="weeks">
+<li><span class="wk">Week 1</span><span><b>August 31 and September 2.</b> Categories, functors, natural transformations, limits, colimits, and adjunctions. Additive and abelian categories; kernels and cokernels.</span></li>
+<li><span class="wk">Week 2</span><span><b>September 9.</b> Chain complexes, chain homotopies, and homology. Exact sequences, the snake lemma, and long exact sequences. Mapping cones; homotopy and derived categories.</span></li>
+<li><span class="wk">Week 3</span><span><b>September 14 and 16.</b> Tensor products, resolutions, derived functors, Tor, and Ext. Extensions and noncommutative examples. Simplicial chains and universal coefficients.</span></li>
+<li><span class="wk">Week 4</span><span><b>September 21 and 23.</b> The simplex category; simplicial sets, faces, and degeneracies. Geometric realization, singular simplicial sets, and their adjunction. Simplicial abelian groups, singular chains, and the statement of Dold–Kan.</span></li>
+</ol>
+<h3>Part II — Singular Homology</h3>
+<ol class="weeks">
+<li><span class="wk">Week 5</span><span><b>September 28 and 30.</b> Generalized homology and the Eilenberg–Steenrod axioms in Mayer–Vietoris form. The homotopy category and homotopy invariant functors. Beginning of the proof of homotopy invariance of singular homology.</span></li>
+<li><span class="wk">Week 6</span><span><b>October 5 and 7.</b> Homotopy invariance of singular homology; homotopy pushout squares in Top and Ch; double mapping cylinders, mapping cones, relative homology, and reduced homology.</span></li>
+<li><span class="wk">Week 7</span><span><b>October 12 and 14.</b> Homotopy pushouts; relative and reduced homology. Preservation of homotopy pushouts by singular chains with coefficients in an abelian group A. The long exact sequence in homology of a homotopy pushout of chain complexes. Mayer–Vietoris and excision; homology of spheres, tori, and complex projective spaces.</span></li>
+<li><span class="wk">Week 8</span><span><b>October 19 and 21.</b> CW complexes and cellular homology; comparison with singular homology. Attaching maps, degree, and Euler characteristic. Universal coefficients and a survey of the Künneth theorem. Applications to the Brouwer fixed point theorem, invariance of dimension, and invariance of domain.</span></li>
+</ol>
+<h3>Part III — Homotopy Theory and the Fundamental Group</h3>
+<ol class="weeks">
+<li><span class="wk">Week 9</span><span><b>October 26 and 28.</b> Homotopy groups, basepoints, and the action of the fundamental group. Statements of the Whitehead and Hurewicz theorems; proofs deferred to Math 616.</span></li>
+<li><span class="wk">Week 10</span><span><b>November 2 and 4.</b> Fibrations and the homotopy lifting property; Serre fibrations and fiber bundles. The long exact sequence of a fibration, the path–loop fibration, and the Hopf fibration; computation of the third homotopy group of the 2-sphere.</span></li>
+<li><span class="wk">Week 11</span><span><b>November 9 and 11.</b> The fundamental group: the circle via lifting, free products, and the Seifert–van Kampen theorem. Applications to the fundamental theorem of algebra and the low-dimensional Borsuk–Ulam theorem.</span></li>
+<li><span class="wk">Week 12</span><span><b>November 16 and 18.</b> Covering spaces: lifting criteria, classification by subgroups of the fundamental group, universal covers, deck transformations, and the Galois correspondence. Subgroups of free groups; preview of Math 616. Remaining class time is reserved for review and project preparation; the Lefschetz fixed point theorem is included if time permits.</span></li>
+</ol>
+<h3>Final Project Presentations</h3>
+<ol class="weeks"><li><span class="wk">Nov 30–Dec 9</span><span>In-class final project presentations. No new lecture material.</span></li></ol>
+<p>The schedule from October 12 onward is provisional. Thanksgiving break: no classes during the university break.</p>
   <h2>Grading</h2>
   <p>
     <b>Your course grade is based entirely on class participation/attendance
@@ -266,12 +290,14 @@
   </ol>
 
   <h2 id="homework">Homework</h2>
-<table class="materials"><thead><tr><th>Week</th><th>Dates</th><th>Topic and Downloads</th></tr></thead><tbody>
-<tr><td class="num">1</td><td class="date">Aug 31 &amp; Sep 2</td><td><a href="algtop1fall2026/Homework-01-Categories-and-Chain-Complexes-v02.pdf">Categories and Chain Complexes</a><br><small class="download"><a href="algtop1fall2026/Homework-01-Categories-and-Chain-Complexes-v02.pdf">PDF</a></small></td></tr>
-<tr><td class="num">2</td><td class="date">Sep 9</td><td><a href="algtop1fall2026/Homework-02-Homotopies-Exact-Sequences-and-Cones-v05.pdf">Homotopies, Exact Sequences, and Cones</a><br><small class="download"><a href="algtop1fall2026/Homework-02-Homotopies-Exact-Sequences-and-Cones-v05.pdf">PDF</a></small></td></tr>
-<tr><td class="num">3</td><td class="date">Sep 14 &amp; 16</td><td><a href="algtop1fall2026/Homework-03-Derived-Functors-Tor-and-Ext-v03.pdf">Derived Functors, Tor, and Ext</a><br><small class="download"><a href="algtop1fall2026/Homework-03-Derived-Functors-Tor-and-Ext-v03.pdf">PDF</a></small></td></tr>
-<tr><td class="num">4</td><td class="date">Sep 21 &amp; 23</td><td><a href="algtop1fall2026/Homework-04-Simplicial-Sets-and-Singular-Chains-v03.pdf">Simplicial Sets and Singular Chains</a><br><small class="download"><a href="algtop1fall2026/Homework-04-Simplicial-Sets-and-Singular-Chains-v03.pdf">PDF</a></small></td></tr>
-<tr><td class="num">5</td><td class="date">Sep 28 &amp; 30</td><td><a href="algtop1fall2026/Homework-05-Homotopy-Invariance-v01.pdf">Homotopy Invariance</a><br><small class="download"><a href="algtop1fall2026/Homework-05-Homotopy-Invariance-v01.pdf">PDF</a></small></td></tr>
+<table class="materials"><thead><tr><th>Week</th><th>Dates</th><th>Topic</th></tr></thead><tbody>
+<tr><td class="num">1</td><td class="date">Aug 31 &amp; Sep 2</td><td><a href="algtop1fall2026/Homework-01-Categories-and-Chain-Complexes-v02.pdf">Categories and Chain Complexes</a></td></tr>
+<tr><td class="num">2</td><td class="date">Sep 9</td><td><a href="algtop1fall2026/Homework-02-Homotopies-Exact-Sequences-and-Cones-v05.pdf">Homotopies, Exact Sequences, and Cones</a></td></tr>
+<tr><td class="num">3</td><td class="date">Sep 14 &amp; 16</td><td><a href="algtop1fall2026/Homework-03-Derived-Functors-Tor-and-Ext-v03.pdf">Derived Functors, Tor, and Ext</a></td></tr>
+<tr><td class="num">4</td><td class="date">Sep 21 &amp; 23</td><td><a href="algtop1fall2026/Homework-04-Simplicial-Sets-and-Singular-Chains-v03.pdf">Simplicial Sets and Singular Chains</a></td></tr>
+<tr><td class="num">5</td><td class="date">Sep 30</td><td><a href="algtop1fall2026/Homework-05-Generalized-Homology-and-Eilenberg-Steenrod-Axioms-v01.pdf">Generalized Homology and the Eilenberg–Steenrod Axioms</a></td></tr>
+<tr><td class="num">6</td><td class="date">Oct 5 &amp; 7</td><td><a href="algtop1fall2026/Homework-06-Homotopy-Invariance-v01.pdf">Homotopy Invariance</a></td></tr>
+<tr><td class="num">7</td><td class="date">Oct 12 &amp; 14</td><td><a href="algtop1fall2026/Homework-07-Homotopy-Pushouts-and-Homology-v01.pdf">Homotopy Pushouts and Homology</a></td></tr>
 </tbody></table>
 
 
@@ -308,7 +334,7 @@
   <footer>
     <p>AS.110.615, Department of Mathematics, Johns Hopkins University.
        Questions about the course: <a href="mailto:gepner@jhu.edu">gepner@jhu.edu</a>.
-       Page maintained by the instructor; last updated October 2, 2026.</p>
+       Page maintained by the instructor; last updated <span style="white-space:nowrap">October 7, 2026.</span></p>
   </footer>
 
 </main>
