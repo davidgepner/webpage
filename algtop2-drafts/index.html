@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Algebraic Topology II — Provisional Draft Materials</title>
+<meta name="description" content="Provisional plan and opening notes for a second algebraic topology course on generalized cohomology, spectra, and spectral sequences.">
+<style>
+@font-face { font-family: "TeX Gyre Termes Math"; src: url("../fonts/texgyretermes-math.otf") format("opentype"); }
+@font-face { font-family: "DejaVu Serif"; src: url("../fonts/DejaVuSerif.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "DejaVu Serif"; src: url("../fonts/DejaVuSerif-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "DejaVu Serif"; src: url("../fonts/DejaVuSerif-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "DejaVu Serif"; src: url("../fonts/DejaVuSerif-BoldItalic.ttf") format("truetype"); font-weight: 700; font-style: italic; font-display: swap; }
+  h2 { color: #176568; }
+  h3 { color: #782f40; }
+  .download { white-space: nowrap; }
+  .materials { width: 100%; }
+  .materials .date { white-space: normal; min-width: 6rem; }
+  @media (max-width: 34rem) { .materials th, .materials td { padding: .6rem .3rem; } .materials .date { min-width: 4.5rem; } }
+  /* Shared Math 615 typography and colors. */
+  :root {
+    --paper:   #ffffff;
+    --ink:     #262626;
+    --faint:   #6d626b;
+    --rule:    #d7d1bf;
+    --blue:    #176568;   /* Deep plum */
+    --blue-70: #782f40;
+    --tint:    #f0f6f6;
+    --chalk:   #e5dfcb;
+  }
+  * { box-sizing: border-box; }
+  html { font-size: 17px; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "DejaVu Serif", "TeX Gyre Termes Math", Georgia, serif;
+    line-height: 1.55;
+  }
+  a { color: var(--blue-70); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  header a { color: #ffe0a0; }
+  header a:hover { color: #fff0cc; }
+  a:hover { color: var(--blue); text-decoration-thickness: 2px; }
+  a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+  /* ---------- header: blackboard band ---------- */
+  .band {
+    background: var(--blue);
+    color: #fff;
+  }
+  .band-inner {
+    max-width: 50rem;
+    margin: 0 auto;
+    padding: 3.2rem 1.25rem 2.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  .course-id { margin: 0 0 .5rem; color: var(--chalk); font-style: italic; }
+  h1 {
+    font-size: 2.7rem;
+    line-height: 1.08;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.012em;
+  }
+  .term { margin: .7rem 0 0; color: var(--chalk); }
+  .diagram { flex-shrink: 0; }
+  @media (max-width: 42rem) {
+    .band-inner { flex-direction: column; align-items: flex-start; padding-top: 2.2rem; }
+    h1 { font-size: 2.1rem; }
+  }
+
+  /* ---------- logistics grid ---------- */
+  .logistics {
+    background: var(--tint);
+    border-bottom: 1px solid var(--rule);
+  }
+  .logistics-inner {
+    max-width: 50rem;
+    margin: 0 auto;
+    padding: 1.1rem 1.25rem 1.2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .35rem 2.5rem;
+  }
+  .logistics p { margin: 0; }
+  .logistics b { font-weight: 600; color: var(--blue); }
+  @media (max-width: 42rem) { .logistics-inner { grid-template-columns: 1fr; } }
+
+  /* ---------- main column ---------- */
+  .page { max-width: 50rem; margin: 0 auto; padding: 0 1.25rem 5rem; }
+  main { max-width: 44rem; }
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 3.2rem 0 1rem;
+  }
+  h2::before {
+    content: "";
+    display: block;
+    width: 2.6rem;
+    height: 4px;
+    background: var(--blue);
+    margin-bottom: .55rem;
+  }
+  h3 { font-size: 1.06rem; font-weight: 700; margin: 1.8rem 0 .6rem; }
+  ol { padding-left: 1.3rem; margin: .5rem 0; }
+  li { margin: .35rem 0; }
+
+  /* Week-by-week: hanging labels in the margin, like lecture notes */
+  .weeks { list-style: none; padding: 0; margin: .6rem 0 0; }
+  .weeks li {
+    display: grid;
+    grid-template-columns: 5.8rem 1fr;
+    gap: 1rem;
+    padding: .5rem 0;
+    border-top: 1px solid var(--rule);
+    margin: 0;
+  }
+  .weeks li:last-child { border-bottom: 1px solid var(--rule); }
+  .wk { color: var(--blue); font-weight: 600; font-variant-numeric: tabular-nums; }
+  @media (max-width: 42rem) {
+    .weeks li { grid-template-columns: 1fr; gap: .1rem; }
+  }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: .8rem 0; }
+  th, td { text-align: left; padding: .55rem .6rem .55rem 0; vertical-align: top; }
+  thead th { font-weight: 700; border-bottom: 2px solid var(--blue); padding-bottom: .4rem; }
+  tbody tr { border-bottom: 1px solid var(--rule); }
+  tbody tr:hover { background: var(--tint); }
+  td.num  { width: 3rem;   color: var(--faint); }
+  td.date { width: 7.5rem; white-space: nowrap; color: var(--faint); }
+  .tba { color: var(--faint); font-style: italic; }
+
+  footer {
+    margin-top: 4.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    color: var(--faint);
+    font-size: .9rem;
+  }
+#lecture-notes + table {table-layout:fixed;}
+#lecture-notes + table th:first-child,#lecture-notes + table td:first-child {width:1.8rem;padding-right:.35rem;}
+#lecture-notes + table th:nth-child(2),#lecture-notes + table td:nth-child(2) {width:9.1rem;padding-right:.9rem;white-space:nowrap;}
+
+@media print {
+@page {size: Letter; margin: .5in;}
+body {line-height:1.4;}
+h2,h3 {break-before:auto; break-after:avoid;}
+h2 {margin:1.5rem 0 .6rem;}
+h3 {margin:1rem 0 .5rem;}
+h2 + h3 {padding-top:.5rem;margin-top:1rem;}
+h2,h3,table,.weeks {margin-break:discard;}
+.materials {table-layout:fixed;}
+.materials th:first-child,.materials td:first-child {width:5.7rem;padding-right:1.5rem;}
+.materials th:nth-child(2),.materials td:nth-child(2) {width:9.8rem;padding-right:1rem;white-space:nowrap;}
+.materials th,.materials td {padding-top:.4rem;padding-bottom:.4rem;}
+table:not(.materials) th:first-child,table:not(.materials) td:first-child {width:10rem;padding-right:1.2rem;}
+p {orphans:3;widows:3;margin:.6rem 0;}
+tr {break-inside:avoid;}
+.band-inner {padding-top:1rem;padding-bottom:1rem;}
+.logistics-inner {padding-top:.65rem;padding-bottom:.65rem;}
+.page {padding-bottom:0;}
+.weeks li {display:block;break-inside:avoid;padding:.35rem 0;}
+.weeks li::after {content:"";display:block;clear:both;}
+.weeks li .wk {float:left;width:5.8rem;}
+.weeks li > span + span {display:block;margin-left:6.8rem;orphans:3;widows:3;}
+ol:not(.weeks) > li:nth-last-child(2) {break-after:avoid;}
+footer {margin-top:1rem;break-inside:avoid;}
+
+}
+</style>
+</head>
+<body>
+<header class="band"><div class="band-inner"><div>
+<p class="course-id">David Gepner · Proposed second course</p>
+<h1>Algebraic Topology&nbsp;II</h1>
+<p class="term">Provisional draft materials · October 22, 2026</p>
+</div></div></header>
+<div class="page"><main>
+<p><a href="../615-index.html">Back to Math 615 — Algebraic Topology I</a></p>
+<h2>Generalized Cohomology, Spectra, and Spectral Sequences</h2>
+<p><b>These materials are provisional drafts, not a complete course.</b> The plan proposes a dependency-ordered development; the opening notes contain a limited initial treatment of represented cohomology and finite filtrations. The remaining foundations and later lectures have not been completed.</p>
+<h2>Draft Downloads</h2>
+<ul>
+<li><a href="Algebraic-Topology-II-Plan-Draft-v01.pdf">Provisional course plan and proposed appendix placement</a> (PDF, 4 pages).</li>
+<li><a href="Algebraic-Topology-II-Opening-Notes-Draft-v01.pdf">Provisional opening notes: Cohomology, Spectra, and Filtrations</a> (PDF, 4 pages).</li>
+</ul>
+<h2>Relationship to Math 615</h2>
+<p>The plan proposes integrating mapping complexes and Künneth material into the second course, while keeping geometric applications of first-course homology in the first course. No appendix has been removed or relocated in the current published-file package.</p>
+<p><a href="../algtop1fall2026/Math-615-Course-Notes.pdf">Math 615 course notes, including all appendices</a>.</p>
+<footer><p>Prepared October 22, 2026. Draft materials; subject to revision.</p></footer>
+</main></div>
+</body>
+</html>
