@@ -14,8 +14,13 @@
   h3 { color: #782f40; }
   .download { white-space: nowrap; }
   .materials { width: 100%; }
-  .materials .date { white-space: normal; min-width: 6rem; }
-  @media (max-width: 34rem) { .materials th, .materials td { padding: .6rem .3rem; } .materials .date { min-width: 4.5rem; } }
+  .materials .date { white-space: nowrap; }
+  .materials th:first-child, .materials td:first-child { width: 3.5rem; white-space: nowrap; }
+  @media (max-width: 34rem) {
+    .materials-scroll { overflow-x: auto; }
+    .materials { min-width: 28rem; }
+    .materials th, .materials td { padding: .6rem .3rem; }
+  }
   /* Shared Math 615 typography and colors. */
   :root {
     --paper:   #ffffff;
@@ -142,10 +147,6 @@
     color: var(--faint);
     font-size: .9rem;
   }
-#lecture-notes + table {table-layout:fixed;}
-#lecture-notes + table th:first-child,#lecture-notes + table td:first-child {width:1.8rem;padding-right:.35rem;}
-#lecture-notes + table th:nth-child(2),#lecture-notes + table td:nth-child(2) {width:9.1rem;padding-right:.9rem;white-space:nowrap;}
-
 @media print {
 @page {size: Letter; margin: .5in;}
 body {line-height:1.4;}
@@ -243,6 +244,7 @@ footer {margin-top:1rem;break-inside:avoid;}
 
   <h2 id="lecture-notes">Lectures</h2>
 <p><a href="algtop1fall2026/Math-615-Course-Notes.pdf">Complete course notes (Lectures 1–12 and appendices)</a> · updated October 22, 2026.</p>
+<div class="materials-scroll" role="region" aria-label="Lecture schedule" tabindex="0">
 <table class="materials"><thead><tr><th scope="col" aria-label="Lecture"></th><th>Dates</th><th>Topic</th></tr></thead><tbody>
 <tr><td class="num">1</td><td class="date">Aug 31 &amp; Sep 2</td><td><a href="algtop1fall2026/Lecture-01-Additive-and-Abelian-Categories-v03.pdf">Additive and Abelian Categories</a></td></tr>
 <tr><td class="num">2</td><td class="date">Sep 9</td><td><a href="algtop1fall2026/Lecture-02-Exact-Sequences-and-Derived-Categories-v07.pdf">Modules, Derived Categories, and the Tensor Product</a></td></tr>
@@ -257,6 +259,7 @@ footer {margin-top:1rem;break-inside:avoid;}
 <tr><td class="num">11</td><td class="date">Nov 9 &amp; 11</td><td><a href="algtop1fall2026/Lecture-11-Course-Notes.pdf">The Fundamental Group and Its Applications</a></td></tr>
 <tr><td class="num">12</td><td class="date">Nov 16 &amp; 18</td><td><a href="algtop1fall2026/Lecture-12-Course-Notes.pdf">Covering Spaces and Subgroups of Free Groups</a></td></tr>
 </tbody></table>
+</div>
 
 <h2 id="syllabus">Syllabus</h2>
 <p><a href="2026-10-25-Math-615-Course-Syllabus-v02.pdf">Download the course syllabus (PDF)</a>.</p>
@@ -296,6 +299,7 @@ footer {margin-top:1rem;break-inside:avoid;}
   </ol>
 
   <h2 id="homework">Homework</h2>
+<div class="materials-scroll" role="region" aria-label="Homework schedule" tabindex="0">
 <table class="materials"><thead><tr><th>Week</th><th>Dates</th><th>Topic</th></tr></thead><tbody>
 <tr><td class="num">1</td><td class="date">Aug 31 &amp; Sep 2</td><td><a href="algtop1fall2026/Homework-01-Categories-and-Chain-Complexes-v02.pdf">Categories and Chain Complexes</a></td></tr>
 <tr><td class="num">2</td><td class="date">Sep 9</td><td><a href="algtop1fall2026/Homework-02-Homotopies-Exact-Sequences-and-Cones-v05.pdf">Homotopies, Exact Sequences, and Cones</a></td></tr>
@@ -310,6 +314,7 @@ footer {margin-top:1rem;break-inside:avoid;}
 <tr><td class="num">11</td><td class="date">Nov 9 &amp; 11</td><td><a href="algtop1fall2026/Homework-11-Fundamental-Groups-v01.pdf">Fundamental Groups and Attaching Maps</a></td></tr>
 <tr><td class="num">12</td><td class="date">Nov 16 &amp; 18</td><td><a href="algtop1fall2026/Homework-12-Covering-Spaces-v01.pdf">Covering Spaces and Free Subgroups</a></td></tr>
 </tbody></table>
+</div>
 <p><a href="algtop1fall2026/Math615-Homework-09-through-12-v01.pdf">Homework 9–12 in one PDF</a>. Dates above identify the associated lecture weeks; no new homework due dates are assigned here.</p>
 
 <h2 id="second-course-drafts">Algebraic Topology II — Draft Materials</h2>
